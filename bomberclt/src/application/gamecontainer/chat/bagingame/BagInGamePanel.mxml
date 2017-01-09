@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" initialize="onInit(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx">
+	<fx:Script>
+		<![CDATA[			
+			import application.GameApplication;
+			import application.gamecontainer.chat.userfinishedpanel.info.FinishedInfo;
+			import application.gamecontainer.scene.bag.article.BagInGameArticle;
+			import application.gamecontainer.scene.bag.article.BagInGameSmallArticle;
+			
+			import mx.events.FlexEvent;
+			
+			import utils.managers.useitem.UseItemEvent;
+			import utils.shop.CategoryType;
+			import utils.shop.item.Item;
+			private var _articlesarr:Array = new Array();
+			
+			public function clearPanel():void{
+				articles.removeAllElements();
+				_articlesarr = new Array();
+			}
+			
+			public function updatePanel():void
+			{
+				clearPanel();
+				GameApplication.app.shopmanager.getUserItemsByCategoryID(CategoryType.GAME_INVENTORY, onGetItems);
+				
+			}
+			
+			private function onGetItems(items:Array):void{
+				for(var i:int = 0; i < items.length; i++){
+					var article:BagInGameArticle = new BagInGameArticle();
+					var item:Item = items[i];
+					article.init(item);
+					_articlesarr.push(article);
+					articles.addElement(article);
+				}
+			}
+
+			protected function onInit(event:FlexEvent):void
+			{
+				GameApplication.app.useitemmanager.addEventListener(UseItemEvent.CHANGE_COUNT, onChangeItemCount);
+			}
+			private function onChangeItemCount(e:UseItemEvent):void{
+				var article:BagInGameArticle;
+				for(var i:int = 0; i < _articlesarr.length; i++){
+					article = _articlesarr[i] as BagInGameArticle;
+					if(article.article.item.id == e.itemid){
+						if (e.count == 0){
+							articles.removeElement((_articlesarr[i] as BagInGameArticle));
+							_articlesarr.splice(i, 1);
+						}else if(e.count > 0){												
+							(_articlesarr[i] as BagInGameArticle).article.item.count = e.count;							
+						}
+						break;
+					}
+				}
+			}
+
+		]]>
+	</fx:Script>
+	<s:Rect width="100%" height="1" left="0" top="0">
+		<s:fill>
+			<s:SolidColor color="0x555555" alpha=".7"/>
+		</s:fill>
+	</s:Rect>
+	<s:Rect width="100%" height="1" left="0" bottom="0">
+		<s:fill>
+			<s:SolidColor color="0x555555" alpha=".7"/>
+		</s:fill>
+	</s:Rect>
+	<s:Rect width="1" height="100%" left="0" top="0">
+		<s:fill>
+			<s:SolidColor color="0x555555" alpha=".7"/>
+		</s:fill>
+	</s:Rect>
+	<s:Rect width="1" height="100%" right="0" top="0">
+		<s:fill>
+			<s:SolidColor color="0x555555" alpha=".7"/>
+		</s:fill>
+	</s:Rect>
+	<s:Rect width="100%" height="100%" right="1" top="1" left="1" bottom="1">
+		<s:fill>
+			<s:SolidColor color="0x999999" alpha=".2"/>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Rect width="100%" left="1" right="1" top="1" height="18">
+		<s:fill>
+			<s:SolidColor color="0x5E6F6F" alpha="1"/>
+		</s:fill>
+	</s:Rect>
+	<s:Label top="4"  text="Рюкзак" color="0xdddddd" fontSize="11" textAlign="center" width="100%"/>
+	
+	<s:Scroller top="25" width="100%" left="1" right="1" bottom="1">
+		<s:VGroup id="articles" width="100%" gap="2" paddingLeft="2" paddingRight="2" paddingBottom="2" horizontalAlign="center"/>
+	</s:Scroller>
+</s:Group>

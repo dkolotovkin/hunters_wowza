@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" initialize="group1_initializeHandler(event)"
+		 xmlns:s="library://ns.adobe.com/flex/spark" visible="{GameApplication.app.banmanager.bantime > 0}"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:button="application.components.button.*">
+
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			
+			import mx.events.FlexEvent;
+			
+			import utils.managers.ban.BanManagerEvent;
+			protected function gamebutton1_clickHandler(event:MouseEvent):void
+			{
+				GameApplication.app.shopmanager.showBanPrice();
+			}
+
+			protected function group1_initializeHandler(event:FlexEvent):void
+			{
+				GameApplication.app.banmanager.addEventListener(BanManagerEvent.TIME_UPDATE, onBanTimeUpdate, false, 0, true);
+			}
+			
+			private function onBanTimeUpdate(e:BanManagerEvent):void{				
+				var days:int = Math.floor(e.time / (60 * 60 * 24));
+				var hours:int =  Math.floor((e.time - days * 60 * 60 * 24) / (60 * 60));
+				var minuts:int = Math.floor((e.time - days * 60 * 60 * 24 - hours * 60 * 60) / 60);
+				var seconds:int = e.time - days * 60 * 60 * 24 - hours * 60 * 60 - minuts * 60;
+				var hstr:String = String(hours);
+				if (hours < 10) hstr = "0" + hstr;
+				var mstr:String = String(minuts);
+				if (minuts < 10) mstr = "0" + mstr;
+				var sstr:String = String(seconds);
+				if (seconds < 10) sstr = "0" + sstr;
+				bantext.text = "Оставшееся время в бане: ";
+				if (days > 0){
+					bantext.text += "[" + days + "] ";
+				}else{
+					bantext.text += "[" + 0 + "] ";
+				}
+				if (hours > 0){
+					bantext.text += hstr + " : ";
+				}else{
+					bantext.text += "00" + " : ";
+				}
+				if (minuts > 0){
+					bantext.text += mstr + " : ";
+				}else{
+					bantext.text += "00" + " : ";
+				}
+				if (seconds > 0){
+					bantext.text += sstr;
+				}else{
+					bantext.text += "00";
+				}
+			}
+		]]>
+	</fx:Script>
+
+	<s:VGroup width="100%" height="100%" gap="0">
+		<s:HGroup width="100%" height="100%" gap="0">
+			<s:Rect width="1" height="100%">
+				<s:fill>
+					<s:SolidColor color="0xA85E2D"/>
+				</s:fill>
+			</s:Rect>
+			<s:Rect width="100%" height="100%">
+				<s:fill>
+					<s:SolidColor color="0xC48C55" alpha="0.9"/>
+				</s:fill>
+			</s:Rect>
+		</s:HGroup>
+		<s:Rect width="100%" height="1">
+			<s:fill>
+				<s:SolidColor color="0xA85E2D"/>
+			</s:fill>
+		</s:Rect>
+	</s:VGroup>
+	
+	<s:VGroup paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
+		<s:HGroup verticalAlign="middle">
+			<s:Label id="bantext" minWidth="240" fontStyle="normal" fontWeight="bold" fontSize="12" color="0xFFFFCC"/>
+			<button:GameButton click="gamebutton1_clickHandler(event)" label="Выйти из бана" fontSize="10"/>
+		</s:HGroup>
+		<s:Label width="330" text="Внимание! Каждую минуту в бане с вашего перcонажа снимается штраф в виде опыта и популярности." fontStyle="italic" fontWeight="normal" fontSize="10" color="0xFFFFCC"/>
+	</s:VGroup>
+</s:Group>

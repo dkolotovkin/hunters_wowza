@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="35" width="100%" height="100%" xmlns:experience="application.gamecontainer.persinfobar.experience.*" xmlns:energy="application.gamecontainer.persinfobar.energy.*" xmlns:popular="application.gamecontainer.persinfobar.popular.*" xmlns:money="application.gamecontainer.persinfobar.money.*">
+
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.gamecontainer.scene.clans.ClanRoom;
+			
+			import utils.user.ClanUserRole;
+			import utils.user.Sex;
+			import utils.user.User;
+			import utils.user.UserRole;
+			[Bindable]
+			private var _user:User;
+			
+			public function set user(u:User):void{
+				_user = u;
+				if (_user.sex == Sex.MALE){
+					sex.text = "мужской";
+				}else{
+					sex.text = "женский";
+				}
+				if(_user.claninfo.clanid > 0 && _user.claninfo.clanrole > ClanUserRole.INVITED){
+					clan.text = _user.claninfo.clantitle;
+				}				
+				
+				if(GameApplication.app.userinfomanager.myuser.role == UserRole.ADMINISTRATOR || GameApplication.app.userinfomanager.myuser.role == UserRole.ADMINISTRATOR_MAIN){
+					moneygr.visible = moneygr.includeInLayout = true;
+				}else{
+					moneygr.visible = moneygr.includeInLayout = false;
+				}
+			}
+		]]>
+	</fx:Script>
+	<s:HGroup width="100%" height="100%">
+		<s:VGroup width="100%" height="100%">		
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Имя пользователя:" width="155" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<s:Label id="nick" text="{_user.title}" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<s:Label id="userid" text="({_user.id})" color="0xcccccc" fontSize="10" fontWeight="normal"/>
+			</s:HGroup>
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Уровень пользователя:" width="155" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<s:Label id="level" text="[{_user.level}]" color="0x00FFFF" fontSize="14" fontWeight="normal"/>			
+			</s:HGroup>
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Альянс: " width="155" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<s:Label id="clan" text="не состоит в альянсе" color="0xFFFF99" fontSize="14" fontWeight="normal"/>			
+			</s:HGroup>
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Пол:" width="155" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<s:Label id="sex" color="0xffffff" fontSize="14" fontWeight="normal"/>			
+			</s:HGroup>
+			
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Популярность:" width="155" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<popular:PopularIndicator popular="{_user.popular}" width="170"/>			
+			</s:HGroup>
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Опыт:" width="155" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<experience:ExperienceIndicator experience="{_user.experience}" maxexperience="{_user.maxExperience}" width="170"/>			
+			</s:HGroup>
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Опыт за час: " width="155" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<s:Label id="exphour" text="+ {_user.exphour}" color="0xFFFF99" fontSize="14" fontWeight="normal"/>			
+			</s:HGroup>
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Опыт за день: " width="155" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<s:Label id="expday" text="+ {_user.expday}" color="0xFFFF99" fontSize="14" fontWeight="normal"/>			
+			</s:HGroup>
+			<s:HGroup verticalAlign="middle" id="moneygr">
+				<s:Label text="Деньги:" width="155" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<money:Money money="{_user.money}"/>			
+			</s:HGroup>
+			<!--<s:HGroup verticalAlign="middle">
+				<s:Label text="Энергия:" width="155" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<energy:EnergyIndicator energy="{_user.energy}" maxenergy="{_user.maxEnergy}" width="170"/>			
+			</s:HGroup>-->
+		</s:VGroup>
+	</s:HGroup>	
+</s:Group>

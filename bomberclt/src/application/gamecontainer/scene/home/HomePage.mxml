@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" implements="utils.interfaces.ISceneContent"
+		 xmlns:s="library://ns.adobe.com/flex/spark" initialize="onInit(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="380" xmlns:local="*" xmlns:navigationbtn="application.gamecontainer.scene.home.navigationbtn.*" xmlns:buttonswf="application.components.buttonswf.*" xmlns:money="application.gamecontainer.persinfobar.money.*" xmlns:button="application.components.button.*" xmlns:dressingroom="application.components.dressingroom.*" xmlns:iconswf="application.components.iconswf.*">
+
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.GameMode;
+			import application.components.popup.enemies.PopUpEnemies;
+			import application.components.popup.friends.PopUpFriends;
+			import application.components.popup.help.PopUpHelp;
+			import application.components.popup.help.rule.PopUpRule;
+			import application.components.popup.messages.PopUpMessages;
+			
+			import mx.events.FlexEvent;
+			
+			import spark.filters.GlowFilter;
+			
+			import utils.interfaces.ISceneContent;
+			import utils.user.UserRole;
+			
+			private var _mousemc:MovieClip;
+			private var _glow:spark.filters.GlowFilter = new GlowFilter(0xffffff, 1, 5, 5, 1);
+			
+			protected function goGameWorld(event:MouseEvent):void{
+				GameApplication.app.shopmanager.getItemPrototypes(null);
+				GameApplication.app.gamemanager.sendStartRequest();				
+			}
+			protected function onShopBtnClick(event:MouseEvent):void{	
+				GameApplication.app.navigator.goShop();
+			}
+			protected function onBagBtnClick(event:MouseEvent):void{
+				GameApplication.app.navigator.goBag();				
+			}
+			public function onBankBtnClick(event:MouseEvent):void{
+				GameApplication.app.apimanager.addMoneyUserID = GameApplication.app.userinfomanager.myuser.id;
+				GameApplication.app.apimanager.showBuyMoneyPopUp();
+			}
+
+			protected function onFriendsBtnClick(event:MouseEvent):void{
+				GameApplication.app.apimanager.inviteFriends();				
+			}
+
+			protected function onHellpBtnClick(event:MouseEvent):void{
+				GameApplication.app.popuper.show(new PopUpHelp());
+			}
+			
+			protected function onClanBtnClick(event:MouseEvent):void{
+				GameApplication.app.navigator.goClansRoom();
+			}
+
+			protected function onInit(event:FlexEvent):void
+			{
+				if(GameApplication.app.userinfomanager.myuser.role == UserRole.ADMINISTRATOR || GameApplication.app.userinfomanager.myuser.role == UserRole.ADMINISTRATOR_MAIN){
+					admin.visible = admin.includeInLayout = true;
+				}
+				if(GameApplication.app.config.mode == GameMode.MM){
+					invitebtn.toolTip = "Акция! Пригласи друзей и получи 30 монет за каждого!";
+					news.visible = true;
+				}else{
+					news.visible = false;
+				}
+				
+				if(GameApplication.app.config.mode == GameMode.OD)
+				{
+					minigames.visible = minigames.includeInLayout = false;
+				}
+			}
+
+			protected function onTop(event:MouseEvent):void
+			{		
+				GameApplication.app.navigator.goTop();
+			}
+			
+			protected function showRule(event:MouseEvent):void
+			{
+				GameApplication.app.popuper.show(new PopUpRule());
+			}
+			
+			public function onHide():void{				
+			}
+
+
+			protected function showBanPirice(event:MouseEvent):void
+			{
+				GameApplication.app.shopmanager.showBanPrice();
+			}
+
+
+			protected function showFriends(event:MouseEvent):void
+			{
+				GameApplication.app.popuper.show(new PopUpFriends());
+			}
+
+			protected function showEnemies(event:MouseEvent):void
+			{
+				GameApplication.app.popuper.show(new PopUpEnemies());
+			}
+
+			protected function showMessages(event:MouseEvent):void
+			{
+				GameApplication.app.popuper.show(new PopUpMessages());
+			}
+
+
+			protected function onMiniGames(event:MouseEvent):void
+			{
+				GameApplication.app.navigator.goMiniGames();
+			}
+
+
+			protected function onAdminBtnClick(event:MouseEvent):void
+			{
+				GameApplication.app.navigator.goAdminPanel();
+			}
+			
+			protected function onPayClick(event:MouseEvent):void
+			{
+				GameApplication.app.userinfomanager.showOnlineTimeMoneyInfo();
+			}
+
+
+			protected function dressingroom1_rollOverHandler(event:MouseEvent):void
+			{
+				hero.filters = [_glow];
+			}
+
+
+			protected function dressingroom1_rollOutHandler(event:MouseEvent):void
+			{
+				hero.filters = [];
+			}
+
+
+			protected function dressingroom1_clickHandler(event:MouseEvent):void
+			{
+				GameApplication.app.userinfomanager.showUserInfo(GameApplication.app.userinfomanager.myuser);
+			}
+
+
+			protected function goConstructor(event:MouseEvent):void
+			{
+				if(GameApplication.app.userinfomanager.myuser.level >= 5){
+					GameApplication.app.navigator.goConstructor();
+				}else{
+					GameApplication.app.popuper.showInfoPopUp("Конструктор карт доступен с 5 уровня.");
+				}
+			}
+			
+			protected function goKings(event:MouseEvent):void
+			{
+				GameApplication.app.kingsmanager.getKingsInfo();
+			}
+		]]>
+	</fx:Script>
+	
+	
+	<s:Group id="maskGr" includeInLayout="false">
+		<s:Rect width="740" height="382">
+			<s:fill>
+				<s:SolidColor color="0xff0000"/>
+			</s:fill>
+		</s:Rect>		
+	</s:Group>
+	<s:Group mask="{maskGr}">
+		<iconswf:IconMXML includeInLayout="false" iconClass="{MainBg}" x="-20" y="-70"/>
+		<!--<iconswf:IconMXML includeInLayout="false" iconClass="{MainBgSnow}" x="-20" y="-70"/>-->
+	</s:Group>
+	
+	<s:HGroup paddingLeft="70" paddingRight="5" bottom="5" width="100%" horizontalAlign="center">
+		<s:Label height="13" textDecoration="underline" fontSize="12" color="0x4B2812" text="выборы королей" click="goKings(event)" buttonMode="true"/>
+		<s:Label height="13" textDecoration="underline" fontSize="12" color="0x4B2812" text="конструктор карт" click="goConstructor(event)" buttonMode="true"/>
+		<s:Label height="13" textDecoration="underline" fontSize="12" color="0x4B2812" text="мои сообщения" click="showMessages(event)" buttonMode="true"/>
+		<s:Label height="13" textDecoration="underline" fontSize="12" color="0x4B2812" text="мои враги" click="showEnemies(event)" buttonMode="true"/>
+		<s:Label height="13" textDecoration="underline" fontSize="12" color="0x4B2812" text="мои друзья" click="showFriends(event)" buttonMode="true"/>
+		<s:Label height="13" textDecoration="underline" fontSize="12" color="0x4B2812" text="зарплата" click="onPayClick(event)" buttonMode="true"/>
+		<s:Label height="13" textDecoration="underline" fontSize="12" color="0x4B2812" text="правила" click="showRule(event)" buttonMode="true"/>
+		<s:Label id="buymoneylabel" height="13" textDecoration="underline" fontSize="12" color="0x4B2812" text="пополнить счет" click="onBankBtnClick(event)" buttonMode="true"/>
+	</s:HGroup>		
+	
+	<s:Scroller right="0" top="10" height="67">
+		<s:VGroup id="news">
+			<s:Label width="380" fontSize="15" text="Приглашай друзей и получи 30 монет за каждого!" fontStyle="normal" fontWeight="bold" color="0x603417"/>		
+		</s:VGroup>
+	</s:Scroller>
+	
+	<s:HGroup width="100%" bottom="30" left="160">
+		<dressingroom:DressingRoom id="hero" scale="5" huntSlotsVisible="false" mouseChildren="false" buttonMode="true" rollOver="dressingroom1_rollOverHandler(event)" rollOut="dressingroom1_rollOutHandler(event)" click="dressingroom1_clickHandler(event)"/>		
+	</s:HGroup>
+	
+	
+	<s:VGroup horizontalAlign="center" bottom="100" right="30">
+		<s:Group width="150">
+			<buttonswf:ButtonMXML iconClass="{IconButGame}" width="150" click="goGameWorld(event)" toolTip="Охота"/>		
+			<!--<iconswf:IconMXML id="snow1" iconClass="{Snow1}" width="150" top="-12"/>-->
+		</s:Group>
+		<s:VGroup verticalAlign="middle" horizontalAlign="center">
+			<s:HGroup id="navigations" verticalAlign="middle">			
+				<buttonswf:ButtonMXML toolTip="Магазин" iconClass="{IconButShop}" click="onShopBtnClick(event)"/>
+				<buttonswf:ButtonMXML toolTip="Рюкзак" iconClass="{IconButBag}" click="onBagBtnClick(event)"/>
+				<buttonswf:ButtonMXML toolTip="Зал славы" iconClass="{IconButTop}" click="onTop(event)"/>		
+				<buttonswf:ButtonMXML toolTip="Альянсы" click="onClanBtnClick(event)" iconClass="{IconButClan}"/>
+				<!--<buttonswf:ButtonMXML toolTip="Кланы" iconClass="{IconButClan}" click="onClanBtnClick(event)"/>-->		
+				<buttonswf:ButtonMXML id="minigames" toolTip="Мини игры" iconClass="{IconButMiniGames}" click="onMiniGames(event)"/>
+				<buttonswf:ButtonMXML id="invitebtn" toolTip="Пригласить друзей" iconClass="{IconButFriends}" click="onFriendsBtnClick(event)"/>
+			</s:HGroup>
+			<buttonswf:ButtonMXML id="admin" toolTip="Панель администратора" iconClass="{IconButAdmin}" click="onAdminBtnClick(event)" visible="false" includeInLayout="false"/>
+		</s:VGroup>
+	</s:VGroup>
+</s:Group>

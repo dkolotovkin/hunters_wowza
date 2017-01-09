@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" creationComplete="group2_creationCompleteHandler(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="35" width="100%" height="100%" xmlns:button="application.components.button.*" xmlns:money="application.gamecontainer.persinfobar.money.*" xmlns:iconswf="application.components.iconswf.*">
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.gamecontainer.scene.catalog.article.Article;
+			import application.gamecontainer.scene.catalog.article.catalog.CatalogArticle;
+			
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import utils.shop.item.Item;
+			import utils.shop.itemprototype.ItemPrototype;			
+			
+			protected function changebtn_clickHandler(event:MouseEvent):void
+			{
+				GameApplication.app.popuper.hidePopUp();			
+			}
+			
+
+			protected function group2_creationCompleteHandler(event:FlexEvent):void
+			{
+//				var article1:Article = new Article();
+//				var item1:Item = new Item(0, ItemType.MOUSE_BLACK3, 0, "Мышь черная", "", 3, CategoryType.MOUSES);
+//				article1.init(item1);
+//				prizegr.addElement(article1);
+//				
+//				var article2:Article = new Article();
+//				var item2:Item = new Item(0, ItemType.KOVBOYHAT3, 0, "Ковбойская шляпа", "", 3, CategoryType.ACCESSORIES);
+//				article2.init(item2);
+//				prizegr.addElement(article2);
+				Alert.show("Добавить стартовый бонус");
+			}
+
+		]]>
+	</fx:Script>
+	<s:VGroup width="100%" height="100%">
+		<s:Label text="У тебя здорово получается! Теперь ты можешь принимать участие в забегах с другими мышками! Для увеличения скорости и усиления прыжка мы тебе дарим черную мышку и шляпу на 3 дня (цвета и аксессуары можно покупать в магазине):" width="400" color="0xFF9933" fontSize="14" fontWeight="normal"/>
+		<s:HGroup id="prizegr" width="100%" horizontalAlign="center" verticalAlign="middle"/>
+		<s:HGroup width="100%" verticalAlign="middle" horizontalAlign="right">				
+			<button:GameButton id="changebtn" label="в игру" click="changebtn_clickHandler(event)"/>
+		</s:HGroup>
+	</s:VGroup>
+</s:Group>

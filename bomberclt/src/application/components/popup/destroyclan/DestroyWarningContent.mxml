@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="10" width="100%" height="100%" xmlns:button="application.components.button.*" xmlns:money="application.gamecontainer.persinfobar.money.*" xmlns:iconswf="application.components.iconswf.*">
+	<fx:Script>
+		<![CDATA[			
+			import application.GameApplication;
+						
+			public var closefunction:Function;
+			
+			protected function onDestroy(event:MouseEvent):void
+			{
+				GameApplication.app.clanmanager.destroy();
+				closefunction && closefunction();
+			}
+			
+			
+			protected function onCancel(event:MouseEvent):void
+			{
+				closefunction && closefunction();
+			}
+			
+		]]>
+	</fx:Script>
+	<s:VGroup width="100%" height="100%">
+		<s:Label text="Вы действительно хотите распустить альянс?" width="350" color="0xFFFFFF" fontSize="14" fontWeight="normal"/>
+		<s:HGroup width="100%" verticalAlign="middle" horizontalAlign="center">			
+			<button:GameButton id="destroy" label="распустить альянс" click="onDestroy(event)"/>
+			<button:GameButton id="cancel" label="отмена" click="onCancel(event)"/>
+		</s:HGroup>
+	</s:VGroup>
+</s:Group>

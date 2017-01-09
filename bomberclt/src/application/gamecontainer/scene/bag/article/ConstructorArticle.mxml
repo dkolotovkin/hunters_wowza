@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" buttonMode="true" click="group1_clickHandler(event)"
+		 xmlns:s="library://ns.adobe.com/flex/spark" rollOver="rollOver(event)" rollOut="rollOut(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="35" height="35" xmlns:money="application.gamecontainer.persinfobar.money.*" implements="utils.selector.ISelected">
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.gamecontainer.scene.catalog.article.catalog.CatalogArticleEvent;
+			
+			import utils.selector.ISelected;
+			private var _over:Boolean;
+			private var _selected:Boolean = false;
+			
+			private var _mc:MovieClip;
+			
+			[Bindable]
+			public var constructorMode:uint;
+			
+			protected function rollOver(event:MouseEvent):void{
+				_over = true;
+				updateState();
+			}
+			
+			protected function rollOut(event:MouseEvent):void{
+				_over = false;
+				updateState();
+			}
+			
+			private function updateState ():void{
+				if (_selected) {
+					currentState = "selected";
+				}else{
+					if (_over){
+						currentState = "over";
+					}else{
+						currentState = "normal";
+					}
+				}
+			}
+			
+			public function get selected ():Boolean {
+				return _selected;
+			}
+			
+			public function set selected (value:Boolean):void {
+				if (_selected != value){
+					_selected = value;
+					if (_selected){
+						dispatchEvent(new ConstructorArticleEvent(ConstructorArticleEvent.SELECTED, this));
+					}else{
+						dispatchEvent(new ConstructorArticleEvent(ConstructorArticleEvent.UNSELECTED, this));
+					}
+					updateState();
+				}	
+			}
+			
+			public function set iconClass(classMovie:Class):void{
+				if(_mc && moviegr.contains(_mc)){
+					moviegr.removeChild(_mc);
+				}
+				_mc = new classMovie();
+				_mc.stop();
+				moviegr.addChild(_mc);				
+				
+				var rect:Rectangle = _mc.getBounds(_mc);
+				var otnW:Number = moviegr.width / rect.width;
+				var otnH:Number = moviegr.height / rect.height;
+				var k:Number = 1;
+				if (otnW > otnH) k = otnH else k = otnW;
+				
+				_mc.width *= k;
+				_mc.height *= k;
+				
+				_mc.x = Math.round(-rect.x * k + (moviegr.width - _mc.width) / 2);
+				_mc.y = Math.round(-rect.y * k + (moviegr.height - _mc.height) / 2);
+			}
+
+			protected function group1_clickHandler(event:MouseEvent):void
+			{
+				selected = true;
+			}
+
+		]]>
+	</fx:Script>
+	
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="over"/>
+		<s:State name="selected"/>
+	</s:states>	
+	
+	<s:Rect includeIn="normal" width="100%" height="100%">
+		<s:stroke>
+			<s:SolidColorStroke color="0xC46C33"/>
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="0x66371A"/>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Rect includeIn="over" width="100%" height="100%">
+		<s:stroke>
+			<s:SolidColorStroke color="0xC46C33"/>
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="0x7A431F"/>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Rect includeIn="selected" width="100%" height="100%">
+		<s:stroke>
+			<s:SolidColorStroke color="0x000000" alpha=".8" weight="1"/>
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="0xffffff" alpha=".5"/>
+		</s:fill>
+	</s:Rect>
+	<mx:UIComponent id="moviegr" width="25" height="25" left="5" right="5" top="5" bottom="5"/>
+</s:Group>

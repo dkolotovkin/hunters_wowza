@@ -1,0 +1,115 @@
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" implements="utils.interfaces.ISceneContent"
+		 xmlns:s="library://ns.adobe.com/flex/spark" width="100%" height="100%" creationComplete="onInit(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" left="20" right="20" top="20" bottom="20" xmlns:iconswf="application.components.iconswf.*" xmlns:catalog="application.gamecontainer.scene.catalog.*" xmlns:iteminfo="application.gamecontainer.scene.catalog.iteminfo.*" xmlns:bar="application.gamecontainer.scene.catalog.bar.*" xmlns:body="application.gamecontainer.scene.bag.body.*" xmlns:button="application.components.button.*" xmlns:separator="application.components.separator.*" xmlns:components="application.components.*" xmlns:dressingroom="application.components.dressingroom.*">
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.gamecontainer.scene.catalog.article.catalog.CatalogArticleEvent;
+			import application.gamecontainer.scene.catalog.bar.tab.CatalogTab;
+			import application.gamecontainer.scene.catalog.bar.tab.CatalogTabEvent;
+			
+			import flashx.textLayout.formats.Category;
+			
+			import mx.events.FlexEvent;
+			
+			import utils.interfaces.ISceneContent;
+			import utils.managers.useitem.UseItemEvent;
+			import utils.shop.category.CatalogBarCategory;
+			import utils.shop.category.ShopCategory;
+			
+			protected function onInit(event:FlexEvent):void{
+				var categories:Array = new Array();
+				var category1:CatalogBarCategory = new CatalogBarCategory(ShopCategory.THINGS, "Вещи");
+				categories.push(category1);
+				var category2:CatalogBarCategory = new CatalogBarCategory(ShopCategory.ARSENAL, "Оружие");
+				categories.push(category2);
+				var category3:CatalogBarCategory = new CatalogBarCategory(ShopCategory.PRESENTS, "Подарки");
+				categories.push(category3);			
+				catalogbar.addCategories(categories);
+				
+				catalogbar.addEventListener(CatalogTabEvent.SELECTED, onSelectCategory);
+				catalogbar.addEventListener(CatalogTabEvent.UNSELECTED, onUnSelectCategory);
+				GameApplication.app.shopmanager.addEventListener(UseItemEvent.SALE_PRESENT, onSalePresent, false, 0, true);
+				GameApplication.app.shopmanager.addEventListener(UseItemEvent.DROP, onDropItem, false, 0, true);
+				GameApplication.app.shopmanager.addEventListener(UseItemEvent.PUT, onPutItem, false, 0, true);
+				GameApplication.app.shopmanager.addEventListener(UseItemEvent.TAKEOFF, onTakeOffItem, false, 0, true);
+				
+				(catalogbar.hash[ShopCategory.THINGS] as CatalogTab).selected = true;
+			}
+			
+			private function onPutItem(e:UseItemEvent):void{
+				body.putItem(e.item);
+				dressingroom.addItem(e.item);
+			}
+			
+			private function onTakeOffItem(e:UseItemEvent):void{
+				body.takeoffItem(e.item);
+				dressingroom.removeItem(e.item);
+			}
+			
+			private function onSalePresent(e:UseItemEvent):void{
+				body.removePresent(e.item);
+			}
+			
+			private function onDropItem(e:UseItemEvent):void{
+				body.removeItem(e.item);
+				dressingroom.removeItem(e.item);
+			}
+			
+			private function onUnSelectCategory(e:CatalogTabEvent):void{				
+				body.removeItems();
+			}
+			
+			private function onSelectCategory(e:CatalogTabEvent):void{
+				if(e.tab.category.id == ShopCategory.THINGS || e.tab.category.id == ShopCategory.ARSENAL){
+					GameApplication.app.shopmanager.getMyItems(onGetItems);
+				}else if(e.tab.category.id == ShopCategory.PRESENTS){
+					GameApplication.app.shopmanager.getMyPresents(onGetPresents);
+				}
+			}
+			
+			private function onGetItems(items:Array):void{
+				if (catalogbar && catalogbar.selectedTab) body.addItems(items, catalogbar.selectedTab.category.id);
+			}
+			
+			private function onGetPresents(items:Array):void{
+				body.addItemsPresents(items);
+			}
+			
+			protected function onBack(event:MouseEvent):void{
+				GameApplication.app.navigator.goHome();
+			}
+			
+			public function onHide():void{
+				catalogbar.removeEventListener(CatalogTabEvent.SELECTED, onSelectCategory);
+				catalogbar.removeEventListener(CatalogTabEvent.UNSELECTED, onUnSelectCategory);
+				GameApplication.app.shopmanager.removeEventListener(UseItemEvent.SALE_PRESENT, onSalePresent);
+				GameApplication.app.shopmanager.removeEventListener(UseItemEvent.DROP, onDropItem);
+				GameApplication.app.shopmanager.removeEventListener(UseItemEvent.PUT, onPutItem);
+				GameApplication.app.shopmanager.removeEventListener(UseItemEvent.TAKEOFF, onTakeOffItem);
+			}
+		]]>
+	</fx:Script>
+	<s:Rect width="100%" height="100%" radiusX="0" radiusY="0">
+		<s:stroke>
+			<mx:SolidColorStroke color="0x583016"/>
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="0x8D4F25"/>
+		</s:fill>
+	</s:Rect>
+	<s:VGroup width="100%" height="100%" paddingLeft="20" paddingRight="20" paddingTop="10" paddingBottom="10">
+		<s:Label width="100%" textAlign="center" text="Рюкзак" fontSize="30" color="0xFFFFCC" fontWeight="bold" fontStyle="italic"/>
+		<s:HGroup width="100%" height="100%">
+			<dressingroom:DressingRoom id="dressingroom" width="190" height="100%" scale="5"/>
+			<separator:SeparatorMXML width="1" height="100%" top="10" bottom="10"/>
+			<s:VGroup width="100%" height="100%">
+				<bar:CatalogBar id="catalogbar" width="95%" height="25" gap="0"/>
+				<body:BagBody id="body"/>				
+			</s:VGroup>
+		</s:HGroup>
+		<s:HGroup width="100%" horizontalAlign="right">
+			<button:GameButton id="back" label="назад" click="onBack(event)"/>
+		</s:HGroup>
+	</s:VGroup>
+</s:Group>

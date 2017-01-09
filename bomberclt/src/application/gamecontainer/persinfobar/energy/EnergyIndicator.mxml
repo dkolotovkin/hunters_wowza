@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" implements="utils.managers.tooltip.IToolTiped"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" height="100%" xmlns:local="*" gap="0" verticalAlign="middle" xmlns:iconswf="application.components.iconswf.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import utils.managers.tooltip.IToolTiped;
+			import utils.managers.tooltip.ToolTipType;
+		
+			private var _energy:Number = 0;		
+			private var _maxenergy:Number = 0;
+			
+			public function get toolTipDelay() : int {				
+				return 400;
+			}
+			
+			public function get toolTipDX() : int {
+				return 10;
+			}
+			
+			public function get toolTipDY() : int {
+				return 2;
+			}
+			
+			public function get toolTipType() : int {
+				return ToolTipType.ENERGY;
+			}
+			
+			public function set energy(value:Number):void{
+				_energy = value;
+				indicator.percentWidth = 100 * Math.min(_energy / _maxenergy, 1);
+			}
+			
+			public function set maxenergy(value:Number):void{
+				_maxenergy = value;
+				indicator.percentWidth = 100 * Math.min(_energy / _maxenergy, 1);
+			}
+			
+			public function get energy():Number{
+				return _energy;
+			}
+			
+			public function get maxenergy():Number{
+				return _maxenergy;
+			}
+		]]>
+	</fx:Script>
+	
+	<iconswf:IconMXML iconClass="{IconEnergy}" depth="1"/>	
+	<s:Group width="100%" height="9" depth="0">
+		<s:Rect id="indicator" height="100%">		
+			<s:fill>
+				<s:LinearGradient rotation="90">
+					<s:entries>
+						<s:GradientEntry color="0x265904" ratio="0.00" alpha="1"/>
+						<s:GradientEntry color="0x4FBD03" ratio="0.4" alpha="1"/>
+						<s:GradientEntry color="0x347D02" ratio="0.99" alpha="1"/>
+					</s:entries>
+				</s:LinearGradient>
+			</s:fill>
+		</s:Rect>
+		
+		<s:VGroup width="100%" height="100%" gap="0">
+			<s:Rect height=".3" width="100%">
+				<s:fill>
+					<s:SolidColor color="0xcccccc" alpha=".8"/>
+				</s:fill>
+			</s:Rect>
+			
+			<s:Rect height="100%" width="100%">
+				<s:fill>
+					<s:SolidColor color="0x808080" alpha=".2"/>
+				</s:fill>
+			</s:Rect>
+			
+			<s:Rect height=".3" width="100%">
+				<s:fill>
+					<s:SolidColor color="0xcccccc" alpha=".8"/>
+				</s:fill>
+			</s:Rect>
+		</s:VGroup>
+	</s:Group>
+</s:HGroup>

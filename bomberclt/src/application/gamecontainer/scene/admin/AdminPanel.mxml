@@ -1,0 +1,111 @@
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" implements="utils.interfaces.ISceneContent"
+		 xmlns:s="library://ns.adobe.com/flex/spark" width="100%" height="100%" initialize="onInit(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" left="20" right="20" top="20" bottom="20" xmlns:button="application.components.button.*" xmlns:buttonswf="application.components.buttonswf.*" xmlns:minigames="application.gamecontainer.scene.minigames.*" xmlns:input="application.gamecontainer.chat.input.*">
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			
+			import utils.interfaces.ISceneContent;
+			import utils.managers.admin.ParamType;
+			
+			protected function onBack(event:MouseEvent):void{
+				GameApplication.app.navigator.goHome();
+			}
+			
+			public function onHide():void{				
+			}
+
+			protected function onUpdateAllUsers(event:MouseEvent):void
+			{
+				GameApplication.app.adminmanager.updateAllUsersParams();
+			}
+
+
+			protected function setParam(event:MouseEvent):void
+			{
+				if(int(params.selectedItem.data) == ParamType.NAME){
+					GameApplication.app.adminmanager.setNameParam(int(userID.text), params.selectedItem.data, (paramValue.text));
+				}else{
+					GameApplication.app.adminmanager.setParam(int(userID.text), params.selectedItem.data, int(paramValue.text));
+				}
+			}
+			
+			protected function setModerator(event:MouseEvent):void
+			{
+				GameApplication.app.adminmanager.setModerator(int(userID.text));
+			}
+			
+			protected function deleteModerator(event:MouseEvent):void
+			{
+				GameApplication.app.adminmanager.deleteModerator(int(userID.text));
+			}
+			
+			protected function deleteUser(event:MouseEvent):void
+			{
+				GameApplication.app.adminmanager.deleteUser(int(userID.text));
+			}
+
+			protected function onInit(event:FlexEvent):void
+			{
+				userID.text = String(GameApplication.app.adminmanager.lastUserID);
+			}
+
+
+			protected function showInfo(event:MouseEvent):void
+			{
+				GameApplication.app.adminmanager.showInfo(int(userID.text));
+			}
+
+
+			protected function sendNotification(event:MouseEvent):void
+			{
+				GameApplication.app.adminmanager.sendNotification(notification.text);
+			}
+
+		]]>
+	</fx:Script>
+	<s:Rect width="100%" height="100%" radiusX="0" radiusY="0">
+		<s:stroke>
+			<mx:SolidColorStroke color="0x583016"/>
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="0x8D4F25"/>
+		</s:fill>
+	</s:Rect>
+	<s:VGroup width="100%" height="100%" paddingLeft="20" paddingRight="20" paddingTop="10" paddingBottom="10">		
+		<s:Label width="100%" textAlign="center" text="Панель администратора" fontSize="30" color="0xffffff" fontWeight="bold" fontStyle="italic"/>
+		<s:VGroup width="100%" height="100%" verticalAlign="top" horizontalAlign="left">
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="ID:" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<input:InputText id="userID" maxChars="8" width="60"/>
+				<button:GameButton label="информация" click="showInfo(event)"/>
+				<mx:ComboBox id="params"> 
+					<mx:ArrayCollection>
+						<fx:Object label="деньги" data="{ParamType.MONEY}"/>
+						<fx:Object label="опыт" data="{ParamType.EXPERIENCE}"/>
+						<fx:Object label="популярность" data="{ParamType.POPULAR}"/>
+						<fx:Object label="имя" data="{ParamType.NAME}"/>
+					</mx:ArrayCollection>
+				</mx:ComboBox>
+				<input:InputText id="paramValue" maxChars="30" width="60"/>
+				<button:GameButton label="установить" click="setParam(event)"/>
+				<button:GameButton label="удалить пользователя" click="deleteUser(event)"/>
+			</s:HGroup>
+			<s:HGroup>
+				<button:GameButton label="+ модератор" click="setModerator(event)"/>
+				<button:GameButton label="- модератор" click="deleteModerator(event)"/>				
+			</s:HGroup>
+			<s:HGroup width="100%">				
+				<input:InputText id="notification" width="100%" height="21"/>
+				<button:GameButton label="отправить уведомление" click="sendNotification(event)"/>
+			</s:HGroup>
+			<button:GameButton label="обновить параметры пользователей" click="onUpdateAllUsers(event)"/>
+		</s:VGroup>
+		<s:HGroup width="100%" horizontalAlign="right">
+			<button:GameButton id="back" label="назад" click="onBack(event)"/>
+		</s:HGroup>
+	</s:VGroup>
+</s:Group>

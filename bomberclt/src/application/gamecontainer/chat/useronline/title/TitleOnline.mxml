@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" initialize="onInit(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="20" xmlns:input="application.gamecontainer.chat.input.*" xmlns:useronline="application.gamecontainer.chat.useronline.*" xmlns:iconswf="application.components.iconswf.*">
+
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.gamecontainer.chat.useronline.ChatUserList;
+			
+			import flash.utils.clearInterval;
+			import flash.utils.setInterval;
+			
+			import mx.events.FlexEvent;
+			
+			import utils.user.User;
+			[Bindable]
+			private var _count:int;
+			private var _sid:int = -1;
+			
+			public function set count(c:int):void{
+				_count = c;
+			}
+
+			protected function onInit(event:FlexEvent):void
+			{
+				inptext.textinput.addEventListener(Event.CHANGE, onChange, false, 0, true);
+				inptext.textinput.addEventListener(FocusEvent.FOCUS_IN, onFocusIn, false, 0, true);
+				inptext.textinput.addEventListener(FocusEvent.FOCUS_OUT, onFocusOut, false, 0, true);
+				findusers.addEventListener(MouseEvent.CLICK, onFuClick, false, 0, true);
+				GameApplication.app.addEventListener(MouseEvent.CLICK, onStageClick, false, 0, true);
+			}
+			
+			private function onFocusIn(e:FocusEvent):void{
+				serchicon.visible = false;
+			}
+			private function onFocusOut(e:FocusEvent):void{
+				serchicon.visible = true;
+			}
+			
+			private function onFuClick(e:MouseEvent):void{
+				e.stopPropagation();
+			}
+			
+			private function onStageClick(e:MouseEvent):void{
+				inptext.textinput.text = "";
+				findusers.removeAllUsers();
+				findusers.visible = false;
+				dispatchEvent(new TitleOnlineEvent(TitleOnlineEvent.HIDE_FIND_USERS));
+			}
+			
+			private function onChange(e:Event):void{
+				if(_sid != -1){
+					clearInterval(_sid);
+					_sid = -1;
+				}
+				_sid = setInterval(showUsersByName, 1000);				
+			}
+			
+			private function showUsersByName():void{
+				if(_sid != -1){
+					clearInterval(_sid);
+					_sid = -1;
+				}
+				
+				findusers.removeAllUsers();
+				if(inptext.textinput.text.length > 2){
+					var count:int = 0;
+					for each(var user:User in GameApplication.app.chatmanager.commonroom.users){
+						var usertitle:String = user.title.toLowerCase();
+						if(usertitle.indexOf(inptext.textinput.text.toLowerCase()) > -1){							
+							findusers.addUser(user);
+							count++;
+						}
+					}	
+					if(count > 0){
+						findusers.visible = true;
+						dispatchEvent(new TitleOnlineEvent(TitleOnlineEvent.SHOW_FIND_USERS));
+						
+						
+					}else{
+						findusers.visible = false;
+						dispatchEvent(new TitleOnlineEvent(TitleOnlineEvent.HIDE_FIND_USERS));
+					}
+				}else{
+					findusers.visible = false;
+					dispatchEvent(new TitleOnlineEvent(TitleOnlineEvent.HIDE_FIND_USERS));
+				}
+			}
+
+		]]>
+	</fx:Script>
+
+	<s:Rect width="100%" height="100%" left="1" right="1" top="1" bottom="1">
+		<s:fill>
+			<s:SolidColor color="0xC48C55" alpha="1"/>
+		</s:fill>
+	</s:Rect>
+	<s:HGroup verticalAlign="middle" width="100%" paddingTop="0" paddingLeft="1" paddingRight="0" paddingBottom="1">
+		<s:Label top="4" id="online" text=" В сети ({_count})" color="0xF4EADF" fontSize="11" textAlign="center" width="100%"/>
+		<s:Group>
+			<input:InputText id="inptext" fontSize="12" width="70" height="19"/>
+			<iconswf:IconMXML id="serchicon" iconClass="{SearchIcon}" left="5" top="4"/>
+		</s:Group>
+	</s:HGroup>	
+	<useronline:ChatUserList id="findusers" top="24" left="4" visible="false" height="160" width="98%"/>
+</s:Group>

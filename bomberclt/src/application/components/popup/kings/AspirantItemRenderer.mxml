@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+				xmlns:s="library://ns.adobe.com/flex/spark" rollOver="itemrenderer1_rollOverHandler(event)"
+				xmlns:mx="library://ns.adobe.com/flex/mx" rollOut="itemrenderer1_rollOutHandler(event)"
+				autoDrawBackground="false" xmlns:useritem="application.components.useritem.*" xmlns:money="application.gamecontainer.persinfobar.money.*">
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			
+			import flashx.textLayout.edit.SelectionFormat;
+			
+			import mx.events.FlexEvent;
+			
+			import utils.user.UserAspirantKingData;
+
+			private var _aspirant:UserAspirantKingData;
+			
+			override public function set data(value:Object):void{
+				_aspirant = value as UserAspirantKingData;
+				if(_aspirant){
+					useritem.user = _aspirant.user;
+					bets.money = _aspirant.bets;
+					
+					if(_aspirant.mybet == 1)
+						mybet.text = "(" + _aspirant.mybet + " монета)";
+					else if(_aspirant.mybet == 2 || _aspirant.mybet == 3 || _aspirant.mybet == 4)
+						mybet.text = "(" + _aspirant.mybet + " монеты)";
+					else
+						mybet.text = "(" + _aspirant.mybet + " монет)";
+					
+					if(_aspirant.mybet > 0){
+						mybet.visible = mybet.includeInLayout = true;						
+					}else{
+						mybet.visible = mybet.includeInLayout = false;
+					}
+					
+					if(_aspirant.mybet >= 50000){
+						betGroup.visible = false;
+					}else{
+						betGroup.visible = true;
+					}
+				}
+			}
+
+
+			protected function label1_clickHandler(event:MouseEvent):void
+			{
+				var bet:int = int(textinput.text);
+				if(bet > 0){
+					GameApplication.app.kingsmanager.bet(_aspirant.user.id, bet);
+				}
+			}
+
+
+			protected function itemrenderer1_rollOverHandler(event:MouseEvent):void
+			{
+				bg.visible = true;
+			}
+
+
+			protected function itemrenderer1_rollOutHandler(event:MouseEvent):void
+			{
+				bg.visible = false;
+			}
+
+		]]>
+	</fx:Script>
+	
+	<s:Rect id="bg" width="100%" height="100%" visible="false">
+		<s:fill>
+			<s:SolidColor color="0xffffff" alpha=".2"/>
+		</s:fill>
+	</s:Rect>
+	<s:HGroup verticalAlign="middle" width="100%" height="100%" gap="0" paddingTop="2" paddingBottom="2" paddingLeft="5" paddingRight="5">
+		<s:Label color="0xffffff" text="{itemIndex + 1}." fontSize="12"/>
+		<mx:Spacer width="5"/>
+		<useritem:OnlineUserItem id="useritem" width="200" buttonMode="true"/>
+		<mx:Spacer width="5"/>
+		<s:HGroup>
+			<money:Money id="bets" toolTip="Cумма всех ставок"/>
+			<s:Label id="mybet" paddingTop="5" fontSize="12" color="0xFFFFCC" toolTip="Ваша ставка"/>
+		</s:HGroup>
+		<mx:Spacer minWidth="5" width="100%"/>
+		<s:HGroup id="betGroup" gap="0" verticalAlign="middle">
+			<s:TextInput id="textinput" maxChars="25" width="40" color="0x000000" contentBackgroundColor="0xFBEFC4" contentBackgroundAlpha="1" focusAlpha="0" focusEnabled="false" borderColor="0xDB9668"/>
+			<mx:Spacer width="5"/>
+			<s:Label id="betLbl" color="0xC4C4C4" text="сделать ставку" textDecoration="underline" buttonMode="true" click="label1_clickHandler(event)" fontSize="12"/>			
+		</s:HGroup>
+	</s:HGroup>
+</s:ItemRenderer>

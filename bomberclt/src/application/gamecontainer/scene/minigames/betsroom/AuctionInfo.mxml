@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" xmlns:useritem="application.components.useritem.*" xmlns:money="application.gamecontainer.persinfobar.money.*" xmlns:button="application.components.button.*">
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			
+			import spark.events.TextOperationEvent;
+			
+			[Bindable]
+			public var currentbet:int = 0;
+			[Bindable]
+			public var minbet:int = 0;
+			
+			public function update(mb:int, winnerid:int):void{
+//				if(GameApplication.app.gameContainer.chat.getUserByID(winnerid)){
+//					user.user = GameApplication.app.gameContainer.chat.getUserByID(winnerid);
+//				}
+				minbet = mb;
+				currentbet = mb;
+				rbdefault.selected = true;
+				lbet.enabled = false;
+				lbet.text = "";
+			}
+
+			protected function radiobutton8_changeHandler(event:Event):void
+			{
+				lbet.enabled = false;
+				currentbet = minbet;
+			}
+
+
+			protected function radiobutton9_changeHandler(event:Event):void
+			{
+				lbet.enabled = true;
+			}
+
+
+			protected function lbet_changeHandler(event:TextOperationEvent):void
+			{
+				currentbet = int(lbet.text);
+			}
+
+
+			protected function bet_clickHandler(event:MouseEvent):void
+			{
+				GameApplication.app.userinfomanager.auctionBet(currentbet);
+			}
+
+		]]>
+	</fx:Script>
+	<s:Rect width="100%" height="100%" radiusX="10" radiusY="10">
+		<s:stroke>
+			<s:SolidColorStroke color="0x666666" weight="2"/>
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="0xffffff" alpha=".2"/>
+		</s:fill>
+	</s:Rect>	
+	<s:VGroup width="100%" height="100%" paddingLeft="5" paddingRight="5" paddingBottom="5" paddingTop="5">
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:Label color="0xffffff" text="Лидер:"/>
+			<useritem:OnlineUserItem id="user"/>
+		</s:HGroup>
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:Label color="0xffffff" text="Минимальная ставка:"/>
+			<money:Money money="{minbet}"/>
+		</s:HGroup>
+		<mx:Spacer height="5"/>
+		<s:Label width="100%" color="0xffffff" text="Сделать ставку:"/>
+		<s:VGroup verticalAlign="middle">
+			<s:HGroup verticalAlign="middle">
+				<s:RadioButton id="rbdefault" groupName="sex" color="0xffffff" selected="true" change="radiobutton8_changeHandler(event)"/>
+				<money:Money money="{minbet}"/>							
+			</s:HGroup>			
+			<s:HGroup verticalAlign="middle">
+				<s:RadioButton groupName="sex" color="0xffffff" change="radiobutton9_changeHandler(event)"/>
+				<s:TextInput id="lbet" enabled="false" maxChars="10" width="100" color="0xffffff" contentBackgroundColor="0x666666" focusAlpha="0" focusEnabled="false" borderColor="0x333333" change="lbet_changeHandler(event)"/>
+			</s:HGroup>						
+		</s:VGroup>
+		
+		<s:HGroup verticalAlign="middle">
+			<s:Label color="0xffffff" text="Ваша ставка:"/>
+			<money:Money money="{currentbet}"/>
+		</s:HGroup>
+		
+		<s:HGroup width="100%" horizontalAlign="center">
+			<button:GameButton id="bet" label="сделать ставку" click="bet_clickHandler(event)"/>
+		</s:HGroup>
+	</s:VGroup>
+</s:Group>

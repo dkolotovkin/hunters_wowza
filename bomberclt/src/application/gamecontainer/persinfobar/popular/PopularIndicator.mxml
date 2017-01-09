@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009" initialize="hgroup1_initializeHandler(event)"
+		  xmlns:s="library://ns.adobe.com/flex/spark"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" height="100%" xmlns:local="*" gap="-5" verticalAlign="middle" xmlns:iconswf="application.components.iconswf.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.components.iconswf.IconMXML;
+			
+			import mx.events.FlexEvent;
+			
+			import utils.managers.gameparams.GameParamsManager;
+			
+			public var _popular:int;
+
+			public function set popular(value:int):void{
+				_popular = value;
+				initParts();
+			}
+			
+			public function get popular():int{
+				return _popular;
+			}
+			
+			public function initParts():void{
+				var popularparts:Array = GameApplication.app.userinfomanager.popularparts;
+				var populartitles:Array = GameApplication.app.userinfomanager.populartitles;				
+			
+				parts.removeAllElements();
+				for(var i:int = 0; i < popularparts.length - 1; i++){
+					
+					var part:PopularPart = new PopularPart();					
+					part.min = popularparts[i];
+					part.max = popularparts[i + 1];
+					part.title = populartitles[i];
+					part.popular = popular;
+					
+					if(popular <= popularparts[i]){
+						part.percentFill = 0;
+					}else if(popular > popularparts[i] && popular < popularparts[i + 1]){
+						part.percentFill = 100 * ((popular - popularparts[i])/(popularparts[i + 1] - popularparts[i]));
+					}else{
+						part.percentFill = 100;
+					}		
+					
+					parts.addElement(part);
+				}
+				
+				icongr.removeAllElements();
+				
+				var icon:IconMXML = new IconMXML();
+				icon.iconClass = IconPopular;
+				icongr.addElement(icon);
+				
+				icongr.toolTip = GameApplication.app.userinfomanager.getPopularTitle(popular);
+			}
+
+			protected function hgroup1_initializeHandler(event:FlexEvent):void
+			{
+				initParts();
+			}
+
+		]]>
+	</fx:Script>
+	
+	<s:Group id="icongr" depth="1" mouseEnabled="true"/>
+	<s:Group width="100%" height="9" depth="0" mouseEnabled="true">		
+		<s:VGroup width="100%" height="100%" gap="0">
+			<s:Rect height="1" width="100%">
+				<s:fill>
+					<s:SolidColor color="0x6C3F1B" alpha="1"/>
+				</s:fill>
+			</s:Rect>
+			
+			<s:Rect height="100%" width="100%">
+				<s:fill>
+					<s:SolidColor color="0x935A2C" alpha="1"/>
+				</s:fill>
+			</s:Rect>
+			
+			<s:Rect height="1" width="100%">
+				<s:fill>
+					<s:SolidColor color="0x6C3F1B" alpha="1"/>
+				</s:fill>
+			</s:Rect>
+		</s:VGroup>
+		<s:HGroup id="parts" width="100%" gap="2" height="100%"/>
+	</s:Group>
+</s:HGroup>

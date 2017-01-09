@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="35" width="100%" height="100%" xmlns:button="application.components.button.*" xmlns:money="application.gamecontainer.persinfobar.money.*" xmlns:iconswf="application.components.iconswf.*">
+	<fx:Script>
+		<![CDATA[
+			
+			public function init(prize:int, desc:String = null):void{
+				nlprize.money = prize;
+				if(desc && desc.length){
+					description.visible = description.includeInLayout = true;
+					description.text = desc;
+				}
+			}
+		]]>
+	</fx:Script>
+	<s:HGroup width="100%" height="100%" verticalAlign="middle">
+		<iconswf:IconMXML id="nlicon" iconClass="{IconCoins}"/>
+		<s:VGroup width="100%" height="100%" verticalAlign="middle">
+			<s:Label id="description" includeInLayout="false" visible="false" color="0xffffff" fontSize="14" fontWeight="normal"/>
+			<s:HGroup width="100%" verticalAlign="middle">
+				<s:Label text="Ваш выигрыш: " color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<money:Money id="nlprize" money="{200}"/>				
+			</s:HGroup>
+		</s:VGroup>
+	</s:HGroup>
+	
+</s:Group>

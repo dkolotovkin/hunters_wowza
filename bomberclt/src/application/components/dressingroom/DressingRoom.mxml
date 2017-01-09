@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" verticalAlign="middle" horizontalAlign="center"
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" initialize="onInit(event)" xmlns:article="application.gamecontainer.scene.bag.article.*">
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			
+			import mx.events.FlexEvent;
+			import mx.events.ItemClickEvent;
+			
+			import utils.shop.item.Item;
+			
+			private var heromc:MovieClip;
+			public var scale:Number = 1;
+			[Bindable]
+			public var huntSlotsVisible:Boolean = true;
+			public var dressArr:Array = new Array();
+			
+			protected function onInit(event:FlexEvent):void
+			{
+				heromc = new Hero();
+				heromc.scaleX = heromc.scaleY = scale;		
+				heromc.gotoAndStop(1);
+				heroUI.addChild(heromc);
+				
+				var heroW:Number = heromc.width;
+				var heroH:Number = heromc.height;
+				heroUI.width = dressUI.width = huntUI.width = heroW;
+				heroUI.height = dressUI.height = huntUI.height = heroH;
+				
+				//прибавляем, т.к. персонаж выставлен не ровно по центру, а так лучше смотрится
+				heromc.x = (heromc.width + 8 * scale) / 2;
+				heromc.y = (heromc.height + 6 * scale) / 2;
+				
+				var item:Item;
+				var items:Array = GameApplication.app.userinfomanager.myuser.itemsArr;
+				for(var i:uint = 0; i < items.length; i++){
+					item = items[i] as Item;
+					if(item && item.onuser == 1){
+						addItem(item);
+					}
+				}
+			}
+			
+			public function addItemHunt(item:Item):void{
+				if(huntSlot1.item == null){
+					huntSlot1.init(item);
+					return;
+				}else if(huntSlot2.item == null){
+					huntSlot2.init(item);
+					return;
+				}else if(huntSlot3.item == null){
+					huntSlot3.init(item);
+					return;
+				}else{
+					var rnd:int = Math.random() * 2;
+					if(rnd == 0){
+						GameApplication.app.shopmanager.takeOffItem(huntSlot1.item);	
+						huntSlot1.init(item);
+					}else if(rnd == 1){
+						GameApplication.app.shopmanager.takeOffItem(huntSlot2.item);
+						huntSlot2.init(item);
+					}else{
+						GameApplication.app.shopmanager.takeOffItem(huntSlot3.item);
+						huntSlot3.init(item);
+					}
+				}
+			}
+			
+			public function removeItemHunt(item:Item):void{
+				if(huntSlot1.item && item.id == huntSlot1.item.id){
+					huntSlot1.init(null);
+				}else if(huntSlot2.item && item.id == huntSlot2.item.id){
+					huntSlot2.init(null);
+				}else if(huntSlot3.item && item.id == huntSlot3.item.id){
+					huntSlot3.init(null);
+				}
+			}
+			
+			public function addItemDress(item:Item):void{	
+				var existItem:Item;
+				for(var i:uint = 0; i < dressArr.length; i++){
+					existItem = (dressArr[i] as Item);
+					if(existItem && existItem.param2 == item.param2){
+						//надеваем
+						addItemDressToIndex(item, i);
+						//снимаем
+						GameApplication.app.shopmanager.takeOffItem(existItem);	
+						return;
+					}else if(existItem && existItem.param2 > item.param2){
+						addItemDressToIndex(item, i);
+						return;
+					}
+				}
+				var index:int = 0;
+				if(existItem && existItem.param2 < item.param2) index = dressArr.length;
+				addItemDressToIndex(item, index);
+			}
+			private function addItemDressToIndex(item:Item, index:int):void{
+				dressArr.splice(index, 0, item);
+				var mc:DressHero = new DressHero(item);
+				mc.scaleX = mc.scaleY = scale;
+				mc.x = heromc.x;
+				mc.y = heromc.y;
+				dressUI.addChildAt(mc, index);
+			}
+			
+			public function removeItemDress(item:Item):void{
+				var existItem:Item;
+				for(var i:uint = 0; i < dressArr.length; i++){
+					existItem = (dressArr[i] as Item);
+					if(existItem && existItem.id == item.id){
+						dressArr.splice(i, 1);						
+						var mc:DressHero = dressUI.getChildAt(i) as DressHero;
+						dressUI.removeChildAt(i);
+						break;
+					}
+				}
+			}
+			
+			public function addItem(item:Item):void{
+				if(item.param1 == 1){
+					addItemDress(item);
+				}else if(item.param1 == 2){
+					addItemHunt(item);
+				}
+			}
+			public function removeItem(item:Item):void{
+				if(item.param1 == 1){
+					removeItemDress(item);
+				}else if(item.param1 == 2){
+					removeItemHunt(item);
+				}
+			}
+		]]>
+	</fx:Script>
+	<s:Group>
+		<mx:UIComponent id="heroUI"/>
+		<mx:UIComponent id="dressUI"/>
+		<mx:UIComponent id="huntUI"/>
+	</s:Group>
+	<mx:Spacer height="10" visible="{huntSlotsVisible}" includeInLayout="{huntSlotsVisible}"/>
+	<s:HGroup id="huntSlotsGroup" width="100%" gap="12" visible="{huntSlotsVisible}" includeInLayout="{huntSlotsVisible}">
+		<article:DressingRoomItemArticle id="huntSlot1"/>
+		<article:DressingRoomItemArticle id="huntSlot2"/>
+		<article:DressingRoomItemArticle id="huntSlot3"/>
+	</s:HGroup>
+</s:VGroup>

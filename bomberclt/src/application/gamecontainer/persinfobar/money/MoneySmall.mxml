@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009" verticalAlign="middle"
+		  xmlns:s="library://ns.adobe.com/flex/spark" initialize="onInit(event)"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" height="100%" xmlns:local="*" gap="5" xmlns:iconswf="application.components.iconswf.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import spark.filters.DropShadowFilter;
+			import spark.filters.GlowFilter;
+			[Bindable]
+			public var money:uint;			
+			private var _f:spark.filters.DropShadowFilter = new spark.filters.DropShadowFilter(3, 45, 0x000000, 1, 5, 5, .4);
+			
+			protected function onInit(event:FlexEvent):void
+			{
+				l.filters = [_f];
+				icon.scaleX = icon.scaleY = .7; 
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<iconswf:IconMXML id="icon" iconClass="{IconEuro}" height="10"/>	
+	<s:Label id="l" text="{money}" height="12" color="0xDAB00C" fontSize="12" fontWeight="bold"/>
+</s:HGroup>

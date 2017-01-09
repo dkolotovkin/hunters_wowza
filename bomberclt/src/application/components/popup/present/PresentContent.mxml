@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" creationComplete="group1_creationCompleteHandler(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="35" width="450" height="340" xmlns:button="application.components.button.*" xmlns:money="application.gamecontainer.persinfobar.money.*" xmlns:preloader="application.components.preloader.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.gamecontainer.scene.catalog.article.catalog.CatalogArticle;
+			import application.gamecontainer.scene.catalog.article.catalog.CatalogArticleEvent;
+			import application.gamecontainer.scene.catalog.article.catalog.CatalogPresentArticle;
+			import application.gamecontainer.scene.catalog.article.catalog.CatalogPresentArticleEvent;
+			
+			import mx.events.FlexEvent;
+			
+			import utils.access.AccessManager;
+			import utils.selector.Selector;
+			import utils.shop.itemprototype.ItemPrototype;
+			import utils.shop.presentprototype.PresentPrototype;
+			
+			protected var _selector : Selector = new Selector();
+			private var _articles:Array = new Array();
+			
+			public var userid:int;
+			private var _selecteditemID:int;
+			
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{				
+				GameApplication.app.shopmanager.getPresentPrototypes(onGetPresentPrototypes);
+			}
+			
+			private function onGetPresentPrototypes(prototypes:Array):void{	
+				
+				for(var i:int = 0; i < prototypes.length; i++){
+					var prototype:PresentPrototype = prototypes[i];
+					if(prototype.showed == 1 && AccessManager.checkAccessPresent(prototype.id)){
+						var article:CatalogPresentArticle = new CatalogPresentArticle();
+						article.init(prototype);
+						article.toolTip = prototype.title;
+						article.addEventListener(CatalogArticleEvent.SELECTED, onArticleSelected, false, 0, true);
+						article.addEventListener(CatalogArticleEvent.UNSELECTED, onArticlenUnSelected, false, 0, true);
+						_articles.push(article);
+						tilegroup && tilegroup.addElement(article);
+					}
+				}
+				if(_articles.length > 0) (_articles[0] as CatalogPresentArticle).selected = true;
+				
+				preloader.includeInLayout = preloader.visible = false;
+				scrollerContent.includeInLayout = scrollerContent.visible = true;
+			}
+			
+			private function onArticleSelected(event : CatalogPresentArticleEvent) : void {
+				_selector.selected(event.article);
+				dispatchEvent(event.clone());
+				
+				_selecteditemID = event.article.prototype.id;
+			}
+			
+			private function onArticlenUnSelected(event : CatalogPresentArticleEvent) : void {
+				_selector.unselected(event.article);
+				dispatchEvent(event.clone());
+			}
+
+			protected function buy_clickHandler(event:MouseEvent):void
+			{
+				GameApplication.app.shopmanager.buyPresent(_selecteditemID, userid);
+				GameApplication.app.popuper.hidePopUp();
+			}
+
+		]]>
+	</fx:Script>
+	
+	<s:VGroup width="100%" height="100%">
+		<preloader:PreLoaderCircle id="preloader" text="Загрузка..."/>		
+		<s:HGroup id="scrollerContent" width="100%" height="100%" includeInLayout="false" visible="false">
+			<s:HGroup id="scrollingGroup" width="100%" height="100%" paddingLeft="1" paddingTop="1">
+				<s:TileGroup id="tilegroup" width="450" verticalGap="10" horizontalGap="20"/>
+			</s:HGroup>
+			<s:VScrollBar viewport="{scrollingGroup}" height="100%" />
+		</s:HGroup>
+		<s:HGroup width="100%" verticalAlign="middle" horizontalAlign="right">			
+			<button:GameButton id="buy" label="подарить" click="buy_clickHandler(event)"/>
+		</s:HGroup>
+	</s:VGroup>
+</s:Group>

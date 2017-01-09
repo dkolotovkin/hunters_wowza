@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" implements="utils.selector.ISelected"
+		 buttonMode="true" 
+		 rollOver="onRollOver(event)" rollOut="onRollOut(event)" click="onClick(event)">
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="over"/>		
+	</s:states>
+	<fx:Script>
+		<![CDATA[
+			import utils.selector.ISelected;
+			import utils.shop.category.CatalogBarCategory;
+			
+			[Bindable]
+			private var _title:String;
+			private var _over:Boolean = false;
+			
+			private var _selected:Boolean;			
+			public var category:CatalogBarCategory;			
+			
+			protected function onRollOver(event:MouseEvent):void{
+				currentState = "over";
+				_over = true;
+			}
+			protected function onRollOut(event:MouseEvent):void{
+				currentState = "normal";
+				_over = false;
+			}						
+			
+			public function init(category:CatalogBarCategory = null):void {
+				buttonMode = true;
+				this.category = category;
+				_title = category.title;
+				updateState();
+			}
+			
+			private function onClick(event : MouseEvent) : void {
+				selected = true;
+			}
+			
+			public function get selected ():Boolean {
+				return _selected;
+			}
+			
+			public function set selected (value:Boolean):void {
+				if (_selected != value){
+					_selected = value;
+					if (_selected){
+						dispatchEvent(new CatalogTabEvent(CatalogTabEvent.SELECTED, this));
+					}else{
+						dispatchEvent(new CatalogTabEvent(CatalogTabEvent.UNSELECTED, this));
+					}
+					updateState();
+				}	
+			}
+			
+			
+			private function updateState ():void{
+				if (_selected) {
+					height = 25;
+				}else{
+					height = 20;
+				}
+			}
+		]]>
+	</fx:Script>
+	
+	
+	<s:Rect includeIn="normal" width="100%"  height="100%" topRightRadiusX="4" topRightRadiusY="4" topLeftRadiusX="4" topLeftRadiusY="4">
+		<s:stroke>		
+			<s:SolidColorStroke color="0xF2CF92" alpha="1" weight="1" pixelHinting= "true" />
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="0xDB9668" alpha="1"/>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Rect includeIn="over" width="100%"  height="100%" topRightRadiusX="4" topRightRadiusY="4" topLeftRadiusX="4" topLeftRadiusY="4">
+		<s:stroke>	
+			<s:SolidColorStroke color="0xF2CF92" weight="1" pixelHinting= "true" />
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="0xDD9F77"/>
+		</s:fill>
+	</s:Rect>
+	
+	<s:HGroup width="100%" height="100%" verticalAlign="bottom" horizontalAlign="center" left="7" right="7" bottom="5" top="5">
+		<s:Label width="100%" textAlign="center" text="{_title}" fontSize="12" color="0x66371A" fontWeight="bold"/>			
+	</s:HGroup>	
+</s:Group>

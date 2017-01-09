@@ -1,0 +1,105 @@
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" implements="utils.interfaces.ISceneContent"
+		 xmlns:s="library://ns.adobe.com/flex/spark" width="100%" height="100%" initialize="onInit(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" left="50" right="50" top="20" bottom="20" xmlns:iconswf="application.components.iconswf.*" xmlns:catalog="application.gamecontainer.scene.catalog.*" xmlns:iteminfo="application.gamecontainer.scene.catalog.iteminfo.*" xmlns:bar="application.gamecontainer.scene.catalog.bar.*" xmlns:body="application.gamecontainer.scene.bag.body.*" xmlns:button="application.components.button.*" xmlns:top="application.gamecontainer.scene.top.*" xmlns:preloader="application.components.preloader.*">
+	<s:states>
+		<s:State name="loading"/>
+		<s:State name="full"/>
+		<s:State name="normal"/>
+	</s:states>
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.components.clanitem.ClanItem;
+			import application.components.popup.createclan.PopUpCreateClan;
+			import application.components.popup.help.clan.PopUpHelpClan;
+			import application.gamecontainer.scene.catalog.article.catalog.CatalogArticleEvent;
+			import application.gamecontainer.scene.catalog.bar.tab.CatalogTabEvent;
+			import application.gamecontainer.scene.top.topitem.TopItem;
+			
+			import mx.events.FlexEvent;
+			
+			import utils.interfaces.ISceneContent;
+			import utils.managers.useitem.UseItemEvent;
+			
+			private var _sid:int = -1;
+			
+			protected function onInit(event:FlexEvent):void{
+				currentState = "loading";
+				GameApplication.app.clanmanager.getClansInfo(addClans);
+			}		
+			
+			private function addClans(clans:Array):void{
+				if(clans.length == 0){
+					currentState = "full";
+				}else{
+					currentState = "normal";
+					if (_sid !=- 1){
+						clearInterval(_sid);
+						_sid = -1;
+					}
+					_sid = setInterval(onAddClans, 50, clans);
+				}				
+			}
+			
+			private function onAddClans(clans:Array):void{
+				if (_sid !=- 1){
+					clearInterval(_sid);
+					_sid = -1;
+				}
+				for(var i:int = 0; i < clans.length; i++){					
+					var clanitem:ClanItem = new ClanItem();
+					clanitem.idclan = clans[i]["id"];
+					clanitem.title = clans[i]["title"];
+					clanitem.maxusers = clans[i]["maxusers"];
+					clanitem.ownertitle = clans[i]["ownertitle"];
+					clanitem.money = clans[i]["money"];
+					clanitem.experience = clans[i]["experience"];
+					body.addElement(clanitem);
+				}
+			}
+			
+			protected function onBack(event:MouseEvent):void{
+				GameApplication.app.navigator.goHome();
+			}
+			
+			protected function onCreate(event:MouseEvent):void{
+				GameApplication.app.popuper.show(new PopUpCreateClan());
+			}
+			
+			public function onHide():void{				
+			}
+			
+			protected function showHelp(event:MouseEvent):void
+			{
+				GameApplication.app.popuper.show(new PopUpHelpClan());
+			}
+		]]>
+	</fx:Script>
+	<s:Rect width="100%" height="100%" radiusX="0" radiusY="0">
+		<s:stroke>
+			<mx:SolidColorStroke color="0x583016"/>
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="0x8D4F25"/>
+		</s:fill>
+	</s:Rect>
+	<s:VGroup width="100%" height="100%" paddingLeft="20" paddingRight="20" paddingTop="10" paddingBottom="20">		
+		<s:Label width="100%" textAlign="center" text="Альянсы" fontSize="30" color="0xFFFFCC" fontWeight="bold" fontStyle="italic"/>
+		<s:HGroup verticalAlign="middle" width="100%" horizontalAlign="center" click="showHelp(event)" buttonMode="true">
+			<s:Label height="13" textDecoration="underline" fontSize="12" color="0xFFFFCC" text="Информация об альянсах"/>		
+		</s:HGroup>
+		<preloader:PreLoaderCircle text="" includeIn="loading"/>
+		<s:Scroller width="100%" height="100%" includeIn="normal">
+			<s:VGroup id="body" height="100%" width="100%"/>
+		</s:Scroller>
+		<s:HGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" includeIn="full">
+			<s:Label fontSize="12" color="0xFFFFCC" text="Еще никто не создал ни одного альянса..."/>
+		</s:HGroup>
+		<mx:Spacer height="10"/>
+		<s:HGroup width="100%">
+			<button:GameButton id="create" label="создать альянс" click="onCreate(event)"/>
+			<mx:Spacer width="100%"/>
+			<button:GameButton id="back" label="назад" click="onBack(event)"/>
+		</s:HGroup>
+	</s:VGroup>
+</s:Group>

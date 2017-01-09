@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="35" width="100%" height="100%" xmlns:button="application.components.button.*" xmlns:money="application.gamecontainer.persinfobar.money.*">
+	<fx:Script>
+		<![CDATA[
+			[Bindable]
+			public var returnmoney:int;
+			[Bindable]
+			public var section:int;
+			[Bindable]
+			public var prizemoney:int;			
+		]]>
+	</fx:Script>
+	<s:VGroup width="100%" height="100%">		
+		<s:HGroup verticalAlign="middle" width="100%" includeInLayout="{section > 0}" visible="{section > 0}">
+			<s:Label text="Призовая секция: {section}" color="0xffffff" fontSize="14" fontWeight="normal"/>
+		</s:HGroup>
+		<s:HGroup verticalAlign="middle" width="100%" includeInLayout="{prizemoney > 0}" visible="{prizemoney > 0}">
+			<s:Label text="Выйгрыш на ставках: " color="0xffffff" fontSize="14" fontWeight="normal"/>
+			<money:Money money="{prizemoney}"/>		
+		</s:HGroup>
+		<s:HGroup verticalAlign="middle" width="100%" includeInLayout="{returnmoney > 0}" visible="{returnmoney > 0}">
+			<s:Label text="Возвращено: " color="0xffffff" fontSize="14" fontWeight="normal"/>
+			<money:Money money="{returnmoney}"/>		
+		</s:HGroup>
+	</s:VGroup>
+</s:Group>

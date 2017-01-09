@@ -1,0 +1,169 @@
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" implements="utils.interfaces.ISceneContent"
+		 xmlns:s="library://ns.adobe.com/flex/spark" width="100%" height="100%"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" left="40" right="40" top="20" bottom="10" xmlns:button="application.components.button.*" xmlns:buttonswf="application.components.buttonswf.*" xmlns:minigames="application.gamecontainer.scene.minigames.*" xmlns:money="application.gamecontainer.persinfobar.money.*" xmlns:simplerule="application.gamecontainer.scene.minigames.simplerule.*">
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.components.popup.fortuna.PopUpMoneyPrize;
+			
+			import flash.utils.clearInterval;
+			import flash.utils.setInterval;
+			
+			import mx.controls.Alert;
+			import mx.effects.Tween;
+			
+			import spark.events.TextOperationEvent;
+			
+			import utils.interfaces.ISceneContent;
+			import utils.shop.BuyResultCode;
+			
+			private var _userscolors:Array = new Array(0x000000, 0xffffff, 0x00FF00, 0x00FFFF, 0xFF00FF, 0xFFFF00, 0xFF0000, 0x0000FF, 0xFFFF99, 0x66FF99, 0x663300, 0xFF6600, 0xCC9933, 0x6666CC, 0x000066, 0x336600);
+			
+			private var _roomtype:int;
+			
+			public function set roomtype(value:int):void{
+				_roomtype = value;
+			}
+			
+			
+			protected function onBack(event:MouseEvent):void{
+				GameApplication.app.navigator.goMiniGames();
+			}
+			
+			protected function onExit(event:MouseEvent):void{
+				GameApplication.app.navigator.goHome();
+			}
+			
+		/*	protected function onBet(event:MouseEvent):void{				
+				GameApplication.app.userinfomanager.checkLuck(onCheckLuck, currentbet);						
+			}
+			
+			private function onCheckLuck(result:Object):void{
+				if (result["error"] == BuyResultCode.OK){
+					rotateDrum(result["result"]);
+					
+					if(_sid != -1){
+						clearInterval(_sid);
+						_sid = -1;
+					}
+					_sid = setInterval(showResultPopUp, 7000, result["usermoney"], result["addmoney"]);
+					GameApplication.app.userinfomanager.myuser.money -= currentbet;
+					return;
+				}else if (result["error"] == BuyResultCode.NOT_ENOUGH_MONEY){
+					GameApplication.app.popuper.showInfoPopUp("У Вас не достаточно денег для отправки почты.");
+				}else if (result["error"] == BuyResultCode.MIN_BET){
+					GameApplication.app.popuper.showInfoPopUp("Минимальная сумма ставки - 5 евро.");
+				}else{
+					GameApplication.app.popuper.showInfoPopUp("Произошла ошибка при обращении к серверу");
+				}	
+			}
+			
+			private function showResultPopUp(usermoney:int, win:int):void{
+				if(_sid != -1){
+					clearInterval(_sid);
+					_sid = -1;
+				}
+				GameApplication.app.popuper.show(new PopUpMoneyPrize(win));
+				GameApplication.app.userinfomanager.myuser.money = usermoney;
+				
+			}*/
+			
+			public function onHide():void{				
+			}
+			
+
+			protected function money1_clickHandler(event:MouseEvent):void
+			{
+				if(_roomtype != 10){
+					
+				}
+			}
+
+
+			protected function money2_clickHandler(event:MouseEvent):void
+			{
+				if(_roomtype != 50){
+					
+				}
+			}
+
+
+			protected function money3_clickHandler(event:MouseEvent):void
+			{
+				if(_roomtype != 100){
+					
+				}
+			}
+
+		]]>
+	</fx:Script>
+	<s:Rect width="100%" height="100%" radiusX="30" radiusY="30">
+		<s:fill>
+			<s:SolidColor color="0x000000" alpha=".5"/>
+		</s:fill>
+	</s:Rect>
+	<s:VGroup width="100%" height="100%" paddingLeft="20" paddingRight="20" paddingTop="10" paddingBottom="10">		
+		<s:Label width="100%" textAlign="center" text="Простые правила" fontSize="30" color="0xffffff" fontWeight="bold" fontStyle="italic"/>
+		<s:HGroup width="100%" height="100%" verticalAlign="middle" horizontalAlign="center">			
+			<s:Group width="150" height="250">
+				<s:Rect width="100%" height="100%" radiusX="10" radiusY="10">
+					<s:stroke>
+						<s:SolidColorStroke color="0x666666" weight="2"/>
+					</s:stroke>
+					<s:fill>
+						<s:SolidColor color="0xffffff" alpha=".2"/>
+					</s:fill>
+				</s:Rect>
+				
+				<s:VGroup width="100%" gap="3" height="100%" paddingLeft="5" paddingRight="5" paddingTop="10" paddingBottom="10">
+					<s:Label width="100%" color="0xFF9900" text="Правила игры"/>
+					<s:Label width="100%" color="0xffffff" text="Сделать ставку можно кликнув мышкой на любую свободную ячейку. Размер вашей ставки зависит от того, в каком разделе игры вы находитесь(10 или 50 или 100)."/>
+					<s:Label width="100%" color="0xffffff" text="Каждые 2 минуты определяется победитель. Победитель забирает 90 процентов общего банка."/>					
+					<s:Label width="100%" color="0xffffff" text="Удачной игры!"/>
+				</s:VGroup>				
+			</s:Group>
+			
+			<mx:Spacer width="100%"/>
+			
+			<s:VGroup width="100%" height="100%" horizontalAlign="center">
+				<s:HGroup width="100%">
+					<money:Money money="10" buttonMode="true" toolTip="Игра со ставкой 10" click="money1_clickHandler(event)"/>
+					<mx:Spacer width="20"/>
+					<money:Money money="50" buttonMode="true" toolTip="Игра со ставкой 50" click="money2_clickHandler(event)"/>
+					<mx:Spacer width="20"/>
+					<money:Money money="100" buttonMode="true" toolTip="Игра со ставкой 100" click="money3_clickHandler(event)"/>
+				</s:HGroup>
+				<mx:Spacer height="10"/>
+				<simplerule:SRGame/>
+				<mx:Spacer height="10"/>
+				<s:Label color="0xffffff" text="01 : 59" fontSize="15" width="100%" textAlign="center" fontWeight="bold"/>
+			</s:VGroup>
+			
+			<mx:Spacer width="100%"/>
+			<s:Group width="150" height="250">
+				<s:Rect width="100%" height="100%" radiusX="10" radiusY="10">
+					<s:stroke>
+						<s:SolidColorStroke color="0x666666" weight="2"/>
+					</s:stroke>
+					<s:fill>
+						<s:SolidColor color="0xffffff" alpha=".2"/>
+					</s:fill>
+				</s:Rect>
+				
+				<s:VGroup width="100%" height="100%" paddingLeft="5" paddingRight="5" paddingTop="10" paddingBottom="10">
+					<s:Label color="0xffffff" text="Участники"/>
+					
+					<s:Scroller width="100%" height="100%">
+						<s:VGroup verticalAlign="middle">							
+						</s:VGroup>
+					</s:Scroller>					
+				</s:VGroup>	
+			</s:Group>
+			
+		</s:HGroup>
+		<s:HGroup width="100%" horizontalAlign="right">
+			<button:GameButton id="back" label="назад" click="onBack(event)"/>
+			<button:GameButton id="exit" label="выйти" click="onExit(event)"/>
+		</s:HGroup>
+	</s:VGroup>
+</s:Group>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="35" width="100%" height="100%" xmlns:experience="application.gamecontainer.persinfobar.experience.*" xmlns:energy="application.gamecontainer.persinfobar.energy.*" xmlns:button="application.components.button.*" xmlns:popular="application.gamecontainer.persinfobar.popular.*" xmlns:dressingroom="application.components.dressingroom.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.gamecontainer.scene.clans.ClanRoom;
+			
+			import utils.game.GameConfig;
+			import utils.managers.gameparams.GameParamsManager;
+			import utils.shop.category.ShopCategory;
+			import utils.shop.item.Item;
+			import utils.user.ClanUserRole;
+			import utils.user.Sex;
+			import utils.user.User;
+			[Bindable]
+			private var _user:User;
+			
+			public function set user(u:User):void{
+				_user = u;
+				if (_user.sex == Sex.MALE){
+					sex.text = "мужской";
+				}else{
+					sex.text = "женский";
+				}
+				if(_user.claninfo.clanid > 0 && _user.claninfo.clanrole > ClanUserRole.INVITED){
+					clan.text = _user.claninfo.clantitle;
+				}
+				
+				var expbonus:int = 0;
+				var aexpbonus:int = 0;
+				var speedbonus:uint = 0;
+				var jumpbonus:uint = 0;
+				var skills:uint = 0;			
+				
+				var item:Item;
+				var dress:Array = GameApplication.app.userinfomanager.myuser.itemsArr;
+				for(var i:uint; i < dress.length; i++){
+					item = dress[i] as Item;
+					if(item && item.param1 == ShopCategory.THINGS && item.onuser == 1 && item.quality > 0){
+						speedbonus += item.param5;
+						jumpbonus += item.param6;
+						skills += item.param7;
+						
+						expbonus += item.param3;
+						aexpbonus += item.param4;
+					}
+				}	
+				item = null;
+				
+				speedbonus = Math.min(speedbonus, GameConfig.MAX_SPEED_BONUS);
+				jumpbonus = Math.min(jumpbonus, GameConfig.MAX_JUMP_BONUS);
+				skills = Math.min(skills, GameConfig.MAX_SKILLS);
+				
+				speedLbl.text = "+ " + speedbonus + " (макс. +" + GameConfig.MAX_SPEED_BONUS + ")";
+				jumpLbl.text = "+ " + jumpbonus + " (макс. +" + GameConfig.MAX_JUMP_BONUS + ")";
+				skillLbl.text = skills * GameConfig.percentSkillByOnePoint + "%" + " (макс. " + GameConfig.MAX_SKILLS * GameConfig.percentSkillByOnePoint + "%)";;
+				expbonusLbl.text = "+ " + expbonus;
+				aexpbonusLbl.text = "+ " + aexpbonus;
+			}
+
+			protected function gamebutton1_clickHandler(event:MouseEvent):void
+			{
+				GameApplication.app.popuper.hidePopUp();
+				GameApplication.app.navigator.goShop();
+			}
+
+
+			protected function gamebutton2_clickHandler(event:MouseEvent):void
+			{
+				GameApplication.app.apimanager.showBuyMoneyPopUp();
+			}
+
+		]]>
+	</fx:Script>
+	<s:HGroup width="100%" height="100%">
+		<s:HGroup width="100" height="100%" verticalAlign="middle" horizontalAlign="center">
+			<dressingroom:DressingRoom scale="2" huntSlotsVisible="false" mouseChildren="false" buttonMode="false"/>
+		</s:HGroup>
+		<s:VGroup width="100%" height="100%">		
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Имя пользователя:" width="155" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<s:Label id="nick" text="{_user.title}" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<s:Label id="userid" text="({_user.id})" color="0xcccccc" fontSize="10" fontWeight="normal"/>
+			</s:HGroup>
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Уровень пользователя:" width="155" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<s:Label id="level" text="[{_user.level}]" color="0x00FFFF" fontSize="14" fontWeight="normal"/>			
+			</s:HGroup>
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Альянс: " width="155" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<s:Label id="clan" text="не состоит в альянсе" color="0xFFFF99" fontSize="14" fontWeight="normal"/>			
+			</s:HGroup>
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Пол:" width="155" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<s:Label id="sex" color="0xffffff" fontSize="14" fontWeight="normal"/>			
+			</s:HGroup>
+			
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Популярность:" width="155" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<popular:PopularIndicator popular="{_user.popular}" width="170"/>			
+			</s:HGroup>
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Опыт:" width="155" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<experience:ExperienceIndicator experience="{_user.experience}" maxexperience="{_user.maxExperience}" width="170"/>			
+			</s:HGroup>
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Количество патронов: " width="155" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<s:Label id="bulletsLbl" text="{_user.bullets}" color="0xFFFF99" fontSize="14" fontWeight="normal"/>			
+			</s:HGroup>
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Опыт за час: " width="155" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<s:Label id="exphour" text="+ {_user.exphour}" color="0xFFFF99" fontSize="14" fontWeight="normal"/>			
+			</s:HGroup>
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Опыт за день: " width="155" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<s:Label id="expday" text="+ {_user.expday}" color="0xFFFF99" fontSize="14" fontWeight="normal"/>			
+			</s:HGroup>
+			
+			<mx:Spacer height="10"/>
+			<s:Label text="Действие облика персонажа:" width="220" color="0xFFFF99" fontSize="14" fontWeight="normal"/>
+			<mx:Spacer height="5"/>
+			
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Бонус к скорости:" width="220" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<s:Label id="speedLbl" text="да" color="0xFFFF99" fontSize="14" fontWeight="normal"/>
+			</s:HGroup>
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Бонус к силе прыжка:" width="220" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<s:Label id="jumpLbl" text="да" color="0xFFFF99" fontSize="14" fontWeight="normal"/>
+			</s:HGroup>
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Уворотливость:" width="220" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<s:Label id="skillLbl" text="да" color="0xFFFF99" fontSize="14" fontWeight="normal"/>
+			</s:HGroup>
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Бонус к опыту:" width="220" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<s:Label id="expbonusLbl" text="да" color="0xFFFF99" fontSize="14" fontWeight="normal"/>
+			</s:HGroup>
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Бонус к опыту альянса:" width="220" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<s:Label id="aexpbonusLbl" text="да" color="0xFFFF99" fontSize="14" fontWeight="normal"/>
+			</s:HGroup>
+			<s:HGroup width="100%" verticalAlign="middle">
+				<button:GameButton label="перейти в магазин" click="gamebutton1_clickHandler(event)" visible="{!GameApplication.app.gamemanager.gameMode}" includeInLayout="{!GameApplication.app.gamemanager.gameMode}"/>
+				<button:GameButton label="пополнить счет" click="gamebutton2_clickHandler(event)" visible="{!GameApplication.app.gamemanager.gameMode}" includeInLayout="{!GameApplication.app.gamemanager.gameMode}"/>
+			</s:HGroup>
+		</s:VGroup>
+	</s:HGroup>	
+</s:Group>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" paddingRight="10" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" xmlns:button="application.components.button.*" xmlns:preloader="application.components.preloader.*">
+	<s:states>
+		<s:State name="loading"/>
+		<s:State name="normal"/>
+		<s:State name="full"/>
+	</s:states>
+	<fx:Script>
+		<![CDATA[
+			import application.gamecontainer.scene.bag.article.BagItemArticle;
+			import application.gamecontainer.scene.bag.article.BagPresentArticle;
+			import application.gamecontainer.scene.catalog.article.Article;
+			import application.gamecontainer.scene.catalog.article.catalog.CatalogArticle;
+			import application.gamecontainer.scene.catalog.article.catalog.CatalogArticleEvent;
+			
+			import flash.utils.clearInterval;
+			import flash.utils.setInterval;
+			
+			import mx.collections.errors.ItemPendingError;
+			import mx.events.FlexEvent;
+			
+			import utils.shop.item.Item;
+			import utils.shop.item.ItemPresent;						
+			
+			private var _articles:Array = new Array();
+			private var _sid:int = -1;
+			
+			public function removeItems():void{	
+				tilegroup && tilegroup.removeAllElements();
+				_articles = new Array();
+				currentState = "loading";
+			}			
+			
+			public function addItems(items:Array, categoryId:int) : void {
+				if (items.length > 0){
+					if (_sid !=- 1){
+						clearInterval(_sid);
+						_sid = -1;
+					}
+					_sid = setInterval(onAddItems, 50);
+					
+					var countAdded:int = 0;
+					for(var i:int = 0; i < items.length; i++){
+						var item:Item = items[i];
+						if(item.param1 == categoryId){
+							countAdded++;
+							var article:BagItemArticle = new BagItemArticle();
+							article.init(item);					
+							_articles.push(article);
+						}
+					}
+					if(countAdded > 0) currentState = "normal";
+					else currentState = "full";
+				}else{
+					currentState = "full";
+				}
+			}
+			
+			public function addItemsPresents(items:Array) : void {
+				if (items.length > 0){
+					currentState = "normal";
+					if (_sid !=- 1){
+						clearInterval(_sid);
+						_sid = -1;
+					}
+					_sid = setInterval(onAddItems, 50);
+					
+					for(var i:int = 0; i < items.length; i++){
+						var article:BagPresentArticle = new BagPresentArticle();
+						var item:ItemPresent = items[i];
+						article.init(item);					
+						_articles.push(article);						
+					}				
+				}else{
+					currentState = "full";
+				}
+			}
+			
+			private function onAddItems():void{				
+				if (_sid !=- 1){
+					clearInterval(_sid);
+					_sid = -1;
+				}
+				for(var i:int = 0; i < _articles.length; i++){					
+					tilegroup && tilegroup.addElement(_articles[i]);
+				}
+			}
+			
+			public function removePresent(item:Item):void{
+				var pid:int = item.id;
+				var article:BagPresentArticle;
+				for(var i:int = 0; i < _articles.length; i++){
+					if(_articles[i] is BagPresentArticle){
+						article = _articles[i] as BagPresentArticle;
+						if(article.article.item.id == pid){
+							if(tilegroup.contains(_articles[i] as BagPresentArticle)){
+								tilegroup.removeElement((_articles[i] as BagPresentArticle));
+								_articles.splice(i, 1);
+							}
+							break;
+						}
+					}
+				}
+				if(_articles.length == 0) currentState = "full";
+			}
+			
+			public function removeItem(item:Item):void{
+				var iid:int = item.id;
+				var article:BagItemArticle;
+				for(var i:int = 0; i < _articles.length; i++){
+					if(_articles[i] is BagItemArticle){
+						article = _articles[i] as BagItemArticle;
+						if(article.article.item.id == iid){
+							if(tilegroup.contains(_articles[i] as BagItemArticle)){
+								tilegroup.removeElement((_articles[i] as BagItemArticle));
+								_articles.splice(i, 1);
+							}
+							break;
+						}
+					}
+				}
+				if(_articles.length == 0) currentState = "full";
+			}
+			
+			public function putItem(item:Item):void{
+				var article:BagItemArticle;
+				for(var i:int = 0; i < _articles.length; i++){
+					if(_articles[i] is BagItemArticle){
+						article = _articles[i] as BagItemArticle;
+						if(article.article.item.id == item.id){
+							article.init(item);
+							break;
+						}
+					}
+				}
+			}
+			
+			public function takeoffItem(item:Item):void{
+				var article:BagItemArticle;
+				for(var i:int = 0; i < _articles.length; i++){
+					if(_articles[i] is BagItemArticle){
+						article = _articles[i] as BagItemArticle;
+						if(article.article.item.id == item.id){
+							article.init(item);
+							break;
+						}
+					}
+				}
+			}
+		]]>
+	</fx:Script>
+	<preloader:PreLoaderCircle text="Загрузка инвентаря..." includeIn="loading"/>
+	<s:HGroup width="100%" height="100%" includeIn="normal">
+		<s:HGroup id="scrollingGroup" width="100%" height="100%" paddingLeft="1" paddingTop="1">
+			<s:TileGroup id="tilegroup" width="100%" verticalGap="20" horizontalGap="20"/>
+		</s:HGroup>
+		<s:VScrollBar viewport="{scrollingGroup}" height="100%" />
+	</s:HGroup>
+	<s:HGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" includeIn="full">
+		<s:Label fontSize="12" color="0xFFFFCC" text="У вас ничего нет. Вы можете купить необходимые вещи в магазине..."/>
+	</s:HGroup>
+</s:VGroup>

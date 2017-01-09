@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" creationComplete="group1_creationCompleteHandler(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="35" width="250" height="100%" xmlns:button="application.components.button.*" xmlns:money="application.gamecontainer.persinfobar.money.*">
+	<fx:Script>
+		<![CDATA[			
+			import application.GameApplication;
+			import application.components.button.GameButton;
+			
+			import mx.events.FlexEvent;
+			
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+				var b:GameButton;
+				for(var i:uint = 1; i < GameApplication.app.serversmanager.servers.length; i++){
+					b = new GameButton();
+					b.data = new Object();
+					b.data["index"] = i;
+					b.width = 150;
+					b.label = GameApplication.app.serversmanager.servers[i].name;
+					b.addEventListener(MouseEvent.CLICK, onClick, false, 0, true);
+					content.addElement(b);
+				}
+			}
+			
+			private function onClick(e:MouseEvent):void{
+				if(e.currentTarget is GameButton){
+					GameApplication.app.popuper.hidePopUp();
+					if(int((e.currentTarget as GameButton).data["index"]) != GameApplication.app.serversmanager.currentServerIndex){						
+						GameApplication.app.serversmanager.currentServerIndex = int((e.currentTarget as GameButton).data["index"]);
+						if(GameApplication.app.so){
+							GameApplication.app.so.data["redirecing"] = true;
+							GameApplication.app.so.flush();
+						}
+						GameApplication.app.reconnect();
+					}
+				}
+			}
+		]]>
+	</fx:Script>
+	<s:VGroup width="100%" height="70" id="content" verticalAlign="middle" horizontalAlign="center">		
+	</s:VGroup>
+</s:Group>

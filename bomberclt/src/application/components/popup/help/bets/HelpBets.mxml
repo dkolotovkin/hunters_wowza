@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" initialize="onInit(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="20" width="500" height="400">
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			
+			import mx.events.FlexEvent;
+			
+			import spark.utils.TextFlowUtil;
+			
+			protected function onInit(event:FlexEvent):void
+			{				
+				var _text:String = "<span  color='0xFF9933' fontSize='14'>" + 
+					"Забеги на ставки" + 
+					"</span><br/>"+
+					
+					
+					"<span  color='0xFFFFFF' fontSize='12'>" + 
+					"В такой забег может зайти любой желающий и наблюдать за происходящим." + 
+					"</span><br/><br/>" +
+					
+					
+					"<span  color='0xFF9933' fontSize='14'>" + 
+					"Организатор забега" + 
+					"</span><br/>"+
+					
+					
+					"<span  color='0xFFFFFF' fontSize='12'>" + 
+					"Если вы нажали на кнопку создания нового забега вы автоматически становитеcь его организатором. "+
+					"Организатор, как и остальные участники, может делать ставки, но его основная функция  - "+
+					"принимать/отклонять заявки участников в этом забеге и начинать забег, нажав соответствующую кнопку." + 
+					"</span><br/><br/>"+
+					
+					
+					"<span  color='0xFF9933' fontSize='14'>" + 
+					"Участники забега" + 
+					"</span><br/>"+
+					
+					
+					"<span  color='0xFFFFFF' fontSize='12'>" + 
+					"Любой пользователь, вошедший в игру на ставки, становится наблюдателем. "+
+					"Помимо этого, он может делать ставки на участников забега, либо сам стать учасником забега. "+
+					"Для того чтобы стать участником забега, необходимо войти в нужный вам забег и подать заявку на участие. "+
+					"Заявка будет рассмотрена (принята или отклонена) организатором забега." +
+					"</span><br/><br/>"+
+					
+					
+					"<span  color='0xFF9933' fontSize='14'>" + 
+					"Начало забега" + 
+					"</span><br/>"+
+					
+					
+					"<span  color='0xFFFFFF' fontSize='12'>" + 
+					"Все ставки принимаются только до начала забега. "+
+					"Забег начинается как только организатор забега нажмет кнопку начала забега." +					
+					"</span><br/><br/>"+
+					
+					
+					"<span  color='0xFF9933' fontSize='14'>" + 
+					"Выигрыш" + 
+					"</span><br/>"+
+					
+					
+					"<span  color='0xFFFFFF' fontSize='12'>" + 
+					"Выигрыш получают все пользователи, сделавшие ставку на победителя. "+
+					"Выигрыш между пользователями распределяется в процентном соотношении от суммы ставки. Если ваша ставка превышает максимальную выйгрышную ставку и вы проиграли, то вам вернут разницу. "+
+					"Победитель забега получает приз 5% от банка. "+
+					"</span><br/><br/>" + 
+					
+					"<span  color='0xFF9933' fontSize='14'>" + 
+					"Требования к организатору" + 
+					"</span><br/>"+					
+					
+					"<span  color='0xFFFFFF' fontSize='12'>" + 
+					"Минимальные требования: популярность не ниже 50(" + 
+					GameApplication.app.userinfomanager.getPopularTitle(50).toLocaleLowerCase() + 
+					"), уровень не ниже 3(200 опыта)."+
+					"</span><br/>";				
+				
+				
+				rtext.textFlow = TextFlowUtil.importFromString(_text);
+			}
+			
+		]]>
+	</fx:Script>
+	<s:Scroller width="100%" height="100%">
+		<s:Group width="100%" height="100%">
+			<s:RichText id="rtext" width="100%"/>			
+		</s:Group>
+	</s:Scroller>
+</s:Group>

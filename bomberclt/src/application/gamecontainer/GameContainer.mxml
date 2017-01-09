@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:chat="application.gamecontainer.chat.*" xmlns:scene="application.gamecontainer.scene.*"
+		  xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:persinfobar="application.gamecontainer.persinfobar.*" 
+		  alpha="1" width="100%" height="100%" left="10" right="10" xmlns:vklink="application.gamecontainer.vklink.*" xmlns:promotion="application.components.promotion.*" xmlns:iconswf="application.components.iconswf.*" xmlns:gamecontainer="application.gamecontainer.*" >	
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.GameMode;
+			
+			import mx.events.FlexEvent;
+			
+			[Bindable]
+			private var _contentVisible:Boolean = true;
+			
+			public function addSmile(type:String):void{
+				chat.addSmile(type);
+			}
+			
+			public function hideSmiles():void{
+				chat.hideSmiles();
+			}
+			
+			public function set promotionMode(value:Boolean):void{
+				value = true;
+				if(GameApplication.app.config.mode != GameMode.SITE){
+					if(value)
+					{
+						GameApplication.app.height = 750;
+						promotionMouse.url = GameApplication.app.apimanager.getMouseAppUrl();
+						promotionRerace.url = GameApplication.app.apimanager.getReraceAppUrl();
+					}else{
+						GameApplication.app.height = 650;
+					}
+				}else{
+					GameApplication.app.height = NaN;
+				}
+				promotionGroup.visible = promotionGroup.includeInLayout = value;
+			}
+			
+			public function get promotionMode():Boolean{
+				return false;
+			}
+		]]>
+	</fx:Script>	
+	<persinfobar:PersInfoBar height="25" visible="{_contentVisible}"/>
+	<scene:Scene id="scene" width="100%" height="380" visible="{_contentVisible}"/>
+	<chat:Chat id="chat" width="100%" height="100%" visible="{_contentVisible}"/>
+	<s:VGroup id="promotionGroup" gap="10" width="100%" horizontalAlign="center" visible="false" includeInLayout="false">
+		<s:Label color="0xFFFFCC" text="Наши проекты" fontWeight="bold" fontSize="12"/>
+		<s:HGroup height="60" gap="20">
+			<promotion:PromotionComponent id="promotionMouse" source="{MouserunSmallBaner}" toolTip="Мышиные бега"/>
+			<promotion:PromotionComponent id="promotionRerace" source="{GameRealRacing}" toolTip="Реальные гонки"/>
+		</s:HGroup>
+	</s:VGroup>
+	<mx:Spacer height="1"/>
+	<!--<vklink:VKlink/>-->
+</s:VGroup>

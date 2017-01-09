@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" initialize="onInit(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="20" width="500" height="385">
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			
+			import mx.events.FlexEvent;
+			
+			import spark.utils.TextFlowUtil;
+			
+			protected function onInit(event:FlexEvent):void
+			{				
+				var _text:String = "<span  color='0xFFFF99' fontSize='14'>" + 
+					"Альянс" + 
+					"</span><br/>"+
+					
+					
+					"<span  color='0xFFFFFF' fontSize='12'>" + 
+					"Это организованная группа игроков, имеющая лидера - создателя альянса. " + 
+					"</span><br/><br/>" +
+					
+					
+					"<span  color='0xFFFF99' fontSize='14'>" + 
+					"Создатель альянса" + 
+					"</span><br/>"+
+					
+					
+					"<span  color='0xFFFFFF' fontSize='12'>" + 
+					"Любой желающий с 10 уровня может создать свой собственный альянс. "+
+					"Для того чтобы набрать игроков в собственный альянс, создатель должен выслать приглашения игрокам. "+
+					"Любой игрок, желающий вступить в альянс, должен попросить (и получить) приглашение от создателя. "+
+					"Создатель обязан следить за своим альянсом и решать все организационные вопросы. Альянсы, владельцы которых не проявляют активность более месяца, будут удалены."+
+					"</span><br/><br/>"+
+					
+					
+					"<span  color='0xFFFF99' fontSize='14'>" + 
+					"Опыт альянса" + 
+					"</span><br/>"+
+					
+					
+					"<span  color='0xFFFFFF' fontSize='12'>" + 
+					"Игроки, состоящие в альянсе, помимо собственного опыта за охоту, получают опыт для альянса. "+
+					"Таким образом чем больше участников в альянсе, и чем опытнее эти участники, тем больше опыта зарабатывает альянс."+
+					"</span><br/><br/>"+
+					
+					"<span  color='0xFFFF99' fontSize='14'>" + 
+					"Денежный фонд альянса" + 
+					"</span><br/>"+
+					
+					
+					"<span  color='0xFFFFFF' fontSize='12'>" + 
+					"Это счет владельца альянса. "+
+					"Игроки, состоящие в альянсе, помимо собственного денежного приза, за каждый выигрышный забег получают деньги для альянса. "+
+					"</span><br/><br/>"+
+					
+					
+					"<span  color='0xFFFF99' fontSize='14'>" + 
+					"Зарплата" + 
+					"</span><br/>"+
+					
+					
+					"<span  color='0xFFFFFF' fontSize='12'>" + 
+					"Каждый участник, состоящий в альянсе, имеет возможность получать зарплату. "+
+					"Уровень зарплаты зависит от должности участника в альянсе (количества звезд). Должность каждому из участников назначает создатель (владелец) альянса." +					
+					"</span><br/><br/>";				
+				
+				
+				rtext.textFlow = TextFlowUtil.importFromString(_text);
+			}
+			
+		]]>
+	</fx:Script>
+	<s:Scroller width="100%" height="100%">
+		<s:Group width="100%" height="100%">
+			<s:RichText id="rtext" width="100%"/>			
+		</s:Group>
+	</s:Scroller>
+</s:Group>

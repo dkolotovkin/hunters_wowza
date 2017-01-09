@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" initialize="onInit(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="30" width="500" height="100">
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			
+			import mx.events.FlexEvent;
+			
+			import spark.utils.TextFlowUtil;
+			
+			protected function onInit(event:FlexEvent):void
+			{				
+				var _text:String = "<span  color='0xFFFF99' fontSize='14'>" + 
+					"Опыт" + 
+					"</span><br/>"+
+					
+					
+					"<span  color='0xFFFFFF' fontSize='12'>" + 
+					"Опыт - это качественная характеристика игрока, отражающая его навыки и умения. Опыт начисляется игрокам по результатам охоты. " +
+					"Уровень игрока напрямую зависит от заработанного им опыта. Некоторые возможности игры ограничены и открываются игрокам при достижении определенного уровня. "+
+					"Лучшие игроки попадают в ТОП."+
+					"</span><br/><br/>";				
+				
+				
+				rtext.textFlow = TextFlowUtil.importFromString(_text);
+			}
+			
+		]]>
+	</fx:Script>
+	<s:Scroller width="100%" height="100%">
+		<s:Group width="100%" height="100%">
+			<s:RichText id="rtext" width="100%"/>			
+		</s:Group>
+	</s:Scroller>
+</s:Group>

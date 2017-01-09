@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" width="100%"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="10" height="100%" xmlns:button="application.components.button.*" xmlns:money="application.gamecontainer.persinfobar.money.*">
+	<fx:Script>
+		<![CDATA[
+			[Bindable]
+			public var winner:String;
+			[Bindable]
+			public var money:int;
+			
+		]]>
+	</fx:Script>
+	<s:VGroup width="100%" height="100%">
+		<s:HGroup>
+			<s:Label text="Джек пот разыгран! Побетитель: "  color="0xFF9933" fontSize="14" fontWeight="normal"/>
+			<s:Label text="{winner}" color="0x00FF00" fontSize="14" fontWeight="normal"/>
+		</s:HGroup>
+		
+		<s:HGroup verticalAlign="middle">
+			<s:Label text="Размер выйгрыша: " color="0xFFFFFF" fontSize="14" fontWeight="normal"/>
+			<money:Money money="{money}"/>
+		</s:HGroup>
+	</s:VGroup>
+</s:Group>

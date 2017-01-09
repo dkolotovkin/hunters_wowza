@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" buttonMode="true"
+		 xmlns:s="library://ns.adobe.com/flex/spark" rollOver="group1_rollOverHandler(event)" rollOut="group1_rollOutHandler(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="150" height="200" xmlns:buttonswf="application.components.buttonswf.*">
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="over"/>
+	</s:states>
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+
+			public function set iconClass(Cl:Class):void{
+				icon.iconClass = Cl;
+				
+				var needHeight:Number = 110;
+				var needWidth:Number = 130;
+				var k:Number;
+				if(Math.abs(icon.icon.width - needWidth) > Math.abs(icon.icon.height - needHeight)){					
+					k = needWidth / icon.icon.width;					
+				}else{					
+					k = needHeight / icon.icon.height;					
+				}
+				icon.icon.height *= k;
+				icon.icon.width *= k;
+				
+				icon.height = icon.icon.height;
+				icon.width = icon.icon.width;
+			}
+			
+			public function set title(value:String):void{
+				ltitle.text = value;
+			}
+
+
+			protected function group1_rollOverHandler(event:MouseEvent):void
+			{
+				currentState = "over";
+			}
+
+
+			protected function group1_rollOutHandler(event:MouseEvent):void
+			{
+				currentState = "normal";
+			}
+
+		]]>
+	</fx:Script>
+	
+	<s:Rect width="100%" height="100%" includeIn="normal">
+		<s:stroke>
+			<s:SolidColorStroke color="0x5B2E00" weight="2"/>
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="0xF2CF92"/>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Rect width="100%" height="100%" includeIn="over">
+		<s:stroke>
+			<s:SolidColorStroke color="0x5B2E00" weight="2"/>
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="0xF4D7AC"/>
+		</s:fill>
+	</s:Rect>
+	
+	<s:VGroup paddingTop="10" paddingBottom="10" paddingRight="5" paddingLeft="5" horizontalAlign="center" height="200" width="150">
+		<buttonswf:ButtonMXML id="icon"/>
+		<mx:Spacer height="100%"/>
+		<s:Label id="ltitle" fontSize="15" fontWeight="bold" fontStyle="italic" color="0x8D4F25" width="140" textAlign="center"/>		
+	</s:VGroup>
+</s:Group>

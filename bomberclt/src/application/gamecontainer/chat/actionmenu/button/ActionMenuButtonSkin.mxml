@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009"  xmlns:s="library://ns.adobe.com/flex/spark"  rollOver="rollOver(event)" rollOut="rollOut(event)">
+
+	<fx:Script>
+		<![CDATA[
+			import flash.text.engine.FontWeight;
+			protected function rollOver(event:MouseEvent):void
+			{
+				//this.titleTxt.setStyle("fontStyle", FontStyle.ITALIC);
+				this.titleTxt.setStyle("color", 0x3D2110);
+			}
+
+			protected function rollOut(event:MouseEvent):void
+			{
+				//this.titleTxt.setStyle("fontStyle", "normal");
+				this.titleTxt.setStyle("color", 0xffffff);
+			}
+
+		]]>
+	</fx:Script>
+
+    <s:states>
+        <s:State name="normal" />
+        <s:State name="over" />
+        <s:State name="down" />
+        <s:State name="disabled" />
+    </s:states>
+	    
+		<s:Rect width="100%" height="100%" includeIn="normal">
+	    	<s:fill>
+	    		<s:SolidColor color="0xE6B799" alpha=".3"/>
+	    	</s:fill>
+	    </s:Rect>
+	    
+	   	<s:Rect width="100%" height="100%" includeIn="over">
+	    	<s:fill>
+	    		<s:SolidColor color="0xE6B799" alpha=".7"/>
+	    	</s:fill>
+	    </s:Rect>
+	    
+	   	<s:Rect width="100%" height="100%" includeIn="down">
+	    	<s:fill>
+	    		<s:SolidColor color="0xE6B799" alpha=".5"/>
+	    	</s:fill>
+	    </s:Rect>
+	    
+	   	<s:Rect width="100%" height="100%" includeIn="disabled">
+	    	<s:fill>
+	    		<s:SolidColor color="0xEAEAEA" />
+	    	</s:fill>
+	    </s:Rect>
+    
+
+	<s:Label id="titleTxt" left="4" right="4" bottom="4" top="6" fontSize="12" color="0xffffff"/>	
+	
+	<s:Group id="contentGroup" left="4" right="4" top="4" bottom="4">
+        <s:layout>
+            <s:BasicLayout />
+        </s:layout>
+    </s:Group>
+
+</s:SparkSkin> 

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" buttonMode="true"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" click="hgroup2_clickHandler(event)">
+
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.GameMode;
+			import application.components.popup.buylink.PopUpBuyLink;
+			[Bindable]
+			public var index:int;
+			[Bindable]
+			public var title:String;
+			[Bindable]
+			public var level:int;
+			public var url:String;
+			
+			[Bindable]
+			public var color:uint = 0x00ff00;
+
+			protected function hgroup2_clickHandler(event:MouseEvent):void
+			{
+				if (url != null && length > 0){
+					var vkRE:RegExp = /(http:\/\/)vkontakte(\S*)/g;
+					var mmRE:RegExp = /(http:\/\/)my.mail(\S*)/g;	
+					var odRE:RegExp = /(http:\/\/)odnoklassniki(\S*)/g;
+					if (GameApplication.app.config.mode == GameMode.VK && vkRE.exec(url) != null ||
+						GameApplication.app.config.mode == GameMode.MM && mmRE.exec(url) != null ||
+						GameApplication.app.config.mode == GameMode.OD && odRE.exec(url) != null ||
+						GameApplication.app.config.mode == GameMode.DEBUG || GameApplication.app.config.mode == GameMode.SITE || 
+						GameApplication.app.userinfomanager.myuser.role == UserRole.ADMINISTRATOR || 
+						GameApplication.app.userinfomanager.myuser.role == UserRole.ADMINISTRATOR_MAIN){
+						GameApplication.app.popuper.show(new PopUpBuyLink(url));									
+					}
+				}				
+			}
+
+		]]>
+	</fx:Script>
+	<s:Label text="{index}." maxWidth="130" height="13" color="0xffffff" fontSize="14" fontWeight="normal" />
+	<s:Label text="{title}" maxWidth="130" height="13" color="{color}" fontSize="14" fontWeight="normal" />
+	<s:Label text="[{level}]" width="35" height="13" color="0x00FFFF" fontSize="14" fontWeight="normal"/>
+</s:HGroup>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" initialize="onInit(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="30" width="350" height="375">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import spark.utils.TextFlowUtil;
+			
+			protected function onInit(event:FlexEvent):void
+			{				
+				var _text:String = "<span  color='0xFFFF99' fontSize='14'>" + 
+					"В общем чате игры запрещаются:" + 
+					"</span><br/>"+"<br/>"+
+					
+					
+					"<span  color='0xFFFFFF' fontSize='12'>" + 
+					"- флуд, спам (наказание в виде бана от 5 минут до 1 часа)" + "<br/>" + "<br/>" +
+					"- ругаться матом и оскорблять кого-либо (наказание в виде бана от 5 минут до 1 часа)" + "<br/>" + "<br/>" +
+					"- использовать ЗАГЛАВНЫЕ БУКВЫ (наказание в виде бана 5 минут)" + "<br/>" + "<br/>" +
+					"- любые выражения и действия, вызывающие сомнения модераторов (наказание в виде бана от 5 минут до 1 часа)" + "<br/>" + "<br/>" +
+					"- распространение ссылок на другие ресурсы, кроме ссылок на официальный сайт и группы игры (наказание в виде бана от 5 минут до 1 часа)" + "<br/>" + "<br/>" +
+					"- использование большого количества смайлов в сообщении (от 5), расценивается как флуд (наказание в виде бана от 5 минут до 15 минут)" + "<br/>" + "<br/>" +
+					"- использование посторонних программ, изменяющих логику игры" + "<br/>" + "<br/>" +
+					"- использование ников с нецензурными словами" +
+					
+					"</span><br/>";
+				
+				rtext.textFlow = TextFlowUtil.importFromString(_text);
+			}
+			
+		]]>
+	</fx:Script>
+	<s:Scroller width="100%" height="100%">
+		<s:Group width="100%" height="100%">
+			<s:RichText id="rtext" width="100%"/>			
+		</s:Group>
+	</s:Scroller>
+</s:Group>

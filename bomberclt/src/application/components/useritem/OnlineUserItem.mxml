@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark" click="onClick(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" maxWidth="170">
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.components.iconswf.IconMXML;
+			import application.gamecontainer.chat.actionmenu.chatuser.ActionMenuChatUser;
+			
+			import mx.events.FlexEvent;
+			
+			import utils.user.User;
+			
+			private var _user:User;
+
+			public function set user(value:User):void{
+				_user = value;
+				if(_user.isonline){
+					title.setStyle("color", 0x00ff00);
+				}
+				if(_user.title.length > 15){
+					title.text = _user.title.substring(0, 15);
+				}else{
+					title.text = _user.title;
+				}
+				level.text = "[" + String(_user.level) + "]";
+				
+				var icon:IconMXML = new IconMXML();
+				icon.iconClass = GameApplication.app.userinfomanager.getPopularIconClass(_user.popular);
+				
+				var needHeight:Number = 15;
+				var k:Number;
+				k = needHeight / icon.icon.height;
+				icon.icon.height *= k;
+				icon.icon.width *= k;
+				
+				populargr.removeAllElements();
+				populargr.addElement(icon);
+				
+				populargr.toolTip = GameApplication.app.userinfomanager.getPopularTitle(_user.popular);
+			}
+			
+			public function get user():User{
+				return _user;
+			}
+			
+			private function onClick(e:MouseEvent):void{				
+				GameApplication.app.actionShowerMenu.showMenu(new ActionMenuChatUser(user));
+			}
+
+		]]>
+	</fx:Script>
+	
+	<s:HGroup verticalAlign="middle" gap="0">
+		<s:Group id="populargr" height="18"/>
+		<mx:Spacer width="2"/>
+		<s:Label id="title" height="13" color="0xFF9933" fontSize="14" fontWeight="normal" maxWidth="130"/>
+		<mx:Spacer width="5"/>
+		<s:Label id="level" height="13" color="0x00FFFF" fontSize="14" fontWeight="normal" width="100%"/>
+	</s:HGroup>
+</s:Group>

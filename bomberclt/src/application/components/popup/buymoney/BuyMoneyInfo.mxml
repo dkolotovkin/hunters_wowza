@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="30" width="370" height="100%" xmlns:button="application.components.button.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			
+			import spark.events.TextOperationEvent;
+			[Bindable]
+			public var text:String = "";
+			
+			protected function onClick(event:MouseEvent):void
+			{
+				GameApplication.app.apimanager.buyMoney(Math.max(0, int(textinput.text)));
+			}
+			
+			protected function textinput_changeHandler(event:TextOperationEvent):void
+			{
+				reals.text = String(Math.max(0, int(textinput.text)) * 400);
+			}
+		]]>
+	</fx:Script>
+	
+	<s:VGroup width="100%" height="100%" horizontalAlign="center" gap="10">
+		<s:Label text="Купить валюту" width="100%" color="0xffffff" fontSize="16" fontWeight="normal" textAlign="center"/>
+		
+		<s:HGroup width="100%" horizontalAlign="center">
+			<s:Label id="reals" text="400" color="0xffffff" fontSize="16" paddingTop="4"/>
+			<s:Label text="монет за " color="0xffffff" fontSize="16" paddingTop="4"/>
+
+			<s:TextInput id="textinput" text="1" maxChars="6" width="60" color="0x000000" contentBackgroundColor="0xFBEFC4" contentBackgroundAlpha="1" focusAlpha="0" focusEnabled="false" borderColor="0xDB9668" change="textinput_changeHandler(event)"/>
+			
+			<s:Label text="голос(a/ов)" color="0xffffff" fontSize="16" paddingTop="4"/>
+			<button:GameButton id="okbtn" label="купить" click="onClick(event)"/>
+		</s:HGroup>
+	</s:VGroup>
+</s:Group>

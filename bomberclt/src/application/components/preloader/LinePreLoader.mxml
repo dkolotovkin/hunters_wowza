@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" initialize="onInit(event)" width="100%" height="100%"
+		  verticalAlign="middle" horizontalAlign="center">
+
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import spark.filters.GlowFilter;
+			[Bindable]
+			private var _percent:Number = 0;
+			[Bindable]
+			private var _linew:Number = 190;
+			
+			public function set percent(value:Number):void{
+				_percent = value;
+				indicator.width = value * _linew;
+			}
+			
+			private var _gf:GlowFilter = new GlowFilter(0x000000, 1, 20, 20, 2);
+
+			protected function onInit(event:FlexEvent):void
+			{
+				l.filters = [_gf];				
+			}
+			
+			
+
+		]]>
+	</fx:Script>	
+	
+	<s:Label id="l" text="Загрузка {Math.round(_percent * 100)}%" fontSize="13" color="0xffffff" textAlign="left" width="{_linew}"/>
+	
+	<s:Group width="{_linew}" height="8">
+		<s:Rect width="100%" height="100%">
+			<s:fill>
+				<s:SolidColor color="0x000000" alpha=".6"/>
+			</s:fill>
+		</s:Rect>
+		
+		<s:Rect width="100%" height="100%" top="2" bottom="2">
+			<s:fill>
+				<s:SolidColor color="0xffffff" alpha=".5"/>
+			</s:fill>
+		</s:Rect>
+		
+		<s:Rect id="indicator" width="90" height="100%" top="3" bottom="3">
+			<s:fill>
+				<s:SolidColor color="0xffffff" alpha=".7"/>
+			</s:fill>
+		</s:Rect>
+	</s:Group>	
+</s:VGroup>

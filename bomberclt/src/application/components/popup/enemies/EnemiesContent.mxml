@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" creationComplete="group1_creationCompleteHandler(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="35" width="350" height="300" xmlns:button="application.components.button.*" xmlns:money="application.gamecontainer.persinfobar.money.*" xmlns:preloader="application.components.preloader.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.gamecontainer.scene.catalog.article.catalog.CatalogArticleEvent;
+			
+			import mx.events.FlexEvent;
+			
+			import utils.user.User;
+			
+			
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{				
+				GameApplication.app.userinfomanager.getEnemies(onGetEnemies);
+			}
+			
+			private function onGetEnemies(enemies:Array):void{				
+				for(var i:int = 0; i < enemies.length; i++){
+					var eitem:EnemyItem = new EnemyItem();
+					eitem.init(User.createFromObject(enemies[i]));
+					tilegroup && tilegroup.addElement(eitem);
+				}
+				preloader.includeInLayout = preloader.visible = false;
+				if(enemies.length > 0){
+					scroller.includeInLayout = scroller.visible = true;
+				}else{
+					noenemies.includeInLayout = noenemies.visible = true;
+				}
+			}			
+		]]>
+	</fx:Script>
+	
+	<s:VGroup width="100%" height="100%">
+		<preloader:PreLoaderCircle id="preloader" text="Загрузка врагов..."/>
+		<s:Scroller id="scroller" width="100%" height="100%" includeInLayout="false" visible="false">
+			<s:TileGroup id="tilegroup" width="100%" height="100%" verticalGap="10" horizontalGap="20"/>
+		</s:Scroller>
+		<s:HGroup id="noenemies" width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" includeInLayout="false" visible="false">
+			<s:Label fontSize="12" width="330" textAlign="center" color="0xFFFFCC" text="Не добавлено ни одного врага. Добавить врага можно через меню пользователя."/>
+		</s:HGroup>
+	</s:VGroup>
+</s:Group>

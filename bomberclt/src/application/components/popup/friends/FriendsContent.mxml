@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" creationComplete="group1_creationCompleteHandler(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="35" width="350" height="300" xmlns:button="application.components.button.*" xmlns:money="application.gamecontainer.persinfobar.money.*" xmlns:preloader="application.components.preloader.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.gamecontainer.scene.catalog.article.catalog.CatalogArticleEvent;			
+			import mx.events.FlexEvent;			
+			import utils.user.User;
+			
+			
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{				
+				GameApplication.app.userinfomanager.getFriends(onGetFriends);
+			}
+			
+			private function onGetFriends(friends:Array):void{
+				for(var i:int = 0; i < friends.length; i++){
+					var fitem:FriendItem = new FriendItem();
+					fitem.init(User.createFromObject(friends[i]));
+					tilegroup && tilegroup.addElement(fitem);
+				}
+				preloader.includeInLayout = preloader.visible = false;
+				if(friends.length > 0){
+					scroller.includeInLayout = scroller.visible = true;
+				}else{
+					nofriends.includeInLayout = nofriends.visible = true;
+				}
+			}			
+		]]>
+	</fx:Script>
+	
+	<s:VGroup width="100%" height="100%">
+		<preloader:PreLoaderCircle id="preloader" text="Загрузка друзей..."/>
+		<s:Scroller id="scroller" width="100%" height="100%" includeInLayout="false" visible="false">
+			<s:TileGroup id="tilegroup" width="100%" height="100%" verticalGap="10" horizontalGap="20"/>
+		</s:Scroller>
+		<s:HGroup id="nofriends" width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" includeInLayout="false" visible="false">
+			<s:Label fontSize="12" width="330" textAlign="center" color="0xFFFFCC" text="Не добавлено ни одного друга. Добавить друга можно через меню пользовалеля."/>
+		</s:HGroup>
+	</s:VGroup>
+</s:Group>

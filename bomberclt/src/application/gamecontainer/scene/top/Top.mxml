@@ -1,0 +1,220 @@
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" implements="utils.interfaces.ISceneContent"
+		 xmlns:s="library://ns.adobe.com/flex/spark" width="100%" height="100%" initialize="onInit(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" left="20" right="20" top="20" bottom="10" xmlns:iconswf="application.components.iconswf.*" xmlns:catalog="application.gamecontainer.scene.catalog.*" xmlns:iteminfo="application.gamecontainer.scene.catalog.iteminfo.*" xmlns:bar="application.gamecontainer.scene.catalog.bar.*" xmlns:body="application.gamecontainer.scene.bag.body.*" xmlns:button="application.components.button.*" xmlns:top="application.gamecontainer.scene.top.*">
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.components.useritem.OnlineUserItem;
+			import application.gamecontainer.persinfobar.money.Money;
+			import application.gamecontainer.scene.catalog.article.catalog.CatalogArticleEvent;
+			import application.gamecontainer.scene.catalog.bar.tab.CatalogTabEvent;
+			import application.gamecontainer.scene.top.topitem.TopItem;
+			
+			import mx.events.FlexEvent;
+			
+			import spark.layouts.VerticalAlign;
+			
+			import utils.interfaces.ISceneContent;
+			import utils.managers.useitem.UseItemEvent;
+			import utils.user.User;
+			
+			protected function onInit(event:FlexEvent):void
+			{	
+				topbar.addEventListener(CatalogTabEvent.SELECTED, onSelectCategory);
+				topbar.addEventListener(CatalogTabEvent.UNSELECTED, onUnSelectCategory);
+				topbar.showGroups();
+			}		
+			
+			private function onUnSelectCategory(e:CatalogTabEvent):void{				
+				body.removeAllElements();
+			}
+			
+			private function onSelectCategory(e:CatalogTabEvent):void{				
+				if (e.tab.category.id == TopCategoryType.EXPERIENCE){
+					GameApplication.app.connection.call("gettopusers", new Responder(onGetTop, onGetTopError));
+				}else if(e.tab.category.id == TopCategoryType.POPULAR){
+					GameApplication.app.connection.call("gettoppopularusers", new Responder(onGetTop, onGetTopError));
+				}else if(e.tab.category.id == TopCategoryType.EXPERIENCE_HOUR){
+					GameApplication.app.connection.call("gettophourusers", new Responder(onGetTopHour, onGetTopError));
+				}else if(e.tab.category.id == TopCategoryType.EXPERIENCE_DAY){
+					GameApplication.app.connection.call("gettopdayusers", new Responder(onGetTopDay, onGetTopError));
+				}
+			}
+			
+			private function onGetTop(list:Array):void{				
+				for(var i:int = 0; i < list.length; i++){
+					var useritem:OnlineUserItem = new OnlineUserItem();					
+					useritem.user = User.createFromObject(list[i]);					
+					useritem.title.maxWidth = 120;
+					useritem.maxWidth = 300;
+					useritem.buttonMode = true;
+					
+					var hg:HGroup = new HGroup();
+					hg.verticalAlign = VerticalAlign.MIDDLE;
+					hg.gap = 3;
+					var l:Label = new Label();
+					l.text = (i + 1) + ".";
+					l.setStyle("color", 0xffffff);
+					hg.addElement(l);
+					hg.addElement(useritem);
+					
+					body.addElement(hg);
+				}
+			}
+			
+			private function onGetTopHour(list:Array):void{				
+				for(var i:int = 0; i < list.length; i++){
+					var useritem:OnlineUserItem = new OnlineUserItem();					
+					useritem.user = User.createFromObject(list[i]);					
+					useritem.title.maxWidth = 120;
+					useritem.width = 250;
+					useritem.buttonMode = true;
+					
+					var hg:HGroup = new HGroup();
+					hg.verticalAlign = VerticalAlign.MIDDLE;
+					hg.gap = 0;
+					var l:Label = new Label();
+					l.width = 20;
+					l.text = (i + 1) + ".";
+					l.setStyle("color", 0xffffff);					
+					
+					var exp:Label = new Label();
+					exp.width = 100;
+					exp.text = "+ " + list[i]["exphour"];
+					exp.setStyle("color", 0xFFFF99);					
+					
+					hg.addElement(l);
+					hg.addElement(useritem);
+					hg.addElement(exp);
+					
+					var bonus:Money;
+					if(i + 1 == 1){
+						bonus = new Money();
+						bonus.darkMode = true;
+						bonus.height = 10;
+						bonus.money = GameApplication.app.config.exphourprizes[0];
+						hg.addElement(bonus);
+					}else if(i + 1 == 2){
+						bonus = new Money();
+						bonus.darkMode = true;
+						bonus.height = 10;
+						bonus.money = GameApplication.app.config.exphourprizes[1];
+						hg.addElement(bonus);
+					}else if(i + 1 == 3){
+						bonus = new Money();
+						bonus.darkMode = true;
+						bonus.height = 10;
+						bonus.money = GameApplication.app.config.exphourprizes[2];
+						hg.addElement(bonus);
+					}else if(i + 1 == 4){
+						bonus = new Money();
+						bonus.darkMode = true;
+						bonus.height = 10;
+						bonus.money = GameApplication.app.config.exphourprizes[3];
+						hg.addElement(bonus);
+					}else if(i + 1 == 5){
+						bonus = new Money();
+						bonus.darkMode = true;
+						bonus.height = 10;
+						bonus.money = GameApplication.app.config.exphourprizes[4];
+						hg.addElement(bonus);
+					}
+					
+					body.addElement(hg);
+				}
+			}
+			
+			private function onGetTopDay(list:Array):void{				
+				for(var i:int = 0; i < list.length; i++){
+					var useritem:OnlineUserItem = new OnlineUserItem();					
+					useritem.user = User.createFromObject(list[i]);					
+					useritem.title.maxWidth = 120;
+					useritem.width = 250;
+					useritem.buttonMode = true;
+					
+					var hg:HGroup = new HGroup();
+					hg.verticalAlign = VerticalAlign.MIDDLE;
+					hg.gap = 0;
+					var l:Label = new Label();
+					l.width = 20;
+					l.text = (i + 1) + ".";
+					l.setStyle("color", 0xffffff);					
+					
+					var exp:Label = new Label();
+					exp.width = 100;
+					exp.text = "+ " + list[i]["expday"];
+					exp.setStyle("color", 0xFFFF99);					
+					
+					hg.addElement(l);
+					hg.addElement(useritem);
+					hg.addElement(exp);
+					
+					var bonus:Money;
+					if(i + 1 == 1){
+						bonus = new Money();
+						bonus.darkMode = true;
+						bonus.height = 10;
+						bonus.money = GameApplication.app.config.expdayprizes[0];
+						hg.addElement(bonus);
+					}else if(i + 1 == 2){
+						bonus = new Money();
+						bonus.darkMode = true;
+						bonus.height = 10;
+						bonus.money = GameApplication.app.config.expdayprizes[1];
+						hg.addElement(bonus);
+					}else if(i + 1 == 3){
+						bonus = new Money();
+						bonus.darkMode = true;
+						bonus.height = 10;
+						bonus.money = GameApplication.app.config.expdayprizes[2];
+						hg.addElement(bonus);
+					}else if(i + 1 == 4){
+						bonus = new Money();
+						bonus.darkMode = true;
+						bonus.height = 10;
+						bonus.money = GameApplication.app.config.expdayprizes[3];
+						hg.addElement(bonus);
+					}else if(i + 1 == 5){
+						bonus = new Money();
+						bonus.darkMode = true;
+						bonus.height = 10;
+						bonus.money = GameApplication.app.config.expdayprizes[4];
+						hg.addElement(bonus);
+					}
+					
+					body.addElement(hg);
+				}
+			}
+			
+			private function onGetTopError(e:Object):void{
+				GameApplication.app.popuper.showInfoPopUp("Не удалось получить список пользователей");
+			}			
+			
+			protected function onBack(event:MouseEvent):void{
+				GameApplication.app.navigator.goHome();
+			}
+			
+			public function onHide():void{				
+			}
+		]]>
+	</fx:Script>
+	<s:Rect width="100%" height="100%" radiusX="0" radiusY="0">
+		<s:stroke>
+			<mx:SolidColorStroke color="0x583016"/>
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="0x8D4F25"/>
+		</s:fill>
+	</s:Rect>
+	<s:VGroup width="100%" height="100%" paddingLeft="20" paddingRight="20" paddingTop="10" paddingBottom="10">		
+		<s:Label width="100%" textAlign="center" text="Зал славы" fontSize="30" color="0xFFFFCC" fontWeight="bold" fontStyle="italic"/>
+		<top:TopBar id="topbar" width="100%" height="25" gap="0"/>
+		
+		<s:TileGroup id="body" orientation="columns" height="235" width="510"/>
+		<s:HGroup width="100%" horizontalAlign="right" verticalAlign="bottom">
+			<s:Label height="13" fontSize="10" color="0xFFFFCC" text="Внимание! Данные о пользователях в зале славы обновляются каждые 5 минут."/>
+			<mx:Spacer width="100%"/>
+			<button:GameButton id="back" label="назад" click="onBack(event)"/>
+		</s:HGroup>
+	</s:VGroup>
+</s:Group>

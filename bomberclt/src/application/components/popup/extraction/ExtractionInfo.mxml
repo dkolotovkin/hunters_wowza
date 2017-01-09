@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="35" width="100%" height="100%" xmlns:button="application.components.button.*" xmlns:money="application.gamecontainer.persinfobar.money.*" xmlns:iconswf="application.components.iconswf.*">
+	<fx:Script>
+		<![CDATA[			
+			import application.GameApplication;
+			
+			import mx.events.FlexEvent;
+			[Bindable]
+			public var description:String;
+			[Bindable]
+			public var experience:int;
+			[Bindable]
+			public var cexperience:int;
+			[Bindable]
+			public var money:int;
+			[Bindable]
+			public var experienceBonus:int;
+			[Bindable]
+			public var cexperienceBonus:int;
+			[Bindable]
+			public var bullets:int;		
+			
+		]]>
+	</fx:Script>
+	<s:VGroup width="100%" height="100%">
+		<s:Label text="{description}" width="300" color="0xFFFF99" fontSize="14" fontWeight="normal"/>
+		<s:HGroup verticalAlign="middle" width="100%" includeInLayout="{experience > 0}" visible="{experience > 0}">
+			<s:Label text="Получено опыта: " color="0xffffff" fontSize="14" fontWeight="normal"/>
+			<s:Label text="+{experience}" color="0xFFFF99" fontSize="14" fontWeight="normal"/>	
+			<s:Label text=" (+{experienceBonus})" color="0xFFFF99" fontSize="14" fontWeight="normal" visible="{experienceBonus > 0}"/>	
+		</s:HGroup>
+		<s:HGroup verticalAlign="middle" width="100%" includeInLayout="{cexperience > 0}" visible="{cexperience > 0}">
+			<s:Label text="Получено опыта для альянса: " color="0xffffff" fontSize="14" fontWeight="normal"/>
+			<s:Label text="+{cexperience}" color="0xFFFF99" fontSize="14" fontWeight="normal"/>	
+			<s:Label text=" (+{cexperienceBonus})" color="0xFFFF99" fontSize="14" fontWeight="normal" visible="{cexperienceBonus > 0}"/>	
+		</s:HGroup>
+		<s:HGroup verticalAlign="middle" width="100%" includeInLayout="{money > 0}" visible="{money > 0}">
+			<s:Label text="Получено денег: " color="0xffffff" fontSize="14" fontWeight="normal"/>
+			<money:Money money="{money}"/>	
+		</s:HGroup>
+		<s:HGroup verticalAlign="middle" width="100%" includeInLayout="{bullets > 0}" visible="{bullets > 0}">
+			<s:Label text="Получено патронов: " color="0xffffff" fontSize="14" fontWeight="normal"/>
+			<s:Label text="{bullets}" color="0xFFFF99" fontSize="14" fontWeight="normal"/>
+		</s:HGroup>	
+	</s:VGroup>
+</s:Group>

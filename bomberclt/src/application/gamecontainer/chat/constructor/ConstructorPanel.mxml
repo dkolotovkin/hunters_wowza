@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009" initialize="hgroup1_initializeHandler(event)"
+		  xmlns:s="library://ns.adobe.com/flex/spark" verticalAlign="middle"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" xmlns:buttonswf="application.components.buttonswf.*" xmlns:iconswf="application.components.iconswf.*" xmlns:article="application.gamecontainer.scene.bag.article.*">
+
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.gamecontainer.scene.bag.article.ConstructorArticleEvent;
+			
+			import mx.events.FlexEvent;
+			
+			import utils.constructor.ConstructorCreateMode;
+			import utils.managers.constructor.ConstructorManagerEvent;
+			import utils.selector.Selector;
+			
+			protected var _selector : Selector = new Selector();
+			
+			private var _articles:Array = new Array();
+			
+			protected function onExit(event:MouseEvent):void
+			{
+				GameApplication.app.navigator.goHome();
+			}
+
+			protected function hgroup1_initializeHandler(event:FlexEvent):void
+			{
+				_articles = new Array();
+				_articles.push(a1); _articles.push(a2);	_articles.push(a3); 
+				_articles.push(a4); _articles.push(a5);	_articles.push(a6); 
+				_articles.push(a7); _articles.push(a8);	_articles.push(a9); 
+				_articles.push(a10); _articles.push(a11);_articles.push(a12);
+				
+				for(var i:uint = 0; i < _articles.length; i++){
+					(_articles[i] as ConstructorArticle).addEventListener(ConstructorArticleEvent.SELECTED, onArticleSelected, false, 0, true);
+					(_articles[i] as ConstructorArticle).addEventListener(ConstructorArticleEvent.UNSELECTED, onArticlenUnSelected, false, 0, true);
+				}	
+				
+				GameApplication.app.constructor.addEventListener(ConstructorManagerEvent.ELEMENT_CREATED, onElementCreated, false, 0, true);
+			}
+			
+			private function onElementCreated(e:ConstructorManagerEvent):void{
+				_selector.clear();
+			}
+			
+			private function onArticleSelected(event : ConstructorArticleEvent) : void {
+				_selector.selected(event.article);
+
+				GameApplication.app.constructor.setMode(event.article.constructorMode);
+			}
+			
+			private function onArticlenUnSelected(event : ConstructorArticleEvent) : void {
+				_selector.unselected(event.article);
+			}
+			
+			public function deleteSelectObject():void{
+				GameApplication.app.constructor.deleteSelectObject();
+			}
+
+
+			protected function onPlay(event:MouseEvent):void
+			{
+				GameApplication.app.constructor.play();
+			}
+
+
+			protected function onSave(event:MouseEvent):void
+			{
+				GameApplication.app.constructor.save();
+			}
+			
+			protected function onOpen(event:MouseEvent):void
+			{
+				GameApplication.app.constructor.open();
+			}
+
+			protected function onSaveOnServer(event:MouseEvent):void
+			{
+				GameApplication.app.constructor.shopSaveOnServerPopUp();
+			}
+
+		]]>
+	</fx:Script>
+	<mx:Spacer width="100%"/>
+	
+	<article:ConstructorArticle id="a1" iconClass="{StaticSkin}" constructorMode="{ConstructorCreateMode.STATIC}" toolTip="Обычная поверхность"/>
+	<article:ConstructorArticle id="a2" iconClass="{StaticBlueSkin}" constructorMode="{ConstructorCreateMode.STATIC_BLUE}" toolTip="Скользящая поверхность"/>
+	<article:ConstructorArticle id="a3" iconClass="{StaticRedSkin}" constructorMode="{ConstructorCreateMode.STATIC_RED}" toolTip="Отталкивающая поверхность"/>
+	<article:ConstructorArticle id="a4" iconClass="{BoxSkin}" constructorMode="{ConstructorCreateMode.BOX}" toolTip="Ящик"/>
+	<article:ConstructorArticle id="a5" iconClass="{BallSkin}" constructorMode="{ConstructorCreateMode.BALL}" toolTip="Мячик"/>
+	<article:ConstructorArticle id="a6" iconClass="{SpringboardSkin}" constructorMode="{ConstructorCreateMode.SPRING_BOARD}" toolTip="Трамплин"/>
+	<article:ConstructorArticle id="a7" iconClass="{HeavyBoxSkin}" constructorMode="{ConstructorCreateMode.HEAVY_BOX}" toolTip="Наковальня"/>
+	<article:ConstructorArticle id="a8" iconClass="{StaticBlackSkin}" constructorMode="{ConstructorCreateMode.CARRIER_H}" toolTip="Горизонтальная переправа"/>
+	<article:ConstructorArticle id="a9" iconClass="{StaticBlackSkin}" constructorMode="{ConstructorCreateMode.CARRIER_V}" toolTip="Вертикальная переправа"/>
+	<article:ConstructorArticle id="a10" iconClass="{ConstructorSource}" constructorMode="{ConstructorCreateMode.SOURCE}" toolTip="Орех"/>
+	<article:ConstructorArticle id="a11" iconClass="{Hero}" constructorMode="{ConstructorCreateMode.HERO}" toolTip="Персонаж"/>
+	<article:ConstructorArticle id="a12" iconClass="{Bullet}" constructorMode="{ConstructorCreateMode.BULLET}" toolTip="Патрон"/>
+	
+	<mx:Spacer width="5"/>
+	
+	<buttonswf:ButtonMXML iconClass="{IconConstructorRemove}" toolTip="Удалить выделенный объект" click="{deleteSelectObject()}"/>
+	<buttonswf:ButtonMXML iconClass="{IconConstructorPlay}" toolTip="Проверить карту" click="onPlay(event)"/>
+	<buttonswf:ButtonMXML iconClass="{IconConstructorSave}" toolTip="Сохранить на своем компьютере" click="onSave(event)"/>
+	<buttonswf:ButtonMXML iconClass="{IconConstructorOpen}" toolTip="Открыть на своем компьютере" click="onOpen(event)"/>
+	<buttonswf:ButtonMXML iconClass="{IconConstructorSave}" toolTip="Сохранить на сервер" click="onSaveOnServer(event)"/>
+	
+	<mx:Spacer width="100%" minWidth="5"/>
+	
+	<buttonswf:ButtonMXMLExit toolTip="Выход" iconClass="{ExitBtn}" width="60" height="38" click="onExit(event)"/>
+	<mx:Spacer width="1"/>
+</s:HGroup>

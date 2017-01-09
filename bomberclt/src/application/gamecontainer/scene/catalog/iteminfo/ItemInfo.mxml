@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" paddingLeft="10" paddingRight="10"
+		  xmlns:s="library://ns.adobe.com/flex/spark" horizontalAlign="center"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="200" height="100%" xmlns:catalog="application.gamecontainer.scene.catalog.article.catalog.*" xmlns:button="application.components.button.*">
+
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			
+			import utils.game.GameConfig;
+			import utils.shop.category.ShopCategory;
+			import utils.shop.itemprototype.ItemPrototype;			
+			
+			protected function onBack(event:MouseEvent):void
+			{
+				GameApplication.app.navigator.goHome();
+			}
+
+			protected function onBuy(event:MouseEvent):void
+			{
+				GameApplication.app.shopmanager.buyItem(selectedArticle.prototype);
+			}
+			
+			public function changeInfo(itemprototype:ItemPrototype):void{
+				selectedArticle.init(itemprototype);
+				articlename.text = itemprototype.title;
+				
+				if(itemprototype.minlevel > GameApplication.app.userinfomanager.myuser.level){
+					description.text = "Эта вещь будет доступна с " + itemprototype.minlevel + " уровня.";
+					buy.visible = false;
+				}else{
+					buy.visible = true;
+					if(itemprototype.description && itemprototype.description.length) description.text = itemprototype.description;
+					else description.text = "";
+					if(itemprototype.maxquality > 0) description.text += "\nКачество: " + itemprototype.maxquality;					
+					if(itemprototype.param1 == ShopCategory.THINGS){
+						description.text += "\nБонус к опыту: +" + itemprototype.param3;
+						description.text += "\nБонус к опыту альянса: +" + itemprototype.param4;
+						description.text += "\nСкорость: +" + itemprototype.param5;
+						description.text += "\nСила прыжка: +" + itemprototype.param6;
+						description.text += "\nУворотливость: " + itemprototype.param7 * GameConfig.percentSkillByOnePoint + "%";
+					}else if(itemprototype.param1 == ShopCategory.ARSENAL){
+						description.text += "\nТочность: " + itemprototype.param2;
+						description.text += "\nУрон: " + itemprototype.param3;
+						description.text += "\nСкорость перезаряда: " + Math.round(((itemprototype.param4 * GameConfig.countMiliSecondByOnePoint) / 1000) * 100) / 100 + " cек.";
+					}
+				}
+			}
+		]]>
+	</fx:Script>
+
+	<s:Label id="articlename" color="0xFFFF99" fontSize="16" width="100%" textAlign="center" height="25"/>
+	<catalog:CatalogArticle id="selectedArticle" mouseChildren="false" mouseEnabled="false"/>
+	<s:Scroller width="100%" height="100%">
+		<s:Group width="100%">
+			<s:Label id="description" color="0xFFFFFF" fontSize="12" width="100%"/>
+		</s:Group>
+	</s:Scroller>
+	<s:HGroup gap="20">
+		<button:GameButton id="buy" label="купить" click="onBuy(event)"/>
+		<button:GameButton id="back" label="закрыть" click="onBack(event)"/>
+	</s:HGroup>
+</s:VGroup>

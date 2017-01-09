@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" creationComplete="group1_creationCompleteHandler(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="35" width="100%" height="100%" xmlns:button="application.components.button.*" xmlns:money="application.gamecontainer.persinfobar.money.*">
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			
+			import flashx.textLayout.edit.SelectionFormat;
+			
+			import mx.events.FlexEvent;
+			
+			import utils.user.Sex;
+			private var _s:SelectionFormat = new SelectionFormat(0x000000, 1, BlendMode.NORMAL, 0xffffff, 1, BlendMode.NORMAL);			
+			
+			public var mapXML:XML;
+			
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{				
+				textinput.textDisplay.textFlow.interactionManager.focusedSelectionFormat = _s;
+			}
+			
+			
+			protected function onSave(event:MouseEvent):void
+			{
+				if(textinput.text.length > 0){
+					var fileName:String;
+					var arr:Array = textinput.text.split(".");
+					if(arr.length){
+						fileName = arr[0] + ".xml";
+						GameApplication.app.constructor.saveOnServer(fileName, mapXML.toXMLString());	
+						GameApplication.app.popuper.hidePopUp();
+					}
+				}						
+			}
+			
+		]]>
+	</fx:Script>
+	<s:VGroup width="100%" height="100%">
+		<s:Label text="Для сохранения файла на сервере введите его имя: " width="300" color="0xFFFF99" fontSize="14" fontWeight="normal"/>
+		<s:HGroup verticalAlign="middle" width="100%">
+			<s:Label text="Имя файла:" color="0xffffff" fontSize="14" fontWeight="normal"/>
+			<s:TextInput id="textinput" maxChars="25" width="100%" color="0x000000" contentBackgroundColor="0xFBEFC4" focusAlpha="0" focusEnabled="false" borderColor="0xDB9668"/>
+		</s:HGroup>		
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:Label text="Цена:" color="0xffffff" fontSize="14" fontWeight="normal"/>
+			<money:Money toolTip="Ваш баланс" money="{100}"/>
+			<button:GameButton label="сохранить" click="onSave(event)"/>
+		</s:HGroup>
+	</s:VGroup>
+</s:Group>

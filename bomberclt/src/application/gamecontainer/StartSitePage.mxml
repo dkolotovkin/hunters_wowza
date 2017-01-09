@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" xmlns:iconswf="application.components.iconswf.*" xmlns:button="application.components.button.*">
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			
+			import mx.controls.Alert;
+			
+			import utils.managers.apimanager.ApiManagerSite;
+			
+			protected function gamebutton1_clickHandler(event:MouseEvent):void
+			{
+				if(GameApplication.app.apimanager is ApiManagerSite){
+					(GameApplication.app.apimanager as ApiManagerSite).authVK();
+				}else{
+					Alert.show("Ошибка авторизации...");
+				}
+			}
+
+			protected function gamebutton2_clickHandler(event:MouseEvent):void
+			{
+				if(GameApplication.app.apimanager is ApiManagerSite){
+					(GameApplication.app.apimanager as ApiManagerSite).authMM();
+				}else{
+					Alert.show("Ошибка авторизации...");
+				}
+			}
+
+
+			protected function gamebutton3_clickHandler(event:MouseEvent):void
+			{
+				if(GameApplication.app.apimanager is ApiManagerSite){
+					(GameApplication.app.apimanager as ApiManagerSite).authOD();
+				}else{
+					Alert.show("Ошибка авторизации...");
+				}
+			}
+
+		]]>
+	</fx:Script>
+
+	
+	<!--<s:VGroup verticalAlign="middle" horizontalAlign="center" width="100%" height="100%">
+		<mx:Spacer height="30"/>
+		<s:Label width="100%" textAlign="center" text="Мышиные бега. Наперегонки с друзьями" fontSize="30" color="0xffffff" fontWeight="bold" fontStyle="italic"/>
+		<mx:Spacer height="100%"/>
+		<s:HGroup>
+			<iconswf:IconMXML scaleX="3" scaleY="3" iconClass="{ShopMouseBlack}"/>
+			<mx:Spacer width="10"/>
+			<s:VGroup>				
+				<button:GameButton width="200" label="Войти через Вконтакте" click="gamebutton1_clickHandler(event)"/>
+				<button:GameButton width="200" label="Войти через Мой Мир" click="gamebutton2_clickHandler(event)"/>
+				<button:GameButton width="200" label="Войти через Одноклассники" click="gamebutton3_clickHandler(event)"/>
+			</s:VGroup>
+			<mx:Spacer width="10"/>
+			<iconswf:IconMXML scaleX="-3" scaleY="3" iconClass="{ShopMouseWhite}"/>
+		</s:HGroup>
+		<mx:Spacer height="100%"/>
+	</s:VGroup>-->
+	
+</s:Group>

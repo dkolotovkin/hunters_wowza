@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" buttonMode="true" click="group1_clickHandler(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="80" height="80" xmlns:money="application.gamecontainer.persinfobar.money.*">
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.components.popup.betminigame.PopUpBet;
+			
+			import mx.events.FlexEvent;
+
+			[Bindable]
+			public var sectionIndex:uint;
+
+
+			protected function group1_clickHandler(event:MouseEvent):void
+			{
+				GameApplication.app.popuper.show(new PopUpBet(sectionIndex));
+			}
+
+		]]>
+	</fx:Script>
+	
+	<s:Rect width="100%" height="100%">
+		<s:stroke>
+			<s:SolidColorStroke color="0x5B2E00" weight="2"/>
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="0xF2CF92"/>
+		</s:fill>
+	</s:Rect>
+	
+	<s:HGroup width="100%" height="100%" verticalAlign="middle" horizontalAlign="center">
+		<s:Label text="{sectionIndex}" fontSize="15" fontWeight="bold" color="0x5B2E00" alpha="0.2"/>
+	</s:HGroup>
+	<money:Money id="mybet" width="60" money="0" top="5" left="5" toolTip="Сумма ваших ставок"/>
+	<money:Money id="allbet" width="60" money="0" bottom="5" left="5" toolTip="Общая сумма ставок"/>
+</s:Group>

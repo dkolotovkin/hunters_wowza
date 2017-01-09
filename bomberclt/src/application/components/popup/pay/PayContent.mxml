@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="30" width="300" height="100%" xmlns:button="application.components.button.*" xmlns:money="application.gamecontainer.persinfobar.money.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;			
+			public var closeFunction:Function;	
+			[Bindable]
+			public var money:int;	
+			
+			protected function getMoney(event:MouseEvent):void{
+				GameApplication.app.userinfomanager.getOnlineTimeMoney();
+				closeFunction && closeFunction();
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:VGroup width="100%" height="100%" horizontalAlign="center" gap="10">
+		<s:HGroup horizontalAlign="left" verticalAlign="middle" width="100%">
+			<s:Label text="Ваш баланс: " color="0xffffff" fontSize="14" fontWeight="normal" textAlign="center"/>
+			<money:Money money="{GameApplication.app.userinfomanager.myuser.money}"/>			
+		</s:HGroup>
+		<s:HGroup horizontalAlign="left" verticalAlign="middle" width="100%">
+			<s:Label text="Размер зарплаты: " color="0xffffff" fontSize="14" fontWeight="normal" textAlign="center"/>
+			<money:Money money="{money}"/>			
+		</s:HGroup>
+		<button:GameButton id="buy80" label="взять зарплату" width="150" click="getMoney(event)"/>
+		<s:Label text="Важно: при получении зарплаты ваша популярность уменьшается в количестве сумма зарплаты / 5. Уровень зарплаты: ваш уровень / 15 * количество минут в игре." width="100%" color="0xffffff" fontSize="10" fontWeight="normal" textAlign="left"/>
+	</s:VGroup>
+</s:Group>

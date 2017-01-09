@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009" initialize="onInit(event)" creationComplete="onCreatenComplete(event)"
+		  xmlns:s="library://ns.adobe.com/flex/spark" horizontalAlign="right" verticalAlign="middle"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="100" height="15">
+	<fx:Script>
+		<![CDATA[
+			import application.components.iconswf.IconMXML;
+			
+			import mx.events.FlexEvent;
+			
+			import utils.user.ClanUserRole;
+			
+			private var _stars:Array = new Array();
+			private var _role:int = ClanUserRole.ROLE1;
+			public var iisowner:Boolean;
+
+			protected function onInit(event:FlexEvent):void
+			{
+				var star1:StarMXML = new StarMXML();
+				star1.iconClass = IconStar;
+				
+				var star2:StarMXML = new StarMXML();
+				star2.iconClass = IconStar;
+				
+				var star3:StarMXML = new StarMXML();
+				star3.iconClass = IconStar;
+				
+				var star4:StarMXML = new StarMXML();
+				star4.iconClass = IconStar;
+				
+				var star5:StarMXML = new StarMXML();
+				star5.iconClass = IconStar;
+				
+				_stars.push(star5);
+				_stars.push(star4);
+				_stars.push(star3);
+				_stars.push(star2);
+				_stars.push(star1);
+				
+				star1.title = "1 звезда";
+				star1.description = "Зарплата: 10 золотых / час";
+				star2.title = "2 звезды";
+				star2.description = "Зарплата: 20 золотых / час";
+				star3.title = "3 звезды";
+				star3.description = "Зарплата: 50 золотых / час";
+				star4.title = "4 звезды";
+				star4.description = "Зарплата: 100 золотых / час";
+				star5.title = "5 звезд";
+				star5.description = "Зарплата: 300 золотых / час";
+				
+				for(var i:int = 0; i < _stars.length; i++){
+					addElement(_stars[i]);
+					if(iisowner) _stars[i].buttonMode = true;
+				}
+				
+				star1.addEventListener(MouseEvent.CLICK, onStar1Click, false, 0, true);
+				star2.addEventListener(MouseEvent.CLICK, onStar2Click, false, 0, true);
+				star3.addEventListener(MouseEvent.CLICK, onStar3Click, false, 0, true);
+				star4.addEventListener(MouseEvent.CLICK, onStar4Click, false, 0, true);
+				star5.addEventListener(MouseEvent.CLICK, onStar5Click, false, 0, true);
+			}
+			
+			public function set role(value:int):void{
+				if (initialized){
+					for(var i:int = 0; i < 5; i++){
+						_stars[i].alpha = 1;					
+					}
+					if(value == ClanUserRole.ROLE1){
+						_stars[0].alpha = _stars[1].alpha = _stars[2].alpha = _stars[3].alpha = .3;
+					}else if(value == ClanUserRole.ROLE2){
+						_stars[0].alpha = _stars[1].alpha = _stars[2].alpha = .3;
+					}else if(value == ClanUserRole.ROLE3){
+						_stars[0].alpha = _stars[1].alpha = .3;
+					}else if(value == ClanUserRole.ROLE4){
+						_stars[0].alpha = .3;
+					}
+				}
+				_role = value;
+			}
+			
+			public function get role():int{
+				return _role;
+			}
+			
+			private function onStar1Click(e:MouseEvent):void{
+				if(iisowner){
+					role = ClanUserRole.ROLE1;
+					dispatchEvent(new StarsComponentEvent(StarsComponentEvent.CHANGE_ROLE, role));
+				}
+			}
+			private function onStar2Click(e:MouseEvent):void{
+				if(iisowner){
+					role = ClanUserRole.ROLE2;
+					dispatchEvent(new StarsComponentEvent(StarsComponentEvent.CHANGE_ROLE, role));
+				}
+			}
+			private function onStar3Click(e:MouseEvent):void{
+				if(iisowner){
+					role = ClanUserRole.ROLE3;
+					dispatchEvent(new StarsComponentEvent(StarsComponentEvent.CHANGE_ROLE, role));
+				}
+			}
+			private function onStar4Click(e:MouseEvent):void{
+				if(iisowner){
+					role = ClanUserRole.ROLE4;
+					dispatchEvent(new StarsComponentEvent(StarsComponentEvent.CHANGE_ROLE, role));
+				}
+			}
+			private function onStar5Click(e:MouseEvent):void{
+				if(iisowner){
+					role = ClanUserRole.ROLE5;
+					dispatchEvent(new StarsComponentEvent(StarsComponentEvent.CHANGE_ROLE, role));
+				}
+			}
+
+			protected function onCreatenComplete(event:FlexEvent):void
+			{
+				role = _role;
+			}
+
+		]]>
+	</fx:Script>
+	
+</s:HGroup>

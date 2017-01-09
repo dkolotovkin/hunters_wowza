@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="10" width="300" height="100%" xmlns:button="application.components.button.*" xmlns:money="application.gamecontainer.persinfobar.money.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			[Bindable]
+			public var text:String = "";
+			public var closeFunction:Function;
+			
+			protected function buy20_clickHandler(event:MouseEvent):void{
+				GameApplication.app.apimanager.buyMoney(20, 2000);
+				closeFunction && closeFunction();
+			}
+			
+			protected function buy70_clickHandler(event:MouseEvent):void{
+				GameApplication.app.apimanager.buyMoney(70, 8000);
+				closeFunction && closeFunction();
+			}
+			
+			
+			protected function buy100_clickHandler(event:MouseEvent):void{
+				GameApplication.app.apimanager.buyMoney(100, 13000);
+				closeFunction && closeFunction();
+			}
+			
+			
+			protected function buy350_clickHandler(event:MouseEvent):void{
+				GameApplication.app.apimanager.buyMoney(350, 46000);
+				closeFunction && closeFunction();
+			}
+			
+
+			protected function buy1000_clickHandler(event:MouseEvent):void
+			{
+				GameApplication.app.apimanager.buyMoney(1000, 46000);
+				closeFunction && closeFunction();
+			}
+
+		]]>
+	</fx:Script>
+	
+	<s:VGroup width="100%" height="100%" horizontalAlign="center" gap="10">
+		<s:Label text="Купить валюту!" width="100%" color="0xffffff" fontSize="16" fontWeight="normal" textAlign="center"/>
+		<s:HGroup verticalAlign="middle">
+			<money:Money money="2000" width="70"/>
+			<button:GameButton id="buy20" label="за 20 мэйликов" width="150" click="buy20_clickHandler(event)"/>
+		</s:HGroup>
+		<s:HGroup verticalAlign="middle">
+			<money:Money money="8000" width="70"/>
+			<button:GameButton id="buy70" label="за 70 мэйликов" width="150" click="buy70_clickHandler(event)"/>
+		</s:HGroup>
+		<s:HGroup verticalAlign="middle">
+			<money:Money money="13000" width="70"/>
+			<button:GameButton id="buy100" label="за 100 мэйликов" width="150" click="buy100_clickHandler(event)"/>
+		</s:HGroup>
+		<s:HGroup verticalAlign="middle">
+			<money:Money money="46000" width="70"/>
+			<button:GameButton id="buy350" label="за 350 мэйликов" width="150" click="buy350_clickHandler(event)"/>
+		</s:HGroup>
+		<s:HGroup verticalAlign="middle">
+			<money:Money money="140000" width="70"/>
+			<button:GameButton id="buy1000" label="за 1000 мэйликов" width="150" click="buy1000_clickHandler(event)"/>
+		</s:HGroup>
+		<s:Label text="* на ваш счет деньги поступят в течение нескольких минут после пополнения" width="100%" color="0xffffff" fontSize="10" fontWeight="normal" textAlign="left"/>
+	</s:VGroup>
+</s:Group>

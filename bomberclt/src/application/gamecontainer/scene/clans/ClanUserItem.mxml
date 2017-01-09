@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009" initialize="onInit(event)"
+		 xmlns:s="library://ns.adobe.com/flex/spark" verticalAlign="middle"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" xmlns:iconswf="application.components.iconswf.*" xmlns:stars="application.gamecontainer.scene.clans.stars.*" xmlns:buttonswf="application.components.buttonswf.*">
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.components.useritem.OnlineUserItem;
+			import application.gamecontainer.scene.clans.stars.StarsComponentEvent;
+			
+			import flashx.textLayout.formats.TextAlign;
+			
+			import mx.events.FlexEvent;
+			
+			import spark.layouts.VerticalAlign;
+			
+			import utils.user.ClanUserRole;
+			import utils.user.User;
+			
+			private var _uid:int;
+			
+			[Bindable]
+			private var _iisowner:Boolean;
+			
+			public function init(user:User, clandepositm:int, clandeposite:int, clanrole:int, num:int, iisowner:Boolean = false):void{
+				_uid = user.id;
+				
+				_iisowner = iisowner;
+				
+				
+				if (clandepositm >= 0){
+					depositm.setStyle("color", 0x00FF00);
+					depositm.text = "+" + clandepositm;
+				}else{
+					depositm.setStyle("color", 0xFF0000);
+					depositm.text = "" + clandepositm;
+				}
+				if (clandeposite >= 0){
+					deposite.setStyle("color", 0x00FF00);
+					deposite.text = "+" + clandeposite;
+				}else{
+					deposite.setStyle("color", 0xFF0000);
+					deposite.text = "" + clandeposite;
+				}
+				
+				starcomp.role = clanrole;
+				
+				var useritem:OnlineUserItem = new OnlineUserItem();
+				useritem.maxWidth = 180;
+				useritem.width = 180;
+				useritem.user = user;
+				useritem.buttonMode = true;
+				
+				var hg:HGroup = new HGroup();
+				hg.verticalAlign = VerticalAlign.MIDDLE;
+				hg.gap = 3;
+				var l:Label = new Label();
+				l.text = num + ".";
+				
+				l.minWidth = 30;
+				l.setStyle("textAlign", TextAlign.LEFT);
+				if(user.id == GameApplication.app.userinfomanager.myuser.id){					
+					l.setStyle("color", 0xFF9900);
+				}else{
+					l.setStyle("color", 0xffffff);
+				}
+				hg.addElement(l);
+				hg.addElement(useritem);
+				usergr.addElement(hg);
+			}
+
+			protected function onInit(event:FlexEvent):void
+			{
+				starcomp.addEventListener(StarsComponentEvent.CHANGE_ROLE, onChangeRole, false, 0, true);
+			}
+			
+			private function onChangeRole(e:StarsComponentEvent):void{
+				GameApplication.app.clanmanager.setrole(_uid, e.role);
+			}
+
+
+			protected function onKick(event:MouseEvent):void
+			{
+				GameApplication.app.clanmanager.kick(_uid);
+			}
+
+		]]>
+	</fx:Script>
+	<s:Group id="usergr"/>
+	<s:HGroup verticalAlign="middle" width="110" toolTip="Денежный вклад пользователя">
+		<iconswf:IconMXML iconClass="{IconEuro}"/>
+		<s:Label id="depositm" text="" height="13" color="0xFF0000" fontSize="14" fontWeight="normal"/>
+	</s:HGroup>
+	<s:HGroup verticalAlign="middle" width="110" toolTip="Заработанный пользователем опыт">
+		<iconswf:IconMXML iconClass="{IconExperience}"/>
+		<s:Label id="deposite" text="" height="13" color="0x00FF00" fontSize="14" fontWeight="normal"/>
+	</s:HGroup>
+	<stars:StarsComponent id="starcomp" iisowner="{_iisowner}"/>
+	<mx:Spacer width="10"/>
+	<buttonswf:ButtonMXML iconClass="{IconButCloseTab}" click="onKick(event)" toolTip="Выгнать из альянса" visible="{_iisowner}"/>
+</s:HGroup>

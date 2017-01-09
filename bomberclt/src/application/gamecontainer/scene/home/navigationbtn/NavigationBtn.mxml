@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 buttonMode="true" rollOver="onRollOver(event)" rollOut="onRollOut(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import spark.filters.GlowFilter;
+			[Bindable]
+			private var _source:Class;
+			
+			private var _filter:spark.filters.GlowFilter = new GlowFilter(0xffffff, 1, 15, 15, 1);
+
+			public function set source(cl:Class):void{
+				_source = cl;
+			}
+
+
+			protected function onRollOver(event:MouseEvent):void
+			{
+				icon.filters = [_filter];
+			}
+
+
+			protected function onRollOut(event:MouseEvent):void
+			{
+				icon.filters = [];
+			}
+
+		]]>
+	</fx:Script>
+	<s:BitmapImage id="icon" source="{_source}" smooth="true" />
+</s:Group>

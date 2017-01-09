@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" initialize="onInit(event)"
+		 xmlns:s="library://ns.adobe.com/flex/spark" buttonMode="true"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" xmlns:money="application.gamecontainer.persinfobar.money.*" xmlns:iconswf="application.components.iconswf.*" xmlns:useritem="application.components.useritem.*">
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="over"/>
+	</s:states>
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.components.popup.sendmail.PopUpSendMail;
+			import application.gamecontainer.chat.actionmenu.chatuser.ActionMenuChatUser;
+			
+			import mx.events.FlexEvent;
+			
+			import utils.user.User;
+			
+			[Bindable]
+			public var user:User;
+			private var _messageID:int;
+			
+			protected function onInit(event:FlexEvent):void
+			{				
+				addEventListener(MouseEvent.ROLL_OVER, onRollOver, false, 0, true);
+				addEventListener(MouseEvent.ROLL_OUT, onRollOut, false, 0, true);
+			}
+			
+			public function init(u:User, msg:String, mid:int):void{	
+				useritem.user = u;
+				useritem.title.maxWidth = 100;
+				message.text = msg;
+				_messageID = mid;
+			}			
+		
+			private function onRollOver(e:MouseEvent):void{
+				currentState = "over";
+			}
+			private function onRollOut(e:MouseEvent):void{
+				currentState = "normal";
+			}
+			
+			protected function label1_clickHandler(event:MouseEvent):void
+			{
+				event.stopPropagation();
+				GameApplication.app.userinfomanager.removeMailMessage(_messageID);				
+			}
+			
+
+			protected function label2_clickHandler(event:MouseEvent):void
+			{
+				GameApplication.app.popuper.show(new PopUpSendMail(useritem.user));
+			}
+
+		]]>
+	</fx:Script>
+	<s:Rect width="100%" height="100%" includeIn="over">
+		<s:fill>
+			<s:SolidColor color="0xffffff" alpha=".2"/>
+		</s:fill>
+	</s:Rect>
+	<s:HGroup verticalAlign="top" width="100%" height="100%" gap="0" paddingTop="2" paddingBottom="2" paddingLeft="5" paddingRight="5">		
+		<useritem:OnlineUserItem width="160" id="useritem"/>
+		<s:Label id="message" paddingTop="4" color="0xffffff" fontSize="12" width="270"/>
+		<mx:Spacer width="100%" minWidth="5"/>		
+		<s:Label paddingTop="4" color="0xC4C4C4" text="ответить" textDecoration="underline" buttonMode="true" click="label2_clickHandler(event)" fontSize="12"/>
+		<mx:Spacer width="3"/>
+		<s:Label paddingTop="4" color="0xC4C4C4" text="удалить" textDecoration="underline" buttonMode="true" click="label1_clickHandler(event)" fontSize="12"/>		
+	</s:HGroup>
+</s:Group>

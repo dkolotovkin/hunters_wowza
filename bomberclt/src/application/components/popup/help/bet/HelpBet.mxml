@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" initialize="onInit(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="20" width="500" height="300">
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			
+			import mx.events.FlexEvent;
+			
+			import spark.utils.TextFlowUtil;
+			
+			protected function onInit(event:FlexEvent):void
+			{				
+				var _text:String = "<span  color='0xFF9933' fontSize='14'>" + 
+					"Платные забеги" + 
+					"</span><br/>"+
+					
+					
+					"<span  color='0xFFFFFF' fontSize='12'>" + 
+					"Это забеги, в которых вы делаете ставку на себя." + 
+					"</span><br/><br/>" +
+					
+					
+					"<span  color='0xFF9933' fontSize='14'>" + 
+					"Организатор забега" + 
+					"</span><br/>"+
+					
+					
+					"<span  color='0xFFFFFF' fontSize='12'>" + 
+					"Если вы нажали на кнопку создания нового забега вы автоматически становитеcь его организатором. "+
+					"При создании забега вы должны указать сумму ставки и пароль. Если хотите создать открытый для всех забег, пароль указывать не нужно."+
+					"</span><br/><br/>"+
+					
+					
+					"<span  color='0xFF9933' fontSize='14'>" + 
+					"Участники забега" + 
+					"</span><br/>"+
+					
+					
+					"<span  color='0xFFFFFF' fontSize='12'>" + 
+					"Игроки могут принять участие в уже созданном забеге только сделав ставку, указанную в информации о забеге, на себя."+
+					"</span><br/><br/>"+
+					
+					
+					"<span  color='0xFF9933' fontSize='14'>" + 
+					"Начало забега" + 
+					"</span><br/>"+
+					
+					
+					"<span  color='0xFFFFFF' fontSize='12'>" + 
+					"При создании платного забега или после того как вы вступили в уже существующий забег, "+
+					"на экране появится таймер, который отображает время до начала." +					
+					"</span><br/><br/>"+
+					
+					
+					"<span  color='0xFF9933' fontSize='14'>" + 
+					"Выигрыш" + 
+					"</span><br/>"+
+					
+					
+					"<span  color='0xFFFFFF' fontSize='12'>" + 
+					"Весь выигрыш получает победитель забега."+
+					"</span><br/><br/>";				
+				
+				
+				rtext.textFlow = TextFlowUtil.importFromString(_text);
+			}
+			
+		]]>
+	</fx:Script>
+	<s:Scroller width="100%" height="100%">
+		<s:Group width="100%" height="100%">
+			<s:RichText id="rtext" width="100%"/>			
+		</s:Group>
+	</s:Scroller>
+</s:Group>

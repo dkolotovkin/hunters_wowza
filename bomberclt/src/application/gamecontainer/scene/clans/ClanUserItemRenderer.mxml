@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" autoDrawBackground="false"
+				xmlns:s="library://ns.adobe.com/flex/spark" initialize="onInit(event)"
+				xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" xmlns:iconswf="application.components.iconswf.*" xmlns:stars="application.gamecontainer.scene.clans.stars.*" xmlns:buttonswf="application.components.buttonswf.*" xmlns:useritem="application.components.useritem.*" xmlns:money="application.gamecontainer.persinfobar.money.*">
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.components.useritem.OnlineUserItem;
+			import application.gamecontainer.scene.clans.stars.StarsComponentEvent;
+			
+			import flashx.textLayout.formats.TextAlign;
+			
+			import mx.events.FlexEvent;
+			
+			import spark.layouts.VerticalAlign;
+			
+			import utils.user.User;
+			import utils.user.UserClanInfo;
+			
+			private var _uid:int;
+			
+			[Bindable]
+			private var _iisowner:Boolean;
+
+			override public function set data(value:Object):void{
+				super.data = value;
+				
+				var user:UserClanInfo = value as UserClanInfo;
+				_uid = user.id;
+				
+				_iisowner = user.iisowner;
+				
+				depositm.money = user.clandepositm;
+				if (user.clandeposite >= 0){
+					deposite.setStyle("color", 0x00FF00);
+					deposite.text = "+" + user.clandeposite;
+				}else{
+					deposite.setStyle("color", 0xFF0000);
+					deposite.text = "" + user.clandeposite;
+				}
+				starcomp.role = user.clanrole;
+				
+				userItem.user = user;
+				numLbl.text = user.num + ".";
+			}
+			
+			protected function onInit(event:FlexEvent):void
+			{
+				starcomp.addEventListener(StarsComponentEvent.CHANGE_ROLE, onChangeRole, false, 0, true);
+			}
+			
+			private function onChangeRole(e:StarsComponentEvent):void{
+				GameApplication.app.clanmanager.setrole(_uid, e.role);
+			}
+			
+			protected function onKick(event:MouseEvent):void
+			{
+				GameApplication.app.clanmanager.kick(_uid);
+			}
+		]]>
+	</fx:Script>
+	
+	<s:HGroup verticalAlign="middle" width="100%">
+		<s:HGroup verticalAlign="middle" gap="3">
+			<s:Label id="numLbl" color="0xffffff" minWidth="30" textAlign="left"/>
+			<useritem:OnlineUserItem id="userItem" width="180" buttonMode="true"/>
+		</s:HGroup>
+		<s:HGroup verticalAlign="top" width="110" toolTip="Денежный вклад пользователя">
+			<money:Money id="depositm"/>
+		</s:HGroup>
+		<s:HGroup verticalAlign="middle" width="110" toolTip="Заработанный пользователем опыт">
+			<iconswf:IconMXML iconClass="{IconPopular}"/>
+			<s:Label id="deposite" text="" height="13" color="0x00FF00" fontSize="14" fontWeight="normal"/>
+		</s:HGroup>
+		<stars:StarsComponent id="starcomp" iisowner="{_iisowner}" buttonMode="true" enabled="true"/>
+		<mx:Spacer width="10"/>
+		<buttonswf:ButtonMXML iconClass="{IconButCloseTab}" click="onKick(event)" toolTip="Выгнать из альянса" visible="{_iisowner}"/>		
+	</s:HGroup>
+</s:ItemRenderer>

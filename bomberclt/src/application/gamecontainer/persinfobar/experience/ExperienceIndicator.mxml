@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" implements="utils.managers.tooltip.IToolTiped"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" height="100%" xmlns:local="*" gap="0" verticalAlign="middle" xmlns:iconswf="application.components.iconswf.*">
+
+	<fx:Script>
+		<![CDATA[
+			import utils.managers.tooltip.IToolTiped;
+			import utils.managers.tooltip.ToolTipType;
+			
+			private var _experience:Number = 0;			
+			private var _maxexperience:Number = 0;
+			
+			public function get toolTipDelay() : int {				
+				return 400;
+			}
+			
+			public function get toolTipDX() : int {
+				return 10;
+			}
+			
+			public function get toolTipDY() : int {
+				return 2;
+			}
+			
+			public function get toolTipType() : int {
+				return ToolTipType.EXPERIENCE;
+			}
+			
+			public function set experience(value:Number):void{
+				_experience = value;
+				indicator.percentWidth = 100 * Math.min(_experience / _maxexperience, 1);
+			}
+			
+			public function set maxexperience(value:Number):void{
+				_maxexperience = value;
+				indicator.percentWidth = 100 * Math.min(_experience / _maxexperience, 1);
+			}
+			
+			public function get experience():Number{
+				return _experience;
+			}
+			
+			public function get maxexperience():Number{
+				return _maxexperience;
+			}
+			
+			public function set level(value:int):void{
+				icon.icon["level"].text = value;
+			}
+		]]>
+	</fx:Script>
+
+	<iconswf:IconMXML id="icon" iconClass="{IconPopular}" depth="1"/>	
+	<s:Group width="100%" height="9" depth="0">		
+		<s:VGroup width="100%" height="100%" gap="0">
+			<s:Rect height="1" width="100%">
+				<s:fill>
+					<s:SolidColor color="0x6C3F1B" alpha="1"/>
+				</s:fill>
+			</s:Rect>
+			
+			<s:Rect height="100%" width="100%">
+				<s:fill>
+					<s:SolidColor color="0x935A2C" alpha="1"/>
+				</s:fill>
+			</s:Rect>
+			
+			<s:Rect height="1" width="100%">
+				<s:fill>
+					<s:SolidColor color="0x6C3F1B" alpha="1"/>
+				</s:fill>
+			</s:Rect>
+		</s:VGroup>
+		
+		<s:Rect id="indicator" height="100%" top="1" bottom="1">		
+			<s:fill>
+				<s:LinearGradient rotation="90">
+					<s:entries>
+						<s:GradientEntry color="0xFE6400" ratio="0.00" alpha="1"/>
+						<s:GradientEntry color="0xFDB03E" ratio="0.4" alpha="1"/>
+						<s:GradientEntry color="0xDD4900" ratio="0.99" alpha="1"/>
+					</s:entries>
+				</s:LinearGradient>
+			</s:fill>
+		</s:Rect>
+	</s:Group>
+</s:HGroup>

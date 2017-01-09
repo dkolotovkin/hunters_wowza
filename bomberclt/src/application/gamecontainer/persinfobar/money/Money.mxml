@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:local="*" xmlns:iconswf="application.components.iconswf.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import spark.filters.DropShadowFilter;
+			import spark.filters.GlowFilter;
+			[Bindable]
+			public var money:int;
+			
+			[Bindable]
+			public var colorBg:uint = 0x935A2C;
+			[Bindable]
+			public var colorStroke:uint = 0x6C3F1B;
+			[Bindable]
+			public var colorTxt:uint = 0xFFFFCC;
+			
+			public function set darkMode(value:Boolean):void{
+				if (value) {
+					colorBg = 0xDB9668;
+					colorStroke = 0xF2CF92;
+					colorTxt = 0x824620;
+				}
+			}
+		]]>
+	</fx:Script>
+	
+	<s:Group left="15" top="2">
+		<s:VGroup height="15" width="100%" gap="0">
+			<s:Rect height="1" width="100%">
+				<s:fill>
+					<s:SolidColor color="{colorStroke}" alpha="1"/>
+				</s:fill>
+			</s:Rect>
+			
+			<s:Rect height="100%" width="100%">
+				<s:fill>
+					<s:SolidColor color="{colorBg}" alpha="1"/>
+				</s:fill>
+			</s:Rect>
+			
+			<s:Rect height="1" width="100%">
+				<s:fill>
+					<s:SolidColor color="{colorStroke}" alpha="1"/>
+				</s:fill>
+			</s:Rect>
+		</s:VGroup>
+		<s:Label id="l" text="{money}" color="{colorTxt}" fontSize="12" fontWeight="bold" bottom="1" top="3" right="5" left="10"/>		
+	</s:Group>
+	<iconswf:IconMXML iconClass="{IconCircleBg}"/>	
+	<iconswf:IconMXML iconClass="{IconMoney}"/>
+</s:Group>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="50" height="50">
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			
+			import utils.managers.classloader.ClassLoaderManager;
+			import utils.shop.item.Item;			
+			private var _mc:MovieClip;
+			[Bindable]
+			public var item:Item;
+			
+			public function init(item:Item):void{
+				if(_mc && moviegr.contains(_mc)){
+					moviegr.removeChild(_mc);
+				}				
+				this.item = item;
+				if(item == null) return;
+				
+				var url:String = GameApplication.app.config.swfDataAddress + "/" + item.url;
+				GameApplication.app.classloader.load(url, onLoad, null, onLoadError);
+			}
+			
+			private function onLoad(classMovie:Class):void{
+				_mc = new classMovie();
+				_mc.gotoAndStop(1);
+				moviegr.addChild(_mc);				
+				
+				var rect:Rectangle = _mc.getBounds(_mc);
+				var otnW:Number = moviegr.width / rect.width;
+				var otnH:Number = moviegr.height / rect.height;
+				var k:Number = 1;
+				if (otnW > otnH) k = otnH else k = otnW;
+				
+				_mc.width *= k;
+				_mc.height *= k;
+				
+				_mc.x = Math.round(-rect.x * k + (moviegr.width - _mc.width) / 2);
+				_mc.y = Math.round(-rect.y * k + (moviegr.height - _mc.height) / 2);
+			}
+			
+			private function addMovieClip():void{
+				
+			}
+			
+			private function onLoadError():void{
+				trace("Ошибка при загрузке: " + item.url);
+				onLoad(IconButHelp);
+			}
+		]]>
+	</fx:Script>
+	
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="over"/>
+		<s:State name="selected"/>
+	</s:states>	
+	
+	<s:Rect includeIn="normal" width="100%" height="100%">
+		<s:stroke>
+			<s:SolidColorStroke color="0xC46C33"/>
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="0x66371A"/>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Rect includeIn="over" width="100%" height="100%">
+		<s:stroke>
+			<s:SolidColorStroke color="0xC46C33"/>
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="0x7A431F"/>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Rect includeIn="selected" width="100%" height="100%">
+		<s:stroke>
+			<s:SolidColorStroke color="0xDC9F78" weight="2"/>
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="0x66371A"/>
+		</s:fill>
+	</s:Rect>
+	<mx:UIComponent id="moviegr" width="40" height="40" left="5" right="5" top="5" bottom="5"/>
+</s:Group>

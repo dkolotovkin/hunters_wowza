@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" creationComplete="group1_creationCompleteHandler(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="35" width="550" height="340" xmlns:button="application.components.button.*" xmlns:money="application.gamecontainer.persinfobar.money.*" xmlns:preloader="application.components.preloader.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.components.popup.friends.FriendItem;
+			import application.gamecontainer.scene.catalog.article.catalog.CatalogArticleEvent;
+			
+			import mx.events.FlexEvent;
+			
+			import utils.user.User;
+			
+			
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{				
+				GameApplication.app.userinfomanager.getMessages(onGetMessages);
+			}
+			
+			private function onGetMessages(messageuser:Array):void{
+				for(var i:int = 0; i < messageuser.length; i++){
+					var mitem:MessageItem = new MessageItem();
+					mitem.init(User.createFromObject(messageuser[i]), messageuser[i]["message"], messageuser[i]["messageid"]);
+					msgs && msgs.addElement(mitem);
+				}
+				preloader.includeInLayout = preloader.visible = false;
+				if(messageuser.length > 0){
+					scroller.includeInLayout = scroller.visible = true;
+				}else{
+					nofriends.includeInLayout = nofriends.visible = true;
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:VGroup width="100%" height="100%">
+		<preloader:PreLoaderCircle id="preloader" text="Загрузка друзей..."/>
+		<s:Scroller id="scroller" width="100%" height="100%" includeInLayout="false" visible="false">
+			<s:VGroup id="msgs" width="100%" height="100%" gap="10"/>
+		</s:Scroller>
+		<s:HGroup id="nofriends" width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" includeInLayout="false" visible="false">
+			<s:Label fontSize="12" width="400" textAlign="center" color="0xFFFFCC" text="У вас нет ни одного сообщения..."/>
+		</s:HGroup>
+	</s:VGroup>
+</s:Group>

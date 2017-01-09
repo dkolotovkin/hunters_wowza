@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" paddingRight="10" 
+		  xmlns:s="library://ns.adobe.com/flex/spark"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" xmlns:button="application.components.button.*" xmlns:preloader="application.components.preloader.*">
+	<s:states>
+		<s:State name="loading"/>
+		<s:State name="normal"/>
+	</s:states>
+	<fx:Script>
+		<![CDATA[
+			import application.gamecontainer.scene.catalog.article.Article;
+			import application.gamecontainer.scene.catalog.article.catalog.CatalogArticle;
+			import application.gamecontainer.scene.catalog.article.catalog.CatalogArticleEvent;
+			
+			import mx.collections.errors.ItemPendingError;
+			import mx.events.FlexEvent;
+			
+			import utils.selector.Selector;
+			import utils.shop.itemprototype.ItemPrototype;
+			
+			protected var _selector : Selector = new Selector();
+			private var _articles:Array = new Array();
+			
+			private function clearSelection() : void {
+				_selector.clear();
+			}
+			
+			public function removeItems():void{
+				clearSelection();				
+				for (var i : uint = 0, len:uint = _articles.length; i <  len; i++) {
+					(_articles[i] as CatalogArticle).removeEventListener(CatalogArticleEvent.SELECTED, onArticleSelected);
+					(_articles[i] as CatalogArticle).removeEventListener(CatalogArticleEvent.UNSELECTED, onArticlenUnSelected);
+					tilegroup.removeElement((_articles[i] as CatalogArticle));
+				}
+				_articles = new Array();				
+				
+				currentState = "loading";
+			}			
+			
+			public function addItems(itemprototypes:Array, categoryId:int) : void {				
+				currentState = "normal";
+				for(var i:int = 0; i < itemprototypes.length; i++){
+					var prototype:ItemPrototype = itemprototypes[i];
+					if(prototype.showed == 1 && prototype.param1 == categoryId){
+						var article:CatalogArticle = new CatalogArticle();
+						
+						article.init(prototype);
+						article.addEventListener(CatalogArticleEvent.SELECTED, onArticleSelected, false, 0, true);
+						article.addEventListener(CatalogArticleEvent.UNSELECTED, onArticlenUnSelected, false, 0, true);
+						_articles.push(article);
+						tilegroup && tilegroup.addElement(article);
+					}
+				}
+				if(_articles.length > 0) (_articles[0] as CatalogArticle).selected = true;
+			}
+			
+			private function onArticleSelected(event : CatalogArticleEvent) : void {
+				_selector.selected(event.article);
+				dispatchEvent(event.clone());
+			}
+			
+			private function onArticlenUnSelected(event : CatalogArticleEvent) : void {
+				_selector.unselected(event.article);
+				dispatchEvent(event.clone());
+			}
+
+		]]>
+	</fx:Script>
+	<preloader:PreLoaderCircle text="Загрузка товаров..." includeIn="loading"/>
+	<s:HGroup width="100%" height="100%">
+		<s:HGroup id="scrollingGroup" width="100%" height="100%" paddingLeft="1" paddingTop="1">
+			<s:TileGroup id="tilegroup" width="430" verticalGap="30" horizontalGap="20"/>
+		</s:HGroup>
+		<s:VScrollBar viewport="{scrollingGroup}" height="100%" />
+	</s:HGroup>
+</s:VGroup>

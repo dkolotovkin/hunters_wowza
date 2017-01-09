@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" initialize="onInit(event)"
+		  xmlns:s="library://ns.adobe.com/flex/spark" buttonMode="true"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" xmlns:money="application.gamecontainer.persinfobar.money.*" xmlns:iconswf="application.components.iconswf.*">
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="over"/>
+	</s:states>
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			
+			import mx.events.FlexEvent;
+			public var idclan:int;
+			[Bindable]
+			public var title:String;
+			[Bindable]
+			public var ownertitle:String;
+			[Bindable]
+			public var money:int;
+			[Bindable]
+			public var experience:int;
+			[Bindable]
+			public var maxusers:int;
+
+			protected function onInit(event:FlexEvent):void
+			{
+				addEventListener(MouseEvent.CLICK, onClick, false, 0, true);
+				addEventListener(MouseEvent.ROLL_OVER, onRollOver, false, 0, true);
+				addEventListener(MouseEvent.ROLL_OUT, onRollOut, false, 0, true);
+			}
+			
+			private function onClick(e:MouseEvent):void{
+				GameApplication.app.navigator.goClanRoom(idclan);
+			}
+			private function onRollOver(e:MouseEvent):void{
+				currentState = "over";
+			}
+			private function onRollOut(e:MouseEvent):void{
+				currentState = "normal";
+			}
+		]]>
+	</fx:Script>
+	<s:Rect width="100%" height="100%" includeIn="over">
+		<s:fill>
+			<s:SolidColor color="0xffffff" alpha=".2"/>
+		</s:fill>
+	</s:Rect>
+	<s:HGroup verticalAlign="middle" width="100%" height="100%">
+		<mx:Spacer width="1"/>
+		<s:Label text="{title}" height="13" color="0xFFFF99" fontSize="14" fontWeight="normal" width="150" toolTip="Название альянса"/>
+		<s:Label text="{ownertitle}" height="13" color="0xFFFFFF" fontSize="14" fontWeight="normal" width="150" toolTip="Владелец альянса"/>
+		<money:Money money="{money}" width="100" toolTip="Денежный фонд альянса"/>
+		<s:HGroup verticalAlign="middle" width="80" toolTip="Максимальное количество участников">
+			<iconswf:IconMXML iconClass="{IconUserOnline}"/>
+			<s:Label text="{maxusers}" height="13" color="0xFFFFFF" fontSize="14" fontWeight="normal"/>
+		</s:HGroup>
+		<s:HGroup verticalAlign="middle" width="140" toolTip="Опыт альянса">
+			<iconswf:IconMXML iconClass="{IconPopular}"/>
+			<s:Label text="{experience}" height="13" color="0xFFFFFF" fontSize="14" fontWeight="normal"/>
+		</s:HGroup>
+	</s:HGroup>
+</s:Group>

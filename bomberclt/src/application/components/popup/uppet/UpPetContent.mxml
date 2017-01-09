@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" minWidth="200"
+		 xmlns:s="library://ns.adobe.com/flex/spark" initialize="group1_initializeHandler(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="35" width="100%" height="100%" xmlns:experience="application.gamecontainer.persinfobar.experience.*" xmlns:energy="application.gamecontainer.persinfobar.energy.*" xmlns:popular="application.gamecontainer.persinfobar.popular.*" xmlns:money="application.gamecontainer.persinfobar.money.*" xmlns:button="application.components.button.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.gamecontainer.scene.catalog.article.ArticleArtefact;
+			import application.gamecontainer.scene.catalog.article.ArticleMovieClass;
+			
+			import mx.events.FlexEvent;
+			
+			import utils.managers.pet.PetManager;
+			
+			private var _petmc:MovieClip;
+			
+			[Bindable]
+			private var _petlevel:int = 0;
+			[Bindable]
+			private var _needexp:int = 0;
+			[Bindable]
+			private var _feedprice:int = 0;
+			[Bindable]
+			private var _price:int = 0;
+
+			protected function group1_initializeHandler(event:FlexEvent):void
+			{
+				_petmc = new Pet();				
+				_petmc.gotoAndStop(PetManager.getNextPetType(GameApplication.app.userinfomanager.myuser.pet.level));
+				petui.addChild(_petmc);
+				
+				_petlevel = GameApplication.app.userinfomanager.myuser.pet.level + 1;
+				
+				if(GameApplication.app.petmanager.needpetexperience.length >= _petlevel){
+					_needexp = GameApplication.app.petmanager.needpetexperience[_petlevel - 1];
+				}
+				if(GameApplication.app.petmanager.petfeedprices.length >= _petlevel){
+					_feedprice = GameApplication.app.petmanager.petfeedprices[_petlevel - 1];
+				}
+				if(GameApplication.app.petmanager.petprices.length >= _petlevel){
+					_price = GameApplication.app.petmanager.petprices[_petlevel - 1];
+				}				
+				if(GameApplication.app.petmanager.petsartefacts.length >= _petlevel){
+					var patrs:Array = GameApplication.app.petmanager.petsartefacts[_petlevel - 1];
+					var artefacts:Object = new Object();
+					for(var i:int; i <  patrs.length; i++){
+						if(artefacts[patrs[i]] == null){
+							artefacts[patrs[i]] = patrs[i];							
+							var article:ArticleArtefact = new ArticleArtefact();							
+							article.init(GameApplication.app.petmanager.artefacts[patrs[i]]);		
+							arts.addElement(article);
+							//trace("------------> " + GameApplication.app.petmanager.artefacts[patrs[i]]["id"]);
+						}
+					}
+				}	
+				
+				if(GameApplication.app.userinfomanager.myuser.pet.experience < _needexp){
+					lne.visible = lne.includeInLayout = true;
+					bb.enabled = false;
+				}else{
+					lne.visible = lne.includeInLayout = false;					
+				}
+				if(GameApplication.app.userinfomanager.myuser.money < _price){
+					lnm.visible = lnm.includeInLayout = true;
+					bb.enabled = false;
+				}else{
+					lnm.visible = lnm.includeInLayout = false;				
+				}
+			}
+
+			protected function gamebutton1_clickHandler(event:MouseEvent):void
+			{
+				GameApplication.app.petmanager.buypet();
+				GameApplication.app.popuper.hidePopUp();
+			}
+
+		]]>
+	</fx:Script>
+	<s:HGroup width="100%" height="100%">
+		<s:HGroup width="100" height="100%" verticalAlign="middle" horizontalAlign="center">
+			<mx:UIComponent id="petui" width="80" height="80"/>	
+		</s:HGroup>
+		<s:VGroup width="100%" height="100%">		
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Уровень помощника:" width="220" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<s:Label text="[{_petlevel}]" color="0x00FFFF" fontSize="14" fontWeight="normal"/>			
+			</s:HGroup>					
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Необходимо опыта помощника:" width="220" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<s:Label text="{_needexp}" color="0xFF9933" fontSize="14" fontWeight="normal"/>		
+			</s:HGroup>
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Цена корма для помощника:" width="220" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<money:Money money="{_feedprice}"/>	
+			</s:HGroup>
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Цена:" width="220" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<money:Money money="{_price}"/>		
+			</s:HGroup>
+			<s:VGroup>
+				<s:Label text="Доступные артефакты:" width="220" color="0xffffff" fontSize="14" fontWeight="normal"/>
+				<s:TileGroup id="arts" width="250"/>	
+			</s:VGroup>
+			<s:Label id="lne" text="У вашего помощника недостаточно опыта." width="100%" color="0xFD3E3E" fontSize="14" fontWeight="normal"/>
+			<s:Label id="lnm" text="У ваc недостаточно денег." width="100%" color="0xFD3E3E" fontSize="14" fontWeight="normal"/>
+			<button:GameButton id="bb" label="купить" click="gamebutton1_clickHandler(event)"/>
+		</s:VGroup>
+	</s:HGroup>	
+</s:Group>

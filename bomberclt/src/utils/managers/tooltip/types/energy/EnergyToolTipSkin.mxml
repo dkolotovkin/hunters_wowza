@@ -1,0 +1,20 @@
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009"  xmlns:s="library://ns.adobe.com/flex/spark">
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="over" />
+		<s:State name="down" />
+	</s:states>
+	
+	<s:Rect width="100%" height="100%" >
+		<s:stroke>
+			<s:SolidColorStroke color="0x000000" alpha="1" />
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="0x000000" alpha=".9" />
+		</s:fill>
+	</s:Rect>
+	<s:HGroup paddingLeft="4" paddingRight="4" paddingBottom="3" paddingTop="5">
+		<s:Label text="Энергия:" color="0xcccccc"/>     
+		<s:Label id="energy" color="0x4BBA01" fontWeight="bold"/>
+	</s:HGroup>
+</s:SparkSkin>

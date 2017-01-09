@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" creationComplete="group1_creationCompleteHandler(event)" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx">
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.components.iconswf.IconMXML;
+			import application.gamecontainer.chat.smilepanel.iconsmile.IconSmile;
+			
+			import mx.events.FlexEvent;
+			import mx.utils.OnDemandEventDispatcher;
+
+			protected function group1_creationCompleteHandler(event:FlexEvent):void{				
+				
+				addSmile(angel, "*angel*");						
+				addSmile(smile, ":-)");
+				addSmile(sad, ":-(");
+				addSmile(yahoo, "*yahoo*");
+				addSmile(blum, ":-P");
+				addSmile(dirol, "8-)");
+				addSmile(bigsmile, ":-D");
+				
+				addSmile(blush, ":-[");
+				addSmile(yes, "*yes*");
+				addSmile(kiss, ":-*");
+				addSmile(cray, ":'(");
+				addSmile(secret, ":-X");
+				addSmile(good, "*good*");
+				addSmile(fool, "*fool*");
+				
+				addSmile(bee, "*bee*");				
+				addSmile(mosking, "*mosking*");
+				addSmile(diablo, "]:->");
+				addSmile(music, "[:-}");
+				addSmile(airkiss, "*airkiss*");
+				addSmile(bad, "*bad*");
+				addSmile(tired, "*tired*");
+				
+				addSmile(stop, "*stop*");
+				addSmile(mankiss, "*kissing*");
+				addSmile(rose, "@}->--");
+				addSmile(acute, ";D");
+				addSmile(drink, "*drink*");
+				addSmile(stratch, "*stratch*");
+				addSmile(dance, "*dance*");
+				
+				addSmile(help, "*help*");
+				addSmile(dash, "*dash*");
+				addSmile(wacko, "*wacko*");
+				addSmile(ok, "*ok*");
+				addSmile(mamba, "*mamba*");
+				addSmile(sorry, "*sorry*");
+				addSmile(clapping, "*clapping*");
+				
+				addSmile(rolf, "*rolf*");
+				addSmile(pardon, "*pardon*");
+				addSmile(no, "*no*");
+				addSmile(crazy, "*crazy*");
+				addSmile(dntknw, "*dntknw*");
+			}
+			
+			private function addSmile(smileClass:Class, type:String):void{
+				var smile:IconSmile = new IconSmile();
+				smile.iconClass = smileClass;
+				smile.type = type;	
+				tgr.addElement(smile);
+			}
+			
+			public function show():void{				
+				stage.addEventListener(MouseEvent.CLICK, onStageClick, false, 0, true);
+			}
+			
+			public function hide():void{				
+				stage.removeEventListener(MouseEvent.CLICK, onStageClick);
+			}
+			private function onStageClick(e:MouseEvent):void{
+				GameApplication.app.gameContainer.hideSmiles();
+			}
+
+		]]>
+	</fx:Script>
+	
+	<s:Rect width="100%" height="100%" radiusX="4" radiusY="4">
+		<s:stroke>
+			<s:SolidColorStroke color="0x9B5628"/>
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="0xC48C55"/>
+		</s:fill>
+	</s:Rect>
+	
+	<s:TileGroup verticalGap="0" horizontalGap="0" id="tgr" left="3" right="3" top="3" bottom="3"/>
+</s:Group>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" initialize="onInit(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="20" width="500" height="355">
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			
+			import mx.events.FlexEvent;
+			
+			import spark.utils.TextFlowUtil;
+			
+			protected function onInit(event:FlexEvent):void
+			{				
+				var _text:String = "<span  color='0xFF9933' fontSize='14'>" + 
+					"Помощник" + 
+					"</span><br/>"+
+					
+					
+					"<span  color='0xFFFFFF' fontSize='12'>" + 
+					"Это ваш питомец, который помогает искать артефакты в забегах. Когда помощник находит в забеге артефакт, он отображается вместе с заработанной вами наградой (опытом и евро)." + 
+					"</span><br/><br/>" +
+					
+					
+					"<span  color='0xFF9933' fontSize='14'>" + 
+					"Артефакты" + 
+					"</span><br/>"+
+					
+					
+					"<span  color='0xFFFFFF' fontSize='12'>" + 
+					"Ценные предметы, которые ваш помощник может найти в забегах. "+
+					"Найденные артефакты попадают в ваш рюкзак. "+
+					"Артефакты можно обменивать на опыт и популярность."+
+					"</span><br/><br/>"+
+					
+					
+					"<span  color='0xFF9933' fontSize='14'>" + 
+					"Уровень и опыт помощника" + 
+					"</span><br/>"+
+					
+					
+					"<span  color='0xFFFFFF' fontSize='12'>" + 
+					"Опыт помощника - это качественная характеристика, отображающая как часто ваш помощник находит артефакты. "+
+					"Для того чтобы купить помощника с более высоким уровнем он должен набрать определенное поличество опыта. "+
+					"С каждым новым уровнем открываются все более редкие и ценные артефакты."+
+					"</span><br/><br/>"+
+					
+					"<span  color='0xFF9933' fontSize='14'>" + 
+					"Энергия помощника" + 
+					"</span><br/>"+
+					
+					
+					"<span  color='0xFFFFFF' fontSize='12'>" + 
+					"Это характеристика, отображающая уровень энергии вашего питомца. "+
+					"С каждым забегом энергия вашего помощника уменьшается на 1. "+
+					"Для того чтобы восстановить энергию помощника, его необходимо покормить."+
+					"</span><br/><br/>"+
+					
+					
+					"<span  color='0xFF9933' fontSize='14'>" + 
+					"Эффективность работы" + 
+					"</span><br/>"+
+					
+					
+					"<span  color='0xFFFFFF' fontSize='12'>" + 
+					"Эффективность работы помощника напрямую зависит от его уровня и энегрии. "+
+					"Чем выше уровень вашего помощника, тем чаще он находит более редкие и ценные артефакты. " +
+					"Чем выше энергия вашего помощника, тем более эффективно (чаще) он находит артефакты." +
+					"</span><br/><br/>";				
+				
+				
+				rtext.textFlow = TextFlowUtil.importFromString(_text);
+			}
+			
+		]]>
+	</fx:Script>
+	<s:Scroller width="100%" height="100%">
+		<s:Group width="100%" height="100%">
+			<s:RichText id="rtext" width="100%"/>			
+		</s:Group>
+	</s:Scroller>
+</s:Group>

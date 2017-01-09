@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="30" width="300" height="100%" xmlns:button="application.components.button.*" xmlns:money="application.gamecontainer.persinfobar.money.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			[Bindable]
+			public var text:String = "";
+			public var closeFunction:Function;			
+
+			protected function buy20_clickHandler(event:MouseEvent):void
+			{
+				GameApplication.app.apimanager.buyMoney(20);
+				closeFunction && closeFunction();
+			}
+
+
+			protected function buy50_clickHandler(event:MouseEvent):void
+			{
+				GameApplication.app.apimanager.buyMoney(50);
+				closeFunction && closeFunction();
+			}
+
+
+			protected function buy160_clickHandler(event:MouseEvent):void
+			{
+				GameApplication.app.apimanager.buyMoney(160);
+				closeFunction && closeFunction();
+			}
+
+
+			protected function buy240_clickHandler(event:MouseEvent):void
+			{
+				GameApplication.app.apimanager.buyMoney(240);
+				closeFunction && closeFunction();
+			}
+
+
+			protected function buy400_clickHandler(event:MouseEvent):void
+			{
+				GameApplication.app.apimanager.buyMoney(400);
+				closeFunction && closeFunction();
+			}
+
+		]]>
+	</fx:Script>
+	
+	<s:VGroup width="100%" height="100%" horizontalAlign="center" gap="10">
+		<s:HGroup verticalAlign="middle">
+			<money:Money money="1500" width="70" darkMode="true"/>
+			<button:GameButton id="buy20" label="за 20 OK" width="150" click="buy20_clickHandler(event)"/>
+		</s:HGroup>
+		<s:HGroup verticalAlign="middle">
+			<money:Money money="4000" width="70" darkMode="true"/>
+			<button:GameButton id="buy50" label="за 50 OK" width="150" click="buy50_clickHandler(event)"/>
+		</s:HGroup>
+		<s:HGroup verticalAlign="middle">
+			<money:Money money="14000" width="70" darkMode="true"/>
+			<button:GameButton id="buy160" label="за 160 OK" width="150" click="buy160_clickHandler(event)"/>
+		</s:HGroup>
+		<s:HGroup verticalAlign="middle">
+			<money:Money money="23000" width="70" darkMode="true"/>
+			<button:GameButton id="buy240" label="за 240 OK" width="150" click="buy240_clickHandler(event)"/>
+		</s:HGroup>
+		<s:HGroup verticalAlign="middle">
+			<money:Money money="40000" width="70" darkMode="true"/>
+			<button:GameButton id="buy400" label="за 400 OK" width="150" click="buy400_clickHandler(event)"/>
+		</s:HGroup>
+		<s:Label text="* на ваш счет деньги поступят в течение минуты после пополнения" width="100%" color="0xffffff" fontSize="10" fontWeight="normal" textAlign="left"/>
+	</s:VGroup>
+</s:Group>

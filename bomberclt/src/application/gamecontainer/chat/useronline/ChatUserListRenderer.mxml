@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:DataRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" implements="mx.core.IFactory, utils.chat.IFlashing" rollOver="rollOver(event)" rollOut="rollOut(event)" click="click(event)"
+				xmlns:s="library://ns.adobe.com/flex/spark" buttonMode="true"
+				xmlns:mx="library://ns.adobe.com/flex/mx" initialize="onInit(event)" width="100%" xmlns:iconswf="application.components.iconswf.*">
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.gamecontainer.chat.actionmenu.chatuser.ActionMenuChatUser;
+			
+			import mx.events.FlexEvent;
+			
+			import utils.chat.Flasher;
+			import utils.chat.IFlashing;
+			import utils.user.Sex;
+			import utils.user.User;
+			import utils.user.UserEvent;
+			import utils.user.UserRole;
+			
+			private var _over:Boolean = false;
+			private var _flash:Boolean;
+			private var _selected:Boolean;
+			private var _flasher:Flasher;	
+			
+			public function newInstance():*{
+				var ret:ChatUserListRenderer = new ChatUserListRenderer();
+				return ret;
+			}
+
+			protected function onInit(event:FlexEvent):void{
+				_flasher = new Flasher(this);
+			}
+			
+			public function startFlash ():void {
+				_flasher.start(400, 4);
+			}
+			
+			public function stopFlash ():void {
+				_flasher.stop();
+			}
+			
+			override public function set data(value:Object):void
+			{			
+				if(value == null){
+					if(this.data != null){
+						(this.data as ChatUser).user.removeEventListener(UserEvent.UPDATE, onUpdateUser);
+					}
+				}
+				super.data = value;
+				
+				if(this.data != null){
+//					if((this.data as ChatUser).flash){	
+//						(this.data as ChatUser).flash = false;
+//						startFlash();
+//					}
+					(this.data as ChatUser).user.addEventListener(UserEvent.UPDATE, onUpdateUser, false, 0, true);			
+					username.text = (this.data as ChatUser).user.title;
+					userlevel.text = String("[" + (this.data as ChatUser).user.level + "]");
+					
+					updateIcon();
+				}
+				updateState();
+			}
+			
+			private function onUpdateUser(e:UserEvent):void{			
+				updateIcon();			
+				updateState();
+			}
+			
+			private function updateIcon():void{
+				if(this.data){
+					if ((this.data as ChatUser).user.sex == Sex.MALE){
+						icon.icon.gotoAndStop(1);
+					}else{
+						icon.icon.gotoAndStop(2);
+					}
+				}
+			}
+
+
+			protected function rollOver(event:MouseEvent):void
+			{				
+				_over = true;
+				updateState ();
+			}
+
+
+			protected function rollOut(event:MouseEvent):void{
+				_over = false;
+				updateState ();
+			}
+
+
+			protected function click(event:MouseEvent):void{
+				GameApplication.app.actionShowerMenu.showMenu(new ActionMenuChatUser((this.data as ChatUser).user));
+			}
+			
+			
+			private function updateState ():void {
+				if (this.data){
+					if (_selected){
+						username.setStyle("color", "0xCD3F44");
+					}else if (_over){
+						username.setStyle("color", "0xD86B76");
+					}else if (_flash){
+						username.setStyle("color", "0xD55E6A");					
+					}else{
+						if ((this.data as ChatUser).user.king == 1){
+							username.setStyle("color", "0xff0000");
+						}else if ((this.data as ChatUser).user.role == UserRole.MODERATOR){
+							username.setStyle("color", "0x028AE3");
+						}else if ((this.data as ChatUser).user.role == UserRole.ADMINISTRATOR || (this.data as ChatUser).user.role == UserRole.ADMINISTRATOR_MAIN){
+							username.setStyle("color", "0x003399");
+						}else{
+							username.setStyle("color", "0xCD3F44");
+						}						
+					}					
+				}
+			}
+			
+			public function get selected ():Boolean {
+				return _selected;
+			}
+			
+			public function set selected (value:Boolean):void {
+				if (_selected != value){
+					_selected = value;
+					updateState();
+				}
+			}
+			
+			public function get flash ():Boolean {
+				return _flash;
+			}
+			
+			public function set flash (value:Boolean):void {
+				if (_flash != value){
+					_flash = value;
+					updateState();
+				}	
+			}
+		]]>
+	</fx:Script>
+	
+	<s:HGroup width="110" height="20" gap="0" verticalAlign="middle">
+		<s:Group>
+			<iconswf:IconMXML id="icon" iconClass="{IconUserOnline}" height="5" top="-5"/>			
+		</s:Group>
+		<mx:Spacer width="3"/>
+		<s:Label id="username" color="0x00FF00" fontSize="12" height="15"/>
+		<mx:Spacer width="2"/>
+		<s:Label id="userlevel" color="0x028AE3" fontSize="14" height="15"/>
+	</s:HGroup>
+</s:DataRenderer>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" horizontalAlign="center" click="onClick(event)" implements="utils.managers.tooltip.IToolTiped"
+		  xmlns:s="library://ns.adobe.com/flex/spark" buttonMode="true" rollOver="rollOver(event)" rollOut="rollOut(event)"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:article="application.gamecontainer.scene.catalog.article.*" xmlns:money="application.gamecontainer.persinfobar.money.*" xmlns:article1="application.gamecontainer.scene.bag.article.*">
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.gamecontainer.chat.actionmenu.bagarticle.ActionMenuBagItemArticle;
+			import application.gamecontainer.chat.actionmenu.bagarticle.ActionMenuBagPresentArticle;
+			
+			import mx.collections.errors.ItemPendingError;
+			import mx.events.FlexEvent;
+			
+			import utils.managers.tooltip.IToolTiped;
+			import utils.managers.tooltip.ToolTipType;
+			import utils.shop.item.Item;
+			
+			private var _selected:Boolean = false;
+			private var _over:Boolean = false;
+			[Bindable]
+			public var item:Item;
+			
+			public var tooltiptitle:String;
+			public var tooltipdescription:String;
+			
+			protected function rollOver(event:MouseEvent):void{
+				_over = true;
+				updateState();
+			}
+			
+			protected function rollOut(event:MouseEvent):void{
+				_over = false;
+				updateState();
+			}
+			
+			public function set selected (value:Boolean):void {
+				if (_selected != value){
+					_selected = value;
+					updateState();
+				}	
+			}
+			
+			private function updateState ():void{
+				if (_selected) {
+					article.currentState = "selected";
+				}else{
+					if (_over){
+						article.currentState = "over";
+					}else{
+						article.currentState = "normal";
+					}
+				}
+			}
+			
+			public function init(item:Item):void{
+				this.item = item;				
+				article.init(item);	
+				
+				var percent:int = Math.round((item.quality / item.maxquality) * 100);
+				this.tooltiptitle = item.title;
+				this.tooltipdescription = "качество: " + percent + "%";
+				
+				if(item.onuser == 1) selected = true;
+				else selected = false;
+			}
+			
+			public function get toolTipDelay() : int {				
+				return 400;
+			}
+			
+			public function get toolTipDX() : int {
+				return 10;
+			}
+			
+			public function get toolTipDY() : int {
+				return 2;
+			}
+			
+			public function get toolTipType() : int {				
+				return ToolTipType.TITLEANDDESCRIPTION;
+			}
+			
+			protected function onClick(event:MouseEvent):void
+			{
+				GameApplication.app.actionShowerMenu.showMenu(new ActionMenuBagItemArticle(item));
+			}
+			
+		]]>
+	</fx:Script>	
+	<article1:ArticleItem id="article"/>
+</s:VGroup>

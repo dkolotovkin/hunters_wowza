@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" initialize="onInit(event)" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="25" xmlns:experience="application.gamecontainer.persinfobar.experience.*" xmlns:energy="application.gamecontainer.persinfobar.energy.*" xmlns:time="application.gamecontainer.persinfobar.time.*" xmlns:money="application.gamecontainer.persinfobar.money.*" xmlns:popular="application.gamecontainer.persinfobar.popular.*" xmlns:iconswf="application.components.iconswf.*">
+
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.GameMode;
+			import application.components.popup.anotherserver.PopUpAnotherServer;
+			import application.components.popup.buymoney.PopUpBuyMoney;
+			import application.components.popup.help.experience.PopUpHelpExperience;
+			import application.components.popup.help.popular.PopUpHelpPopular;
+			
+			import flashx.textLayout.formats.TextDecoration;
+			
+			import mx.events.FlexEvent;
+			
+			import spark.filters.GlowFilter;
+			
+			import utils.game.GameManagerTimerEvent;
+			import utils.managers.persinfo.UserInfoManager;
+			import utils.time.TimeUtils;
+			
+			private var _gf:spark.filters.GlowFilter = new GlowFilter(0x753F1C, 1, 5, 5, 2.3);			
+
+			protected function onInit(event:FlexEvent):void
+			{
+				nick.filters = [_gf];
+				GameApplication.app.gamemanager.addEventListener(GameManagerTimerEvent.TIMER_UPDATE, onTimeUpdate);
+			}			
+			
+			private function onTimeUpdate(e:GameManagerTimerEvent):void{				
+				timeindicator.time = TimeUtils.getGameTime(e.time);
+			}
+
+			protected function nick_rollOverHandler(event:MouseEvent):void
+			{
+				nick.setStyle("textDecoration", TextDecoration.UNDERLINE);
+			}
+
+
+			protected function nick_rollOutHandler(event:MouseEvent):void
+			{
+				nick.setStyle("textDecoration", TextDecoration.NONE);
+			}
+
+
+			protected function nick_clickHandler(event:MouseEvent):void
+			{
+				GameApplication.app.userinfomanager.showchangeInfo();
+			}
+
+
+			protected function money1_clickHandler(event:MouseEvent):void
+			{
+				GameApplication.app.apimanager.addMoneyUserID = GameApplication.app.userinfomanager.myuser.id;
+				GameApplication.app.apimanager.showBuyMoneyPopUp();
+			}
+
+
+			protected function showHelpExperience(event:MouseEvent):void
+			{
+				GameApplication.app.popuper.show(new PopUpHelpExperience());
+			}
+
+
+			protected function showHelpPopular(event:MouseEvent):void
+			{
+				GameApplication.app.popuper.show(new PopUpHelpPopular());
+			}
+
+
+			protected function label1_rollOverHandler(event:MouseEvent):void
+			{
+				(event.target as Label).setStyle("textDecoration", TextDecoration.UNDERLINE);
+			}
+
+
+			protected function label1_rollOutHandler(event:MouseEvent):void
+			{
+				(event.target as Label).setStyle("textDecoration", TextDecoration.NONE);
+			}
+
+
+			protected function label1_clickHandler(event:MouseEvent):void
+			{
+				GameApplication.app.popuper.show(new PopUpAnotherServer());
+			}
+
+		]]>
+	</fx:Script>
+
+	<s:Rect width="100%" height="100%" bottomLeftRadiusX="8" bottomLeftRadiusY="8" bottomRightRadiusX="8" bottomRightRadiusY="8">		
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:entries>
+					<s:GradientEntry color="0xAE7115" ratio="0.00" alpha="1"/>					
+					<s:GradientEntry color="0xF2CF92" ratio="0.99" alpha="1"/>
+				</s:entries>
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+	<s:HGroup width="100%" height="100%" verticalAlign="middle" left="10" right="10" gap="0" visible="{!GameApplication.app.gamemanager.gameMode}" includeInLayout="{!GameApplication.app.gamemanager.gameMode}">
+		<s:Label paddingTop="1" id="nick" toolTip="Параметры персонажа" buttonMode="true" text="{GameApplication.app.userinfomanager.myuser.title}" height="13" color="0xffffff" fontSize="14" fontWeight="normal" click="nick_clickHandler(event)" rollOver="nick_rollOverHandler(event)" rollOut="nick_rollOutHandler(event)"/>
+		<mx:Spacer width="10"/>
+		<!--<s:Label toolTip="Местонахождение" visible="false" includeInLayout="false" text="{GameApplication.app.serversmanager.currentServerName}" height="13" color="0xFFFFFF" fontSize="14" fontWeight="normal"/>
+		<mx:Spacer width="5"/>
+		<s:Label toolTip="Перейти в другой город" text=">>" visible="false" includeInLayout="false" buttonMode="true" color="0xFFFFFF" fontSize="10" fontWeight="normal" rollOver="label1_rollOverHandler(event)" rollOut="label1_rollOutHandler(event)" click="label1_clickHandler(event)"/>
+		<mx:Spacer width="10"/>-->
+		<experience:ExperienceIndicator width="100%" buttonMode="true" experience="{GameApplication.app.userinfomanager.myuser.experience}" maxexperience="{GameApplication.app.userinfomanager.myuser.maxExperience}" level="{GameApplication.app.userinfomanager.myuser.level}" click="showHelpExperience(event)"/>
+		<mx:Spacer width="10"/>
+		<!--<mx:Spacer width="10"/>
+		<energy:EnergyIndicator width="100%" energy="{GameApplication.app.userinfomanager.myuser.energy}" maxenergy="{GameApplication.app.userinfomanager.myuser.maxEnergy}"/>-->
+		<popular:PopularIndicator id="mypopular" buttonMode="true" width="100%" popular="{GameApplication.app.userinfomanager.myuser.popular}" click="showHelpPopular(event)"/>
+		<mx:Spacer width="10"/>		
+		<money:Money buttonMode="true" toolTip="Ваш баланс" money="{GameApplication.app.userinfomanager.myuser.money}" right="0" click="money1_clickHandler(event)"/>
+	</s:HGroup>
+	<s:HGroup width="100%" height="100%" verticalAlign="middle" left="10" right="10" gap="5" visible="{GameApplication.app.gamemanager.gameMode}" includeInLayout="{GameApplication.app.gamemanager.gameMode}">
+		<s:Label paddingTop="1" text="Охотник:" height="13" color="0xffffff" fontSize="14" fontWeight="normal" filters="{[new GlowFilter(0x000000, 1, 10, 10, 1)]}"/>
+		<s:Label paddingTop="1" height="13" color="0xffffff" fontSize="14" fontWeight="bold" filters="{[new GlowFilter(0x000000, 1, 10, 10, 1)]}" text="{GameApplication.app.gamemanager.hunter.title}"/>
+		<s:Label id="creatorMap" width="100%" textAlign="center" text="{GameApplication.app.gamemanager.creatorMapText}" toolTip="Создатель карты {GameApplication.app.gamemanager.mapName}" height="13" color="0xffffff" fontSize="14" fontWeight="normal" filters="{[new GlowFilter(0x000000, 1, 10, 10, 1)]}"/>
+		<s:HGroup toolTip="Количество собранных орехов" gap="0" verticalAlign="middle" visible="{GameApplication.app.gamemanager.hunterId != GameApplication.app.userinfomanager.myuser.id}" includeInLayout="{GameApplication.app.gamemanager.hunterId != GameApplication.app.userinfomanager.myuser.id}">
+			<iconswf:IconMXML iconClass="{IconNut}"/>
+			<mx:Spacer width="5"/>
+			<s:Label paddingTop="1" text="x" height="13" color="0xffffff" fontSize="14" fontWeight="normal" filters="{[new GlowFilter(0x000000, 1, 10, 10, 1)]}"/>
+			<mx:Spacer width="5"/>
+			<s:Label paddingTop="1" text="{GameApplication.app.gamemanager.countNuts}" height="13" color="0xffffff" fontSize="14" fontWeight="normal" filters="{[new GlowFilter(0x000000, 1, 10, 10, 1)]}"/>			
+		</s:HGroup>
+		<mx:Spacer width="20"/>
+		<s:HGroup toolTip="Количество собранных патронов" gap="0" verticalAlign="middle" visible="{GameApplication.app.gamemanager.hunterId != GameApplication.app.userinfomanager.myuser.id}" includeInLayout="{GameApplication.app.gamemanager.hunterId != GameApplication.app.userinfomanager.myuser.id}">
+			<iconswf:IconMXML iconClass="{IconBullet}"/>
+			<mx:Spacer width="5"/>
+			<s:Label paddingTop="1" text="x" height="13" color="0xffffff" fontSize="14" fontWeight="normal" filters="{[new GlowFilter(0x000000, 1, 10, 10, 1)]}"/>
+			<mx:Spacer width="5"/>
+			<s:Label paddingTop="1" text="{GameApplication.app.gamemanager.countBullets}" height="13" color="0xffffff" fontSize="14" fontWeight="normal" filters="{[new GlowFilter(0x000000, 1, 10, 10, 1)]}"/>			
+		</s:HGroup>
+		<mx:Spacer width="20" visible="{GameApplication.app.gamemanager.hunterId == GameApplication.app.userinfomanager.myuser.id}" includeInLayout="{GameApplication.app.gamemanager.hunterId == GameApplication.app.userinfomanager.myuser.id}"/>
+		<s:HGroup toolTip="Количество убитых" gap="0" verticalAlign="middle" visible="{GameApplication.app.gamemanager.hunterId == GameApplication.app.userinfomanager.myuser.id}" includeInLayout="{GameApplication.app.gamemanager.hunterId == GameApplication.app.userinfomanager.myuser.id}">
+			<iconswf:IconMXML iconClass="{IconHero}"/>
+			<mx:Spacer width="5"/>
+			<s:Label paddingTop="1" text="x" height="13" color="0xffffff" fontSize="14" fontWeight="normal" filters="{[new GlowFilter(0x000000, 1, 10, 10, 1)]}"/>
+			<mx:Spacer width="5"/>
+			<s:Label paddingTop="1" text="{GameApplication.app.gamemanager.countKilled}" height="13" color="0xffffff" fontSize="14" fontWeight="normal" filters="{[new GlowFilter(0x000000, 1, 10, 10, 1)]}"/>			
+		</s:HGroup>
+		<mx:Spacer width="20" visible="{GameApplication.app.gamemanager.hunterId == GameApplication.app.userinfomanager.myuser.id}" includeInLayout="{GameApplication.app.gamemanager.hunterId == GameApplication.app.userinfomanager.myuser.id}"/>
+		<s:HGroup toolTip="Количество оставшихся патронов" gap="0" verticalAlign="middle" visible="{GameApplication.app.gamemanager.hunterId == GameApplication.app.userinfomanager.myuser.id}" includeInLayout="{GameApplication.app.gamemanager.hunterId == GameApplication.app.userinfomanager.myuser.id}">
+			<iconswf:IconMXML iconClass="{IconBullet}"/>
+			<mx:Spacer width="5"/>
+			<s:Label paddingTop="1" text="x" height="13" color="0xffffff" fontSize="14" fontWeight="normal" filters="{[new GlowFilter(0x000000, 1, 10, 10, 1)]}"/>
+			<mx:Spacer width="5"/>
+			<s:Label paddingTop="1" text="{GameApplication.app.userinfomanager.myuser.bullets}" height="13" color="0xffffff" fontSize="14" fontWeight="normal" filters="{[new GlowFilter(0x000000, 1, 10, 10, 1)]}"/>			
+		</s:HGroup>
+		<mx:Spacer width="30"/>
+		<time:TimeIndicator id="timeindicator" toolTip="Время до окончания раунда"/>		
+	</s:HGroup>	
+</s:Group>

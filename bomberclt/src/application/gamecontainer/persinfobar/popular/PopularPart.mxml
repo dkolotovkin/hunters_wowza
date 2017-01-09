@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" implements="utils.managers.tooltip.IToolTiped"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import utils.managers.tooltip.IToolTiped;
+			import utils.managers.tooltip.ToolTipType;
+			public var min:Number;
+			public var max:Number;			
+			public var popular:Number;
+			public var title:String;
+			
+			public function set percentFill(value:Number):void{
+				indicator.percentWidth = value;
+			}
+			
+			public function get toolTipDelay() : int {				
+				return 100;
+			}
+			
+			public function get toolTipDX() : int {
+				return 10;
+			}
+			
+			public function get toolTipDY() : int {
+				return 2;
+			}
+			
+			public function get toolTipType() : int {				
+				return ToolTipType.POPULAR;
+			}
+		]]>
+	</fx:Script>
+	
+	<s:Rect height="100%" width="100%" top="1" bottom="1">
+		<s:fill>
+			<s:SolidColor color="0xffffff" alpha=".2"/>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Rect height="100%" width="1" right="0" top="1" bottom="1">
+		<s:fill>
+			<s:SolidColor color="0x6C3F1B" alpha="1"/>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Rect height="100%" width="1" left="0" top="1" bottom="1">
+		<s:fill>
+			<s:SolidColor color="0x6C3F1B" alpha="1"/>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Rect id="indicator" height="100%" top="1" bottom="1" left="1" right="1">		
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:entries>
+					<s:GradientEntry color="0x9BA2D2" ratio="0.00" alpha="1"/>
+					<s:GradientEntry color="0xDDDDFF" ratio="0.4" alpha="1"/>
+					<s:GradientEntry color="0x7282C0" ratio="0.99" alpha="1"/>
+				</s:entries>
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+</s:Group>

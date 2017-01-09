@@ -1,0 +1,186 @@
+
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark" implements="utils.chat.IFlashing"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" buttonMode="true">
+
+	<fx:Script>
+		<![CDATA[
+			import application.components.buttonswf.ButtonSWF;
+			import application.components.buttonswf.ButtonSWFEvent;
+			
+			import flashx.textLayout.formats.LineBreak;
+			import flashx.textLayout.formats.TextAlign;
+			
+			import mx.events.FlexEvent;
+			
+			import utils.chat.Flasher;
+			import utils.chat.IFlashing;
+			import utils.chat.room.Room;			
+			
+			private var _flashMode:Boolean;
+			private var _roomtitle:String;
+			private var _room:Room;
+			private var _selected:Boolean;			
+			private var _closeBut:ButtonSWF = new ButtonSWF(IconButCloseTab);
+		
+			private var _flasher:Flasher = new Flasher(this as IFlashing);
+			private var _flash:Boolean;	
+			
+			override public function set initialized(value:Boolean):void{
+				super.initialized = value;						
+				buttonMode = true;
+				_closeBut.addEventListener(ButtonSWFEvent.CLICK, onCloseButtonClick);
+				addEventListener(MouseEvent.CLICK, onClick , false, 0, true);
+				updateRemoving (int(_room.id));				
+				updateState();
+			}
+			
+			public function set roomtitle(value:String):void{
+				_roomtitle = value;				
+			}
+			
+			public function get room ():Room {
+				return _room;
+			}
+			
+			public function set room (value:Room):void {
+				_room = value;
+			}
+			
+			public function get flashMode ():Boolean {
+				return _flashMode;
+			}
+			
+			public function set flashMode (value:Boolean):void {				
+				if (_flashMode != value){
+					_flashMode = value;
+					
+					if (value){						
+						_flasher.start(200);
+					} else{						
+						_flasher.stop();
+					}
+					updateState();
+				}	
+			}
+			
+			public function get flash ():Boolean {
+				return _flash;
+			}
+			
+			public function set flash (value:Boolean):void {				
+				if (_flash != value){
+					_flash = value;
+					updateState();
+				}	
+			}		
+			
+			private function onCloseButtonClick(event : ButtonSWFEvent) : void {
+				dispatchEvent(new ChatRoomTabEvent(ChatRoomTabEvent.NEED_CLOSE_ROOM, this));
+			}
+			
+			private function onClick(event : MouseEvent) : void {
+				event.stopPropagation();		
+				dispatchEvent(new ChatRoomTabEvent (ChatRoomTabEvent.NEED_SELECTED_ROOM, this));				
+			}
+			
+			public function get selected ():Boolean {
+				return _selected;
+			}
+			
+			public function set selected (value:Boolean):void {				
+				if (_selected != value){
+					_selected = value;
+					
+					if (value && flashMode) {
+						flashMode = false;
+					}
+					updateState();
+				}	
+			}
+			
+			
+			private function updateState() : void {
+				if (initialized){					
+					if (_selected){
+						currentState = ChatRoomTabSkinState.SELECTED;
+						label.setStyle("color", 0xffffff);					
+					} else if(_flash){
+						currentState = ChatRoomTabSkinState.FLASH;
+						label.setStyle("color", 0xA45928);					
+					}else{
+						currentState = ChatRoomTabSkinState.NORMAL;
+						label.setStyle("color", 0xFBEFC4);
+					}
+					label.text = _roomtitle;
+					label.setStyle("lineBreak", LineBreak.EXPLICIT);
+					label.setStyle("fontSize", 11);	
+					label.setStyle("textAlign", TextAlign.CENTER);
+					if (_closeBut.visible){
+						if(initialized) label.right = 22;										
+					}else label.right = 8;
+				}
+			}
+						
+			override protected function createChildren ():void{
+				super.createChildren ();
+				addElement(_closeBut);
+			}
+			
+			override protected function updateDisplayList(w : Number, h : Number) : void {
+				super.updateDisplayList(w, h);			
+				_closeBut.x = w - _closeBut.width - 4;
+				_closeBut.y = (h - _closeBut.height)/ 2;	
+				dispatchEvent(new ChatRoomTabEvent(ChatRoomTabEvent.ADD_TAB, this));					
+			}
+			
+			
+			public function updateRemoving(chatRoomId:int) : void {
+				if (int(_room.id) >= 0) {
+					_closeBut.visible = false;								
+				}else{
+					_closeBut.visible = true;				
+				}
+				updateState();
+			}
+		]]>
+	</fx:Script>
+	
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="selected" />
+		<s:State name="flash" />
+	</s:states>
+	
+	
+	
+	
+	<s:Rect includeIn="normal" width="100%"  height="100%" topRightRadiusX="4" topRightRadiusY="4" topLeftRadiusX="4" topLeftRadiusY="4">
+		<s:stroke>		
+			<s:SolidColorStroke color="0xA45928" alpha=".7" weight="1" pixelHinting= "true" />
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="0xDB9668" alpha="1"/>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Rect includeIn="flash" width="100%"  height="100%" topRightRadiusX="4" topRightRadiusY="4" topLeftRadiusX="4" topLeftRadiusY="4">
+		<s:stroke>	
+			<s:SolidColorStroke color="0xA45928" weight="1" pixelHinting= "true" />
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="0xFBEFC4"/>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Rect includeIn="selected" width="100%" height="100%" topRightRadiusX="4" topRightRadiusY="4" topLeftRadiusX="4" topLeftRadiusY="4">
+		<s:stroke>		
+			<s:SolidColorStroke color="0xA45928" alpha=".7" weight="1" pixelHinting= "true" />
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="0xDB9668" />
+		</s:fill>
+	</s:Rect>
+	
+	<s:Label left="8" right="22" top="4" id="label" mouseEnabled="false" mouseChildren="false"/>	
+</s:Group>

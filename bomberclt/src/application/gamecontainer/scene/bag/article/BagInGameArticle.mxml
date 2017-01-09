@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" horizontalAlign="center" click="onClick(event)"
+		  xmlns:s="library://ns.adobe.com/flex/spark" buttonMode="true" rollOver="rollOver(event)" rollOut="rollOut(event)"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:article="application.gamecontainer.scene.catalog.article.*" xmlns:money="application.gamecontainer.persinfobar.money.*">
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.gamecontainer.chat.actionmenu.bagarticle.ActionMenuBagPresentArticle;
+			import application.gamecontainer.chat.actionmenu.bagingamearticle.ActionMenuBagInGameArticle;
+			
+			import mx.events.FlexEvent;
+			
+			import utils.shop.item.Item;
+			
+			private var _over:Boolean = false;
+			[Bindable]
+			public var item:Item;
+			
+			protected function rollOver(event:MouseEvent):void{
+				_over = true;
+				updateState();
+			}
+			
+			protected function rollOut(event:MouseEvent):void{
+				_over = false;
+				updateState();
+			}
+			
+			private function updateState ():void{
+				if (_over){
+					article.currentState = "over";
+				}else{
+					article.currentState = "normal";
+				}
+			}
+			
+			public function init(item:Item):void{
+				article.moviegr.width = article.moviegr.height = 40;
+				this.item = item;				
+				article.init(item);	
+				this.toolTip = item.title;
+			}
+			
+			protected function onClick(event:MouseEvent):void
+			{
+				event.stopPropagation();
+				//GameApplication.app.actionShowerMenu.showMenu(new ActionMenuBagInGameArticle(item));
+				GameApplication.app.useitemingamemanager.useItem(item);
+			}
+			
+		]]>
+	</fx:Script>	
+	<article:Article id="article" width="50" height="50"/>
+</s:VGroup>

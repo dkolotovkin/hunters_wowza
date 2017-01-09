@@ -1,0 +1,40 @@
+<s:SparkSkin name="TrackThumbOnlyHSBSkin" xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+        xmlns:fb="http://ns.adobe.com/flashbuilder/2009"
+        minWidth="6" minHeight="30">
+    <s:states>
+        <s:State name="normal" />
+        <s:State name="disabled" />
+        <s:State name="inactive" />
+    </s:states>
+ 
+    <fx:Script fb:purpose="styling">
+        <![CDATA[            
+            static private const exclusions:Array = ["track", "thumb", "decrementButton", "incrementButton"];
+ 
+            override public function get colorizeExclusions():Array {
+                return exclusions;
+            }
+ 
+            override protected function initializationComplete():void {               
+                super.initializationComplete();
+            }
+        ]]>
+    </fx:Script> 
+    
+    <s:Button id="track" width="4" top="0" bottom="0" left="1"
+              focusEnabled="false" visible.normal="true" visible.disabled="false" visible.inactive="false"
+              skinClass="skins.scrollbar.VScrollBarTrackSkin"/>
+    
+    <s:Button id="thumb" width="6" visible.normal="true" visible.disabled="false" visible.inactive="false"
+              focusEnabled="false" buttonMode="true"
+              skinClass="skins.scrollbar.VScrollBarThumbSkin"/>
+   <!--
+    <s:Button id="decrementButton" top="0" left="0"
+              focusEnabled="false"
+              skinClass="skins.scrollbar.ScrollBarUpButtonSkin" />
+                  
+    <s:Button id="incrementButton" bottom="-15" left="0"
+              focusEnabled="false"
+              skinClass="skins.scrollbar.ScrollBarDownButtonSkin" />
+ 	-->
+</s:SparkSkin>

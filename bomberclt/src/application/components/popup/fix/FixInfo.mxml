@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="30" width="100%" height="100%" xmlns:button="application.components.button.*" xmlns:money="application.gamecontainer.persinfobar.money.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.gamecontainer.scene.bag.article.BagItemArticle;
+			import application.gamecontainer.scene.bag.article.BagPresentArticle;
+			
+			import utils.shop.item.Item;
+			
+			public var item:Item;
+			public var closefunction:Function;
+			
+			[Bindable]
+			public var maxquality:int;
+			
+			public function init(item:Item):void{
+				this.item = item;
+				var article:BagItemArticle = new BagItemArticle();
+				article.init(item);
+				contentgr.addElementAt(article, 1);
+				
+				maxquality = Math.floor(item.maxquality * 0.8);
+				money.money = Math.floor(item.price * 0.5 * 0.5);
+			}
+			
+			protected function onClick(event:MouseEvent):void
+			{
+				GameApplication.app.shopmanager.fixItem(item);
+				closefunction && closefunction();
+			}
+			protected function onClickCancel(event:MouseEvent):void
+			{				
+				closefunction && closefunction();
+			}
+		]]>
+	</fx:Script>
+	
+	<s:VGroup id="contentgr" height="100%" horizontalAlign="center" gap="10" width="100%" paddingLeft="5" paddingRight="5">
+		<s:HGroup verticalAlign="middle">
+			<s:Label text="Вы можете починить эту вещь до качества {maxquality} за " color="0xffffff" fontSize="14" fontWeight="normal"/>
+			<money:Money id="money"/>
+		</s:HGroup>
+		<s:HGroup>
+			<button:GameButton id="ok" label="починить" click="onClick(event)"/>
+			<button:GameButton id="cancel" label="отмена" click="onClickCancel(event)"/>
+		</s:HGroup>
+	</s:VGroup>
+</s:Group>

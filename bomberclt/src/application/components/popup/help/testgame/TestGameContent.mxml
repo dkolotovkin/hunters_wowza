@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="35" width="100%" height="100%" xmlns:button="application.components.button.*" xmlns:money="application.gamecontainer.persinfobar.money.*" xmlns:iconswf="application.components.iconswf.*">
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			
+			import flashx.textLayout.edit.SelectionFormat;
+			
+			import mx.events.FlexEvent;		
+		
+			
+			protected function changebtn_clickHandler(event:MouseEvent):void{
+				GameApplication.app.popuper.hidePopUp();
+			}
+			
+
+			protected function exit_clickHandler(event:MouseEvent):void
+			{
+				GameApplication.app.popuper.hidePopUp();
+			}
+
+		]]>
+	</fx:Script>
+	<s:VGroup width="100%" height="100%">
+		<s:Label text="Заработать опыт и деньги в игре, можно, участвуя в охоте. Для того чтобы попасть на охоту нужно нажать на большую кнопку на экране              . На охоте может быть два исхода: ты играешь белкой (в этом случае нужно собрать как можно больше      орехов и     патронов, а так же убегать от выстрелов и остаться в живых) или охотником (в этом случае нужно убивать белок). Управлять персонажем (белкой) нужно стрелками (или клавишами WSDA) на клавиатуре, если ты белка, или мышкой (прицелом) - если охотник. Удачной охоты!" width="400" color="0xFFFF99" fontSize="14" fontWeight="normal"/>
+		<iconswf:IconMXML iconClass="{IconButGame}" includeInLayout="false" x="120" y="30" scale=".3"/>
+		<iconswf:IconMXML iconClass="{Nut}" includeInLayout="false" x="62" y="70" scale=".8"/>
+		<iconswf:IconMXML iconClass="{IconBullet}" includeInLayout="false" x="140" y="65" scale=".8"/>
+		<s:HGroup width="100%" verticalAlign="middle" horizontalAlign="right">
+			<mx:Spacer width="100%"/>
+			<button:GameButton id="changebtn" label="в игру" click="changebtn_clickHandler(event)"/>
+		</s:HGroup>
+	</s:VGroup>
+</s:Group>

@@ -1,0 +1,142 @@
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" implements="utils.interfaces.ISceneContent"
+		 xmlns:s="library://ns.adobe.com/flex/spark" width="100%" height="100%" initialize="onInit(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" left="40" right="40" top="20" bottom="10" xmlns:button="application.components.button.*" xmlns:buttonswf="application.components.buttonswf.*" xmlns:minigames="application.gamecontainer.scene.minigames.*" xmlns:money="application.gamecontainer.persinfobar.money.*" xmlns:simplerule="application.gamecontainer.scene.minigames.simplerule.*" xmlns:auction="application.gamecontainer.scene.minigames.auction.*">
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			
+			import flash.utils.clearInterval;
+			import flash.utils.setInterval;
+			
+			import mx.events.FlexEvent;
+			
+			import utils.interfaces.ISceneContent;
+			
+			[Bindable]
+			public var bank:int;
+			public var passtime:int;
+			private var _sid:int = -1;
+			
+			public function update(b:int, pt:int, minbet:int, winnerid:int):void{
+				auctioninfo.update(minbet, winnerid);
+				bank = b;
+				passtime = pt;
+				
+				if(_sid != -1){
+					clearInterval(_sid);
+					_sid = -1;
+				}
+				_sid = setInterval(timeupdate, 1000);
+				if(passtime > 9){
+					ltime.text = "00 : " + passtime;
+				}else{
+					ltime.text = "00 : 0" + passtime;
+				}
+			}
+			
+			private function timeupdate():void{
+				passtime--;
+				if(passtime > 9){
+					ltime.text = "00 : " + passtime;
+				}else{
+					ltime.text = "00 : 0" + passtime;
+				}
+				if(passtime <= 0){
+					if(_sid != -1){
+						clearInterval(_sid);
+						_sid = -1;
+					}
+				}
+			}
+			
+					
+			protected function onBack(event:MouseEvent):void{
+				GameApplication.app.userinfomanager.userOutAuction();
+				GameApplication.app.navigator.goMiniGames();
+			}
+			
+			protected function onExit(event:MouseEvent):void{
+				GameApplication.app.userinfomanager.userOutAuction();
+				GameApplication.app.navigator.goHome();
+			}	
+			
+			public function onHide():void{				
+			}
+
+			protected function onInit(event:FlexEvent):void
+			{
+				GameApplication.app.userinfomanager.userInAuction();
+			}
+
+		]]>
+	</fx:Script>
+	<s:Rect width="100%" height="100%" radiusX="0" radiusY="0">
+		<s:stroke>
+			<mx:SolidColorStroke color="0x583016"/>
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="0x8D4F25"/>
+		</s:fill>
+	</s:Rect>
+	<s:VGroup width="100%" height="100%" paddingLeft="20" paddingRight="20" paddingTop="10" paddingBottom="10">		
+		<s:Label width="100%" textAlign="center" text="Аукцион" fontSize="30" color="0xFFFFCC" fontWeight="bold" fontStyle="italic"/>
+		<s:HGroup width="100%" height="100%" verticalAlign="middle" horizontalAlign="center">			
+			<s:Group width="150" height="250">
+				<s:Rect width="100%" height="100%" radiusX="10" radiusY="10">
+					<s:stroke>
+						<s:SolidColorStroke color="0x5B2E00" weight="2"/>
+					</s:stroke>
+					<s:fill>
+						<s:SolidColor color="0xF2CF92" alpha=".2"/>
+					</s:fill>
+				</s:Rect>
+				
+				<s:VGroup width="100%" gap="3" height="100%" paddingLeft="5" paddingRight="5" paddingTop="10" paddingBottom="10">
+					<s:Label width="100%" color="0xFFFF99" text="Правила игры"/>
+					<s:Label width="100%" color="0xffffff" text="* Для того чтобы забрать банк вы должны сделать ставку не меньше минимальной."/>
+					<s:Label width="100%" color="0xffffff" text="* Когда пользователь делает ставку, до розыгрыша приза устанавливается время 30 секунд и минимальный размер ставки, равный размеру ставки пользователя +1."/>					
+				</s:VGroup>				
+			</s:Group>
+			
+			<mx:Spacer width="100%"/>
+			
+			<s:VGroup width="100%" height="100%" horizontalAlign="center">
+				<s:HGroup width="100%" verticalAlign="middle" horizontalAlign="center">
+					<s:Label color="0xffffff" text="Банк: " fontSize="15"/>
+					<money:Money money="{bank}"/>					
+				</s:HGroup>
+				<mx:Spacer height="10"/>
+				
+				<auction:AuctionInfo id="auctioninfo" width="250"/>
+				
+				<mx:Spacer height="10"/>
+				<s:Label id="ltime" color="0xffffff" text="00 : 30" fontSize="15" width="100%" textAlign="center" fontWeight="bold"/>
+			</s:VGroup>
+			
+			<mx:Spacer width="100%"/>
+			<s:Group width="150" height="250">
+				<s:Rect width="100%" height="100%" radiusX="10" radiusY="10">
+					<s:stroke>
+						<s:SolidColorStroke color="0x5B2E00" weight="2"/>
+					</s:stroke>
+					<s:fill>
+						<s:SolidColor color="0xF2CF92" alpha=".2"/>
+					</s:fill>
+				</s:Rect>
+				
+				<s:VGroup width="100%" gap="3" height="100%" paddingLeft="5" paddingRight="5" paddingTop="10" paddingBottom="10">
+					<s:Label width="100%" color="0xFFFF99" text="Правила игры"/>
+					<s:Label width="100%" color="0xffffff" text="* Победителем становится тот пользователь, чья ставка продержалась 30 секунд."/>
+					<s:Label width="100%" color="0xffffff" text="* Победитель забирает весь банк."/>
+					<s:Label width="100%" color="0xffffff" text="* Аукцион заканчивается, если в нем были сделаны минимум 3 ставки или банк составит более 50 монет."/>
+					<s:Label width="100%" color="0xffffff" text="* Удачной игры!"/>
+				</s:VGroup>				
+			</s:Group>
+			
+		</s:HGroup>
+		<s:HGroup width="100%" horizontalAlign="right">
+			<button:GameButton id="back" label="назад" click="onBack(event)"/>
+			<button:GameButton id="exit" label="выйти" click="onExit(event)"/>
+		</s:HGroup>
+	</s:VGroup>
+</s:Group>

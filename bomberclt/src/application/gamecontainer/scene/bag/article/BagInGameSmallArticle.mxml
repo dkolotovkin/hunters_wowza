@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009" horizontalAlign="center" click="onClick(event)"
+		  xmlns:s="library://ns.adobe.com/flex/spark" buttonMode="true" rollOver="rollOver(event)" rollOut="rollOut(event)"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:article="application.gamecontainer.scene.catalog.article.*" xmlns:money="application.gamecontainer.persinfobar.money.*" xmlns:iconswf="application.components.iconswf.*">
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.gamecontainer.chat.actionmenu.bagarticle.ActionMenuBagPresentArticle;
+			import application.gamecontainer.chat.actionmenu.bagingamearticle.ActionMenuBagInGameArticle;
+			
+			import mx.events.FlexEvent;
+			
+			import utils.shop.item.Item;
+			import utils.shop.itemprototype.ItemPrototype;
+			
+			private var _selected:Boolean = false;
+			private var _over:Boolean = false;
+			[Bindable]
+			public var item:Item;
+			
+			protected function rollOver(event:MouseEvent):void{
+				_over = true;
+				updateState();
+			}
+			
+			protected function rollOut(event:MouseEvent):void{
+				_over = false;
+				updateState();
+			}
+			
+			public function set selected (value:Boolean):void {
+				if (_selected != value){
+					_selected = value;
+					updateState();
+				}	
+			}
+			
+			private function updateState ():void{
+				if (_selected) {
+					article.currentState = "selected";
+				}else{
+					if (_over){
+						article.currentState = "over";
+					}else{
+						article.currentState = "normal";
+					}
+				}
+			}
+			
+			public function init(item:Item):void{
+				this.item = item;				
+				article.init(item);
+				this.toolTip = item.title;
+				
+				cooldownMC.icon.width = cooldownMC.icon.height = 50;
+			}
+			
+			protected function onClick(event:MouseEvent):void
+			{
+				event.stopPropagation();
+				GameApplication.app.gamemanager.selectGun(item);
+			}
+			
+		]]>
+	</fx:Script>
+	<s:Group width="100%" height="100%">
+		<article:ArticleInGame id="article"/>		
+		<iconswf:IconMXML left="-1" top="-1" id="cooldownMC" iconClass="{IconCooldown}"/>
+	</s:Group>
+</s:HGroup>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" initialize="group1_initializeHandler(event)">
+	<fx:Script>
+		<![CDATA[			
+			import application.GameApplication;
+			import application.gamecontainer.scene.bag.article.BagInGameArticle;
+			import application.gamecontainer.scene.bag.article.BagInGameSmallArticle;
+			import application.gamecontainer.scene.bag.article.BagItemArticle;
+			
+			import mx.events.FlexEvent;
+			
+			import utils.game.SelectGunEvent;
+			import utils.shop.category.ShopCategory;
+			import utils.shop.item.Item;
+			import utils.shop.itemprototype.ItemPrototype;
+			
+			private var _articles:Array = new Array();
+			
+			public function clearPanel():void{
+				articles.removeAllElements();			
+			}	
+			
+			public function update(iishunter:Boolean):void
+			{	
+				_articles = new Array();
+				articles.removeAllElements();
+				
+				var article:BagInGameSmallArticle = createDefaultGun();
+				
+				articles.addElement(article);
+				_articles.push(article);
+				
+				if(iishunter){
+					GameApplication.app.gamemanager.selectGun(article.item);					
+				}else{
+					article.enabled = article.buttonMode = false;
+					return;
+				}
+				
+				var item:Item;
+				var userItems:Array = GameApplication.app.userinfomanager.myuser.itemsArr;
+				for(var i:int = 0; i < userItems.length; i++){
+					item = userItems[i] as Item;
+					if(item && item.param1 == ShopCategory.ARSENAL && item.onuser == 1 && item.quality > 0){
+						article = new BagInGameSmallArticle();
+						article.init(item);
+						articles.addElement(article);
+						_articles.push(article);
+					}
+				}
+				
+			}
+			
+			private function createDefaultGun():BagInGameSmallArticle{
+				var item:Item = new Item();
+				item.param2 = 5;
+				item.param3 = 1;
+				item.param4 = 9;			//скорость перезаряда
+				item.title = "Арбалет";
+				item.url = "a2.swf";
+				item.id = 0;
+				
+				var article:BagInGameSmallArticle = new BagInGameSmallArticle();
+				article.init(item);
+				
+				return article
+			}
+
+			protected function group1_initializeHandler(event:FlexEvent):void
+			{
+				GameApplication.app.gamemanager.addEventListener(SelectGunEvent.SELECT, onSelectGun);
+			}
+			
+			private function onSelectGun(e:SelectGunEvent):void{
+				for(var i:uint; i < _articles.length; i++){
+					if(_articles[i] is BagInGameSmallArticle){
+						if((_articles[i] as BagInGameSmallArticle).item.id == e.item.id){
+							(_articles[i] as BagInGameSmallArticle).selected = true;
+						}else{
+							(_articles[i] as BagInGameSmallArticle).selected = false;
+						}
+					}
+				}
+			}
+			
+			public function updateCooldown(percent:Number):void{
+				for(var i:uint; i < _articles.length; i++){
+					if(_articles[i] is BagInGameSmallArticle){
+						if(percent > 0){
+							(_articles[i] as BagInGameSmallArticle).cooldownMC.icon.gotoAndPlay(int(percent * (_articles[i] as BagInGameSmallArticle).cooldownMC.icon.totalFrames));
+						}else{
+							(_articles[i] as BagInGameSmallArticle).cooldownMC.icon.gotoAndStop(percent);
+						}
+					}
+				}
+			}
+			
+			public function updateHunterGun(ip:ItemPrototype):void{
+				_articles = new Array();
+				articles.removeAllElements();
+				
+				var article:BagInGameSmallArticle;
+				if(ip != null){
+					var item:Item = Item.createFromItemPrototype(ip);
+					
+					article = new BagInGameSmallArticle();
+					article.init(item);
+				}else{
+					article = createDefaultGun();
+				}
+				
+				articles.addElement(article);
+				_articles.push(article);
+				
+				article.enabled = article.buttonMode = false;
+			}
+			
+			public function blockAllAndSelectDefault():void{
+				for(var i:uint; i < _articles.length; i++){
+					if(_articles[i] is BagInGameSmallArticle){
+						if((_articles[i] as BagInGameSmallArticle).item.id == 0){
+							(_articles[i] as BagInGameSmallArticle).selected = (_articles[i] as BagInGameSmallArticle).enabled = (_articles[i] as BagInGameSmallArticle).buttonMode = true;
+							GameApplication.app.gamemanager.selectGun((_articles[i] as BagInGameSmallArticle).item);
+						}else{
+							(_articles[i] as BagInGameSmallArticle).selected = (_articles[i] as BagInGameSmallArticle).enabled = (_articles[i] as BagInGameSmallArticle).buttonMode = false;							
+						}
+					}
+				}
+			}
+
+		]]>
+	</fx:Script>	
+	
+	<s:Scroller top="1" width="100%" left="1" right="1" bottom="1">
+		<s:HGroup id="articles" width="100%" gap="15" paddingLeft="2" paddingRight="2" paddingBottom="2" paddingTop="1" horizontalAlign="center"/>
+	</s:Scroller>
+</s:Group>

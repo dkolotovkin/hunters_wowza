@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" initialize="onInit(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="35" width="100%" height="100%" xmlns:experience="application.gamecontainer.persinfobar.experience.*" xmlns:energy="application.gamecontainer.persinfobar.energy.*" xmlns:money="application.gamecontainer.persinfobar.money.*" xmlns:button="application.components.button.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.gamecontainer.scene.clans.ClanRoom;
+			
+			import flashx.textLayout.edit.SelectionFormat;
+			import flashx.textLayout.elements.TextFlow;
+			
+			import mx.events.FlexEvent;
+			
+			import utils.user.ClanUserRole;
+			import utils.user.Sex;
+			import utils.user.User;
+			[Bindable]
+			private var _user:User;
+			
+			public function set user(u:User):void{
+				_user = u;				
+			}
+			
+			protected function onInit(event:FlexEvent):void{
+				textarea.textFlow = new TextFlow();
+				textarea.scrollToRange(int.MAX_VALUE, int.MAX_VALUE);
+			}
+
+			protected function sendMail(event:MouseEvent):void
+			{
+				GameApplication.app.userinfomanager.sendMail(_user.id, textarea.text);
+			}
+
+		]]>
+	</fx:Script>
+	<s:VGroup width="100%" height="100%">
+		<s:Label text="Отправить почту вы можете любому пользователю, не зависимо в сети он или нет. Почта обязательно дойдет до адресата. Для этого необходимо заполнить  следующее поле и отправить письмо." width="300" color="0xFFFF99" fontSize="14" fontWeight="normal"/>
+		<s:Label text="Сообщение для {_user.title}:" color="0xffffff" fontSize="14" fontWeight="normal"/>
+		<s:TextArea id="textarea" editable="true" width="100%" height="100" color="0x000000"  contentBackgroundColor="0xFBEFC4" focusAlpha="0" focusEnabled="false" borderColor="0xDB9668"/>		
+		
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:Label text="Цена:" color="0xffffff" fontSize="14" fontWeight="normal"/>
+			<money:Money money="20"/>
+			<button:GameButton label="отправить" click="sendMail(event)"/>
+		</s:HGroup>
+	</s:VGroup>
+</s:Group>

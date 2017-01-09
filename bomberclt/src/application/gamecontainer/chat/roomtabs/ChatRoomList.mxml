@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" gap="0">	
+
+	<fx:Script>
+		<![CDATA[
+			import application.gamecontainer.chat.roomtabs.tab.ChatRoomTab;
+			import application.gamecontainer.chat.roomtabs.tab.ChatRoomTabEvent;
+			
+			import utils.chat.room.Room;
+			
+			private var _tabs:Object = new Object ();
+			private var _list:Vector.<ChatRoomTab> = new Vector.<ChatRoomTab>();			
+			private var _allTabsWidth:Number = 0;
+			
+			public function updateRemoving(chatRoomId:int) : void {
+				for each (var tab :ChatRoomTab  in _list) {
+					tab.updateRemoving (chatRoomId);				
+				}			
+			}
+			
+			public function addRoom (room:Room):Boolean{
+				if (!_tabs[int(room.id)])
+				{					
+					var tab:ChatRoomTab = new ChatRoomTab();
+					tab.addEventListener(ChatRoomTabEvent.NEED_SELECTED_ROOM, onNeedSelected, false, 0, true);
+					tab.addEventListener(ChatRoomTabEvent.NEED_CLOSE_ROOM, onNeedCloseRoom, false, 0, true);
+					tab.addEventListener(ChatRoomTabEvent.ADD_TAB, onAddTab, false, 0, true);
+					tab.height = 18;					
+					tab.roomtitle = room.title;
+					tab.room = room;
+					_tabs[int(room.id)] = tab;
+					_list.push (tab);
+					resort();
+					return true;
+				}
+				return false;
+			}
+			
+			private function onAddTab(event : ChatRoomTabEvent) : void {			
+				calculateAllTabsWidth();
+			}
+			
+			private function calculateAllTabsWidth():void
+			{
+				_allTabsWidth = 0;
+				var tab : ChatRoomTab;
+				for each (tab in _list) {
+					_allTabsWidth += tab.width;				
+				}						
+				if (_allTabsWidth >= parent.width) 
+				{			
+					for each (tab in _list) {
+						tab.percentWidth = 100;				
+					}
+					this.percentWidth = 100;
+				}
+				else{
+					for each (tab in _list) {
+						tab.percentWidth = NaN;				
+					}
+					this.percentWidth = NaN;
+				}
+			}
+			
+			private function onNeedCloseRoom(event : ChatRoomTabEvent) : void {
+				dispatchEvent(event.clone());
+			}
+			
+			private function onNeedSelected(event : ChatRoomTabEvent) : void {
+				dispatchEvent(event.clone());
+			}
+			
+			public function removeRoom (id:String):Boolean{
+				var tab:ChatRoomTab = _tabs[id];
+				if (tab){
+					tab.flashMode = false;
+					delete _tabs[id];
+					for (var i : uint = 0, len:uint = _list.length; i <  len; i++) {
+						if (_list[i] == tab){
+							_list.splice(i, 1);
+							break;
+						}
+					}
+					resort ();
+					calculateAllTabsWidth();
+					return true;
+				}
+				return false;
+			}
+			
+			private function resort() : void {
+				_list.sort(sort);
+				
+				removeAllElements();			
+				for each (var tab : ChatRoomTab in _list) {
+						addElement(tab);						
+				}
+			}
+			
+			public function flashRoom (id:String):void{
+				var tab:ChatRoomTab = _tabs[id];
+				if(tab && !tab.selected){
+					tab.flashMode = true;
+				}
+			}
+			
+			public function selectedRoom (id:String):void{
+				var tab:ChatRoomTab = _tabs[id];
+				tab && (tab.selected = true);
+			}			
+			
+			public function unselectedRoom (id:String):void{
+				var tab:ChatRoomTab = _tabs[id];
+				tab && (tab.selected = false);
+				
+			}
+			
+			override protected function createChildren() : void {
+				super.createChildren();
+				this.width = NaN;
+			}			
+			
+			private function sort (tab1:ChatRoomTab,tab2:ChatRoomTab):int {
+				return 0;
+			}
+		]]>
+	</fx:Script>
+
+</s:HGroup>

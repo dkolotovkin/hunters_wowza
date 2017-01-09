@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" initialize="group1_initializeHandler(event)" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" minWidth="500" xmlns:kings="application.components.popup.kings.*" xmlns:useritem="application.components.useritem.*" xmlns:money="application.gamecontainer.persinfobar.money.*" xmlns:iconswf="application.components.iconswf.*">
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.gamecontainer.scene.catalog.bar.tab.CatalogTabEvent;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			
+			import utils.user.Sex;
+			import utils.user.User;
+			import utils.user.UserAspirantKingData;
+			
+			[Bindable]
+			public var aspirants:ArrayCollection;
+			[Bindable]
+			public var timetext:String;
+			[Bindable]
+			public var king:User;
+			[Bindable]
+			public var queen:User;
+			[Bindable]
+			public var requestvisible:Boolean;
+
+			protected function group1_initializeHandler(event:FlexEvent):void
+			{
+				ruleLbl.text = "Каждые 5 дней проводится коронация участников. Королем и королевой становятся игроки, собравшие больше всех голосов (в виде монет). Для того чтобы стать претендентом на выборах необходимо подать заявку за 1000 монет (доступно с 5го уровня). " +
+								"Любой игрок может проголосовать(сделать ставку) за короля и королеву (макс. ставка 50 000 монет). Между игроками, проголосовавшими за победителей, делятся призовые деньги (т.е. сделав ставку на победителя, вы можете заработать). "+
+								"Король и королева получают: 5 000 популярности, выделяются в чате особым цветом.";
+				selectorbar.addEventListener(CatalogTabEvent.SELECTED, onSelectCategory);
+				selectorbar.addEventListener(CatalogTabEvent.UNSELECTED, onUnSelectCategory);
+				selectorbar.showGroups();
+				
+				
+			}
+
+			private function onUnSelectCategory(e:CatalogTabEvent):void{
+			}
+			
+			private function onSelectCategory(e:CatalogTabEvent):void{
+				if (e.tab.category.id == Sex.MALE){
+					setMaleAspirants();
+				}else if(e.tab.category.id == Sex.FEMALE){
+					setFeMaleAspirants();
+				}
+			}
+			
+			private function updateVisibleParts():void{
+				if(aspirants && aspirants.length > 0){
+					nofriends.visible = nofriends.includeInLayout = false;
+					list.visible = list.includeInLayout = true;
+				}else{
+					nofriends.visible = nofriends.includeInLayout = true;
+					list.visible = list.includeInLayout = false;
+				}
+			}
+			
+			private function setMaleAspirants():void{
+				aspirants.filterFunction = filterMale;
+				aspirants.refresh();
+				
+				updateVisibleParts();
+			}
+			
+			private function setFeMaleAspirants():void{
+				aspirants.filterFunction = filterFeMale;
+				aspirants.refresh();
+				
+				updateVisibleParts();
+			}
+			
+			private function filterMale(a:UserAspirantKingData):Boolean{
+				if(a.user.sex == Sex.MALE){
+					return true;
+				}
+				return false;
+			}
+			
+			private function filterFeMale(a:UserAspirantKingData):Boolean{
+				if(a.user.sex == Sex.FEMALE){
+					return true;
+				}
+				return false;
+			}
+
+			protected function requestLbl_clickHandler(event:MouseEvent):void
+			{
+				GameApplication.app.kingsmanager.sendAspirantRequest();
+			}
+
+
+			protected function rule_clickHandler(event:MouseEvent):void
+			{
+				ruleLbl.visible = ruleLbl.includeInLayout = !ruleLbl.visible;
+			}
+
+		]]>
+	</fx:Script>
+	<s:VGroup width="100%" top="30">
+		<s:Label text="{timetext}" width="100%" textAlign="center" fontSize="12" color="0xFFFFCC"/>
+		<s:HGroup verticalAlign="middle">
+			<iconswf:IconMXML scale="4" iconClass="{KingsIcon}"/>
+			<s:VGroup>
+				<s:HGroup>
+					<s:Label text="Действующий король:" paddingTop="3" color="0xFFFFCC" fontSize="14" fontWeight="normal"/>
+					<s:Label fontSize="12" paddingTop="4" textAlign="center" color="0xcccccc" text="нет" visible="{king == null}" includeInLayout="{king == null}"/>
+					<useritem:OnlineUserItem user="{king}" buttonMode="true"/>
+				</s:HGroup>
+				<s:HGroup>
+					<s:Label text="Действующая королева:" paddingTop="3" color="0xFFFFCC" fontSize="14" fontWeight="normal"/>
+					<s:Label fontSize="12" paddingTop="4" textAlign="center" color="0xcccccc" text="нет" visible="{queen == null}" includeInLayout="{queen == null}"/>
+					<useritem:OnlineUserItem user="{queen}" buttonMode="true"/>
+				</s:HGroup>
+			</s:VGroup>			
+		</s:HGroup>
+		<s:Label color="0xFFFFCC" text="Список претендентов:" fontSize="14"/>
+		<kings:AspirantsBar id="selectorbar" height="25" gap="0"/>
+		
+		<s:HGroup id="nofriends" width="100%" height="250" horizontalAlign="center" verticalAlign="middle" includeInLayout="false" visible="false">
+			<s:Label fontSize="12" width="330" textAlign="center" color="0xFFFFCC" text="Еще нет претендентов..."/>
+		</s:HGroup>
+		
+		<s:List id="list" width="100%" height="250" dataProvider="{aspirants}" 
+				itemRenderer="application.components.popup.kings.AspirantItemRenderer" 
+				contentBackgroundAlpha="0" borderVisible="false"/>
+		<s:HGroup width="100%">
+			<s:Label id="requestLbl" visible="{requestvisible}" color="0xFFFFCC" text="стать претендентом за" paddingTop="7" textDecoration="underline" buttonMode="true" click="requestLbl_clickHandler(event)" fontSize="12"/>
+			<money:Money money="1000" visible="{requestvisible}"/>
+			<mx:Spacer width="100%"/>
+			<s:Label id="ruleBtnLbl" color="0xFFFFCC" text="правила" paddingTop="7" textDecoration="underline" buttonMode="true" click="rule_clickHandler(event)" fontSize="12"/>
+		</s:HGroup>
+		<s:Label id="ruleLbl" visible="false" includeInLayout="false" textAlign="left" width="450" color="0xC4C4C4" fontSize="10"/>
+	</s:VGroup>
+</s:Group>

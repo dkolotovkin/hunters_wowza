@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="10" width="100%" height="100%" xmlns:button="application.components.button.*" xmlns:money="application.gamecontainer.persinfobar.money.*">
+	<fx:Script>
+		<![CDATA[
+			[Bindable]
+			public var count:int;
+			
+		]]>
+	</fx:Script>
+	<s:VGroup width="100%" height="100%">
+		<s:Label text="Ваши друзья установили приложение. За каждого из них вы получаете бонус! Вам начислено:" width="300" color="0xFF9933" fontSize="14" fontWeight="normal"/>		
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:Label text="Новых друзей : {count} * " color="0xffffff" fontSize="14" fontWeight="normal"/>
+			<money:Money toolTip="Ваш баланс" money="{30}"/>
+			<s:Label text=" = " color="0xffffff" fontSize="14" fontWeight="normal"/>
+			<money:Money toolTip="Ваш баланс" money="{30*count}"/>
+		</s:HGroup>
+	</s:VGroup>
+</s:Group>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" initialize="onInit(event)"
+		 xmlns:s="library://ns.adobe.com/flex/spark" buttonMode="true" width="340"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:money="application.gamecontainer.persinfobar.money.*" xmlns:iconswf="application.components.iconswf.*" xmlns:useritem="application.components.useritem.*">
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="over"/>
+	</s:states>
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			import application.gamecontainer.chat.actionmenu.chatuser.ActionMenuChatUser;
+			
+			import mx.events.FlexEvent;
+			
+			import utils.user.User;
+			
+			protected function onInit(event:FlexEvent):void
+			{				
+				addEventListener(MouseEvent.ROLL_OVER, onRollOver, false, 0, true);
+				addEventListener(MouseEvent.ROLL_OUT, onRollOut, false, 0, true);
+			}
+			
+			public function init(u:User):void{	
+				useritem.user = u;
+				useritem.title.maxWidth = 200;
+			}		
+			
+			private function onRollOver(e:MouseEvent):void{
+				currentState = "over";
+			}
+			private function onRollOut(e:MouseEvent):void{
+				currentState = "normal";
+			}
+
+			protected function label1_clickHandler(event:MouseEvent):void
+			{
+				event.stopPropagation();
+				GameApplication.app.userinfomanager.removeFriend(useritem.user.id);				
+			}
+
+		]]>
+	</fx:Script>
+	<s:Rect width="100%" height="100%" includeIn="over">
+		<s:fill>
+			<s:SolidColor color="0xffffff" alpha=".2"/>
+		</s:fill>
+	</s:Rect>
+	<s:HGroup verticalAlign="middle" width="100%" height="100%" gap="0" paddingTop="2" paddingBottom="2" paddingLeft="5" paddingRight="5">
+		
+		<useritem:OnlineUserItem id="useritem"/>		
+		<mx:Spacer width="100%"/>
+		<s:Label color="0xC4C4C4" text="удалить" textDecoration="underline" buttonMode="true" click="label1_clickHandler(event)" fontSize="12"/>
+		
+	</s:HGroup>
+</s:Group>

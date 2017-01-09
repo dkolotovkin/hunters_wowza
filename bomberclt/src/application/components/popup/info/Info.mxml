@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="30" width="100%" height="100%" xmlns:button="application.components.button.*">
+
+	<fx:Script>
+		<![CDATA[
+			import application.GameApplication;
+			[Bindable]
+			public var text:String = "";
+			
+			protected function onClick(event:MouseEvent):void
+			{
+				event.stopPropagation();
+				GameApplication.app.popuper.hidePopUp();
+			}
+		]]>
+	</fx:Script>
+
+	<s:VGroup width="100%" height="100%" horizontalAlign="center" gap="10">
+		<s:Label text="{text}" maxWidth="300" color="0xFFFF99" fontSize="14" fontWeight="normal"/>
+		<button:GameButton id="okbtn" label="ok" click="onClick(event)"/>
+	</s:VGroup>
+</s:Group>

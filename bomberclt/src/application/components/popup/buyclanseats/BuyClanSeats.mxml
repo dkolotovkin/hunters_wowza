@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" initialize="group1_initializeHandler(event)"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" top="35" width="100%" height="100%" xmlns:button="application.components.button.*" xmlns:money="application.gamecontainer.persinfobar.money.*" xmlns:iconswf="application.components.iconswf.*">
+	<fx:Script>
+		<![CDATA[			
+			import application.GameApplication;
+			
+			import mx.events.FlexEvent;
+			
+			import spark.events.TextOperationEvent;
+			
+			protected function onBuy(event:MouseEvent):void
+			{
+				var seats:int = int(textinput.text);
+				if (seats > 0){
+					GameApplication.app.clanmanager.buyseats(seats);
+				}else{
+					GameApplication.app.popuper.showInfoPopUp("Введите корректное количество мест.");
+				}
+			}
+			
+
+			protected function textinput_changeHandler(event:TextOperationEvent):void
+			{
+				var countseats:int = int(textinput.text);
+				if(GameApplication.app.userinfomanager.myuser.claninfo){
+					var from:uint = GameApplication.app.userinfomanager.myuser.claninfo.maxusers + 1;
+					var to:uint = from + countseats;
+					var price:int = 0;
+					for(var i:uint = from; i < to; i++){
+						var seatIndex:int = i - GameApplication.app.config.maxUsersInClan;
+						var seatprice:int = Math.floor(Math.pow(1.5, seatIndex - 1) * 20);
+						price += seatprice;
+					}
+					money.money = price;
+				}
+			}
+
+
+			protected function group1_initializeHandler(event:FlexEvent):void
+			{				
+				var countseats:int = 1;
+				if(GameApplication.app.userinfomanager.myuser.claninfo){
+					var from:uint = GameApplication.app.userinfomanager.myuser.claninfo.maxusers + 1;
+					var to:uint = from + countseats;
+					var price:int = 0;
+					for(var i:uint = from; i < to; i++){
+						var seatIndex:int = i - GameApplication.app.config.maxUsersInClan;
+						var seatprice:int = Math.floor(Math.pow(1.5, seatIndex - 1) * 20);
+						price += seatprice;
+					}
+					money.money = price;
+				}				
+				textinput.text = String(countseats);
+			}
+
+		]]>
+	</fx:Script>
+	<s:VGroup width="100%" height="100%">
+		<s:Label text="Укажите количество дополнительных мест, которые вы хотите купить: " width="350" color="0xFFFF99" fontSize="14" fontWeight="normal"/>
+		<s:HGroup verticalAlign="middle" width="100%">
+			<s:TextInput id="textinput" change="textinput_changeHandler(event)" maxChars="25" width="50" color="0x000000" contentBackgroundColor="0xFBEFC4" focusAlpha="0" focusEnabled="false" borderColor="0xDB9668"/>
+			<s:Label text="мест = " color="0xFFFFCC"/>
+			<money:Money id="money"/>
+		</s:HGroup>
+		
+		<s:HGroup width="100%" verticalAlign="middle" horizontalAlign="center">			
+			<button:GameButton id="changebtn" label="купить" click="onBuy(event)"/>
+		</s:HGroup>
+	</s:VGroup>
+</s:Group>
